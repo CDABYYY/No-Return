@@ -28,4 +28,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
 	int32 StandFloor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
+	int32 CharacterStatus;
 };
