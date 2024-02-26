@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Y_GameInstance.h"
 #include "Y_Character.h"
+#include "Y_Floor.h"
 #include "Kismet/KismetMaterialLibrary.h"
 
 // Sets default values
@@ -56,9 +57,9 @@ void AY_Card::Clicked()
 	SetColor(TEXT("Blue"));
 	for (int32 i = -1; i <= 1; i++)
 	{
-		int32 i0 = i + UY_GameInstance::MainCharacter->StandFloor;
-		if (i0 >= 0 && i0 < 20 && UY_GameInstance::Floors[i0] != nullptr) {
-			UY_GameInstance::Floors[i0]->SetColor(TEXT("Yellow"));
+		int32 i0 = i + UY_GameInstance::YGI->MainCharacter->StandFloor;
+		if (i0 >= 0 && i0 < 20 && UY_GameInstance::YGI->Floors[i0] != nullptr) {
+			UY_GameInstance::YGI->Floors[i0]->SetColor(TEXT("Yellow"));
 		}
 	}
 }

@@ -3,14 +3,15 @@
 
 #include "Y_GameInstance.h"
 #include "Y_Character.h"
+#include "CameraPawn.h"
+#include "Y_Card.h"
+#include "Y_Floor.h"
 
-ACameraPawn* UY_GameInstance::YC = nullptr;
-TArray<AY_Card*> UY_GameInstance::Cards;
-TArray<AY_Floor*> UY_GameInstance::Floors;
-AY_Character* UY_GameInstance::MainCharacter = nullptr;
+UY_GameInstance* UY_GameInstance::YGI = nullptr;
 
 UY_GameInstance::UY_GameInstance()
 {
+	YGI = this;
 	Cards.SetNum(10);
 	Floors.SetNum(20);
 	for (auto& p : Cards)p = nullptr;

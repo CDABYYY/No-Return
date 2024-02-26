@@ -4,9 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "CameraPawn.h"
-#include "Y_Card.h"
-#include "Y_Floor.h"
 #include "Y_GameInstance.generated.h"
 
 /**
@@ -19,14 +16,19 @@ class DEMO0_API UY_GameInstance : public UGameInstance
 public:
 	UY_GameInstance();
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	static ACameraPawn* YC;
+	static UY_GameInstance* YGI;
 
-	static TArray<AY_Card*> Cards;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class ACameraPawn* YC;
 
-	static TArray<AY_Floor*>Floors;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<class AY_Card*> Cards;
 
-	static class AY_Character* MainCharacter;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<class AY_Floor*>Floors;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class AY_Character* MainCharacter;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetColor(UMeshComponent* MeshComponent, FName MaterialName);

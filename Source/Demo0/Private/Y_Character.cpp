@@ -16,7 +16,7 @@ AY_Character::AY_Character()
 void AY_Character::BeginPlay()
 {
 	Super::BeginPlay();
-	UY_GameInstance::MainCharacter = this;
+	UY_GameInstance::YGI->MainCharacter = this;
 	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, TEXT("Character"));
 }
 
@@ -24,7 +24,6 @@ void AY_Character::BeginPlay()
 void AY_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
