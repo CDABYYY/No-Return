@@ -31,4 +31,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
 	int32 CharacterStatus;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UWidgetComponent* MyWidgetHealth;
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void MyPlayMontage(FName PlayName, float PlayRate, bool Offset);
 };

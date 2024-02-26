@@ -4,6 +4,7 @@
 #include "Y_AnimInstance.h"
 #include "Y_Character.h"
 
+
 void UY_AnimInstance::NativeInitializeAnimation() {
 	if (!Owner) {
 		Owner = Cast<AY_Character>(TryGetPawnOwner());

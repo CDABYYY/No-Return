@@ -39,6 +39,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySceneComponent")
 	UCameraComponent* MyCamera;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	class UInputMappingContext* DefaultMappingContext;
 

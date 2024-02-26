@@ -7,6 +7,7 @@
 #include "Y_GameInstance.h"
 #include "Y_Card.h"
 #include "Y_Floor.h"
+#include "Y_Character.h"
 #include "Engine/LocalPlayer.h"
 
 // Sets default values
@@ -45,6 +46,8 @@ ACameraPawn::ACameraPawn()
 
 	ChoosedCard = nullptr;
 	ChoosedFloor = nullptr;
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -58,6 +61,7 @@ void ACameraPawn::BeginPlay()
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("GameInstance Connect Successfully!"));
 		}
 	}
+	
 }
 
 // Called every frame
@@ -102,6 +106,14 @@ void ACameraPawn::MouseLeftPress()
 					if (ChoosedFloor != nullptr)ChoosedFloor->SetColor("None");
 					ChoosedFloor = HitFloor;
 					HitFloor->Clicked();
+					if (ChoosedCard != nullptr) {
+						UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), 1, true);
+						GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Play Montage"));
+					}
+					else {
+						UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("AM1"), 1, true);
+						GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Play Montage2"));
+					}
 				}
 			}
 		}

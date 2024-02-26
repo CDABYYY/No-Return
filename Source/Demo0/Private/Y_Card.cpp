@@ -39,6 +39,8 @@ void AY_Card::CardShapeInit(const TCHAR* name)
 	}
 	UMaterialInterface* Material = LoadObject<UMaterialInterface>(nullptr, name);
 	UMaterialInstance* DynamicMaterial = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Material);
+	/*static ConstructorHelpers::FObjectFinder<UMaterialInstance>MaterialObj(name);
+	UMaterialInstance* DynamicMaterial = MaterialObj.Object;*/
 	if (DynamicMaterial)
 		MeshComponent->SetMaterial(0, DynamicMaterial);
 	else GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, TEXT("Can't Find Material"));
