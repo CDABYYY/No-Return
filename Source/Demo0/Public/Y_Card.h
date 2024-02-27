@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Y_Card.generated.h"
 
+
 UCLASS()
 class DEMO0_API AY_Card : public AActor
 {
@@ -21,6 +22,10 @@ protected:
 
 	//UFUNCTION(BlueprintCallable)
 	void CardShapeInit(const TCHAR* name);
+	
+	//Can't Use. Show ConstructorHelpers is not declared.
+	/*template<const char* name>
+	void CardInitApp();*/
 
 public:	
 	// Called every frame
@@ -36,3 +41,4 @@ public:
 	void SetColor(FName MaterialName);
 
 };
+

@@ -15,7 +15,7 @@ class DEMO0_API UY_UserWidget : public UUserWidget
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	float CurrentHealth = 100;
+	int32 CurrentHealth = 100;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	float MaxHealth = 100;
+	int32 MaxHealth = 100;
 };

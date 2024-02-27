@@ -32,6 +32,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
 	int32 CharacterStatus;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
+	int32 CharacterPriority;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
+	int32 CharacterAttackTime;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
 
