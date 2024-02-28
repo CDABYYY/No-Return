@@ -34,8 +34,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void Clicked();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void Play();
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Shape")
 	UStaticMeshComponent* MeshComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 CardCost;
 
 	UFUNCTION(BlueprintCallable)
 	void SetColor(FName MaterialName);

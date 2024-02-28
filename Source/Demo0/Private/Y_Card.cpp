@@ -6,6 +6,7 @@
 #include "Y_GameInstance.h"
 #include "Y_Character.h"
 #include "Y_Floor.h"
+#include "CameraPawn.h"
 #include "Kismet/KismetMaterialLibrary.h"
 
 // Sets default values
@@ -14,7 +15,7 @@ AY_Card::AY_Card()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CardShapeInit(TEXT("/Script/Engine.Material'/Game/Resource/Png/JayceW.JayceW'"));
-	SetRootComponent(MeshComponent);
+	CardCost = 10;
 }
 
 // Called when the game starts or when spawned
@@ -43,7 +44,10 @@ void AY_Card::CardShapeInit(const TCHAR* name)
 	UMaterialInstance* DynamicMaterial = MaterialObj.Object;*/
 	if (DynamicMaterial)
 		MeshComponent->SetMaterial(0, DynamicMaterial);
-	else GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, TEXT("Can't Find Material"));
+	else 
+		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, TEXT("Can't Find Material"));
+
+	SetRootComponent(MeshComponent);
 }
 
 // Called every frame
@@ -64,6 +68,11 @@ void AY_Card::Clicked()
 			UY_GameInstance::YGI->Floors[i0]->SetColor(TEXT("Yellow"));
 		}
 	}
+}
+
+void AY_Card::Play()
+{
+	UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, true);
 }
 
 void AY_Card::SetColor(FName MaterialName)

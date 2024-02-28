@@ -15,4 +15,7 @@ void AY_PlayerController::BeginPlay()
 	}
 	if (MyHUD)MyHUD->AddToViewport();
 	else GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Failed"));
+	//MyHUD->MarkPendingKill();
+	//MyHUD->RemoveFromViewport();
+	//MyHUD->RemoveFromParent();
 }

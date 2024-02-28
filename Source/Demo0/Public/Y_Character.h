@@ -42,5 +42,5 @@ public:
 	class UWidgetComponent* MyWidgetHealth;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void MyPlayMontage(FName PlayName, float PlayRate, bool Offset);
+	void MyPlayMontage(FName PlayName, class AY_Floor* ToFloor, float PlayRate, bool Offset);
 };

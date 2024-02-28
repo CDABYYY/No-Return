@@ -25,7 +25,6 @@ void AY_Character::BeginPlay()
 {
 	Super::BeginPlay();
 	UY_GameInstance::YGI->MainCharacter = this;
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, TEXT("Character"));
 }
 
 // Called every frame

@@ -107,12 +107,8 @@ void ACameraPawn::MouseLeftPress()
 					ChoosedFloor = HitFloor;
 					HitFloor->Clicked();
 					if (ChoosedCard != nullptr) {
-						UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), 1, true);
-						GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Play Montage"));
-					}
-					else {
-						UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("AM1"), 1, true);
-						GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Play Montage2"));
+						ChoosedCard->Play();
+						ChoosedCard = nullptr;
 					}
 				}
 			}
