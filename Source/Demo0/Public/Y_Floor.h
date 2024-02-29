@@ -26,8 +26,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shape")
 	UStaticMeshComponent* MeshComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldParam")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 SerialNumber;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 Height;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	class AY_Character* StandCharacter;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Clicked();

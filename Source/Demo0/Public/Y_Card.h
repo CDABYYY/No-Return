@@ -43,8 +43,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 CardCost;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 NowCost;
+
 	UFUNCTION(BlueprintCallable)
 	void SetColor(FName MaterialName);
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool AcceptFloor(class AY_Floor* TargetFloor);
 
 };
 

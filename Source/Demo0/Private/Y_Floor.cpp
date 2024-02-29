@@ -20,6 +20,8 @@ AY_Floor::AY_Floor()
 			MeshComponent->SetWorldScale3D(FVector(0.5));
 		}
 	}
+	Height = 0;
+	StandCharacter = nullptr;
 }
 
 // Called when the game starts or when spawned

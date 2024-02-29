@@ -106,9 +106,13 @@ void ACameraPawn::MouseLeftPress()
 					if (ChoosedFloor != nullptr)ChoosedFloor->SetColor("None");
 					ChoosedFloor = HitFloor;
 					HitFloor->Clicked();
-					if (ChoosedCard != nullptr) {
+					if (ChoosedCard != nullptr && ChoosedCard->AcceptFloor(ChoosedFloor)) {
 						ChoosedCard->Play();
+						ChoosedCard->SetColor(TEXT("None"));
 						ChoosedCard = nullptr;
+						for (auto& f : UY_GameInstance::YGI->Floors) {
+							if (f != nullptr)f->SetColor(TEXT("None"));
+						}
 					}
 				}
 			}

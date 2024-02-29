@@ -26,20 +26,35 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
-	int32 StandFloor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	class AY_Floor* StandFloor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 CharacterStatus;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 CharacterPriority;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyProperty")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 CharacterAttackTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 MaxHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 Shield;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Injured();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MyPlayMontage(FName PlayName, class AY_Floor* ToFloor, float PlayRate, bool Offset);

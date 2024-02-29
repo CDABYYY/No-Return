@@ -15,9 +15,20 @@ AY_Character::AY_Character()
 	static ConstructorHelpers::FClassFinder<UUserWidget>WidgetClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/BluePrint/BP_Y_UserWidget.BP_Y_UserWidget_C'"));
 	MyWidgetHealth->SetWidgetClass(WidgetClass.Class);
 	MyWidgetHealth->SetRelativeLocation(FVector(0, 0, 100));
-	MyWidgetHealth->SetWidgetSpace(EWidgetSpace::World);
+	MyWidgetHealth->SetWidgetSpace(EWidgetSpace::Screen);
 	MyWidgetHealth->SetDrawSize(FVector2D(200, 30));
-	MyWidgetHealth->SetRelativeRotation(FRotator(0, 90, 0));
+	//MyWidgetHealth->SetRelativeRotation(FRotator(0, 90, 0));
+
+
+	CharacterPriority=0;
+	CharacterAttackTime=0;
+	MaxHealth=100;
+	Health=100;
+	Shield=0;
+	CharacterStatus = 0;
+
+	StandFloor = nullptr;
+
 }
 
 // Called when the game starts or when spawned
@@ -38,6 +49,16 @@ void AY_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AY_Character::Attack()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Character Attack!"));
+}
+
+void AY_Character::Injured()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Character Injured!"));
 }
 
 
