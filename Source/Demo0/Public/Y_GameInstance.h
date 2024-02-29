@@ -36,10 +36,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetColor(UMeshComponent* MeshComponent, FName MaterialName);
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RunTime = 0;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<class AY_Character*> AtkOrder;
+
+
 	void AddAtk(class AY_Character* owner);
 	void HelpTick(float DeltaTime);
 	void DeleteAtk(class AY_Character* owner);

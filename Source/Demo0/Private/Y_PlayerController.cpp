@@ -2,7 +2,8 @@
 
 
 #include "Y_PlayerController.h"
-#include "Blueprint/UserWidget.h"
+#include "Y_GameInstance.h"
+#include "Y_HUD.h"
 
 void AY_PlayerController::BeginPlay()
 {
@@ -13,8 +14,13 @@ void AY_PlayerController::BeginPlay()
 	if (HUDAsset) {
 		MyHUD = CreateWidget<UUserWidget>(this, HUDAsset);
 	}
-	if (MyHUD)MyHUD->AddToViewport();
-	else GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Failed"));
+	if (MyHUD) {
+		if (UY_HUD* YHUD = Cast<UY_HUD>(MyHUD)) {
+				YHUD->YGameInstance = UY_GameInstance::YGI;
+		}
+		MyHUD->AddToViewport();
+	}
+	//else GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Failed"));
 	//MyHUD->MarkPendingKill();
 	//MyHUD->RemoveFromViewport();
 	//MyHUD->RemoveFromParent();

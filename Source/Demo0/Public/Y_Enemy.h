@@ -20,6 +20,8 @@ public:
 
 	virtual void Injured();
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintCallable)
 	void ShortAttack();
 

@@ -2,7 +2,7 @@
 
 
 #include "Y_GameInstance.h"
-#include "Y_Character.h"
+#include "Y_Ally.h"
 #include "CameraPawn.h"
 #include "Y_Card.h"
 #include "Y_Floor.h"
@@ -17,6 +17,7 @@ UY_GameInstance::UY_GameInstance()
 	YGI = this;
 	Cards.SetNum(10);
 	Floors.SetNum(20);
+	AtkOrder.SetNum(0);
 	for (auto& p : Cards)p = nullptr;
 	for (auto& p : Floors)p = nullptr;
 }
@@ -36,11 +37,21 @@ void UY_GameInstance::AddAtk(AY_Character* owner)
 
 void UY_GameInstance::HelpTick(float DeltaTime)
 {
-	if (AtkOrder.Num() > 0 && AtkOrder[0] != nullptr && RunTime >= AtkOrder[0]->CharacterAttackTime) {
-		//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("ATK Play"));
-		AtkOrder.RemoveAt(0);
+	RunTime += DeltaTime; 
+	while (AtkOrder.Num() > 0) {
+		if(!IsValid(AtkOrder[0]))
+		{
+			AtkOrder.RemoveAt(0);
+			continue;
+		}
+		else {
+			if (RunTime * 10 >= AtkOrder[0]->CharacterAttackTime) {
+				AtkOrder[0]->Attack();
+				AtkOrder.RemoveAt(0);
+			}
+			else break;
+		}
 	}
-		
 }
 
 void UY_GameInstance::DeleteAtk(AY_Character* owner)

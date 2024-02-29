@@ -4,18 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Y_GameInstance.h"
-#include "Y_HUD.generated.h"
+#include "Y_TimeLine.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEMO0_API UY_HUD : public UUserWidget
+class DEMO0_API UY_TimeLine : public UUserWidget
 {
 	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UY_GameInstance* YGameInstance;
-
+	
 };

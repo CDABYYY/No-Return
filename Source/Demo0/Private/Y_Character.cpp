@@ -3,6 +3,7 @@
 
 #include "Y_Character.h"
 #include "Y_GameInstance.h"
+#include "Y.h"
 #include "Components/WidgetComponent.h"
 
 // Sets default values
@@ -35,7 +36,7 @@ AY_Character::AY_Character()
 void AY_Character::BeginPlay()
 {
 	Super::BeginPlay();
-	UY_GameInstance::YGI->MainCharacter = this;
+	Y::GetGameInstance()->AddAtk(this);
 }
 
 // Called every frame

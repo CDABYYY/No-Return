@@ -60,6 +60,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyValue")
 	FVector CurrentVelocity;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyValue")
+	bool ClickAble;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
 	class AY_Card* ChoosedCard;
 

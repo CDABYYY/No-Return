@@ -8,6 +8,7 @@
 #include "Y_Card.h"
 #include "Y_Floor.h"
 #include "Y_Character.h"
+#include "Y.h"
 #include "Engine/LocalPlayer.h"
 
 // Sets default values
@@ -46,7 +47,7 @@ ACameraPawn::ACameraPawn()
 
 	ChoosedCard = nullptr;
 	ChoosedFloor = nullptr;
-
+	ClickAble = false;
 	
 }
 
@@ -69,6 +70,9 @@ void ACameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	SetActorLocation(GetActorLocation() + CurrentVelocity * DeltaTime);
+	if(!ClickAble){
+		Y::GetGameInstance()->HelpTick(DeltaTime);
+	}
 }
 
 // Called to bind functionality to input
@@ -88,30 +92,39 @@ void ACameraPawn::MoveRight(float Value)
 
 void ACameraPawn::MouseLeftPress()
 {
-	FVector MouseLocation, MouseRotation, EndLocation;
-	FHitResult HitResult;
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller)) {
-		if (PlayerController->DeprojectMousePositionToWorld(MouseLocation, MouseRotation))
-		{
-			EndLocation = MouseLocation + MouseRotation * 10000; 
-			bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, MouseLocation, EndLocation, ECC_Visibility);
-			if (bHit) {
-				AActor* HitActor = HitResult.GetActor();
-				if (AY_Card* HitCard = Cast<AY_Card>(HitActor)) {
-					if (ChoosedCard != nullptr)ChoosedCard->SetColor("None");
-					ChoosedCard = HitCard;
-					HitCard->Clicked();
-				}
-				else if (AY_Floor* HitFloor = Cast<AY_Floor>(HitActor)) {
-					if (ChoosedFloor != nullptr)ChoosedFloor->SetColor("None");
-					ChoosedFloor = HitFloor;
-					HitFloor->Clicked();
-					if (ChoosedCard != nullptr && ChoosedCard->AcceptFloor(ChoosedFloor)) {
-						ChoosedCard->Play();
-						ChoosedCard->SetColor(TEXT("None"));
-						ChoosedCard = nullptr;
-						for (auto& f : UY_GameInstance::YGI->Floors) {
-							if (f != nullptr)f->SetColor(TEXT("None"));
+	if(ClickAble){
+		FVector MouseLocation, MouseRotation, EndLocation;
+		FHitResult HitResult;
+		if (APlayerController* PlayerController = Cast<APlayerController>(Controller)) {
+			if (PlayerController->DeprojectMousePositionToWorld(MouseLocation, MouseRotation))
+			{
+				EndLocation = MouseLocation + MouseRotation * 10000;
+				bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, MouseLocation, EndLocation, ECC_Visibility);
+				if (bHit) {
+					AActor* HitActor = HitResult.GetActor();
+					if (AY_Card* HitCard = Cast<AY_Card>(HitActor)) {
+						if (ChoosedCard != nullptr)ChoosedCard->SetColor("None");
+						ChoosedCard = HitCard;
+						HitCard->Clicked();
+					}
+					else if (AY_Floor* HitFloor = Cast<AY_Floor>(HitActor)) {
+						if (ChoosedFloor != nullptr)ChoosedFloor->SetColor("None");
+						ChoosedFloor = HitFloor;
+						HitFloor->Clicked();
+						if (ChoosedCard != nullptr && ChoosedCard->AcceptFloor(ChoosedFloor)) {
+							ChoosedCard->Play();
+							ChoosedCard->SetColor(TEXT("None")); 
+
+							Y::GetMainCharacter()->CharacterAttackTime += ChoosedCard->CardCost;
+							Y::GetGameInstance()->AddAtk(Y::GetMainCharacter());
+
+
+							ChoosedCard = nullptr;
+							for (auto& f : UY_GameInstance::YGI->Floors) {
+								if (f != nullptr)f->SetColor(TEXT("None"));
+							}
+							
+							ClickAble = false;
 						}
 					}
 				}

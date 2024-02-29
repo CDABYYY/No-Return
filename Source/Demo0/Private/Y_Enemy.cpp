@@ -4,6 +4,7 @@
 #include "Y_Enemy.h"
 #include "Y.h"
 #include "Y_Floor.h"
+#include "Y_GameInstance.h"
 
 AY_Enemy::AY_Enemy()
 {
@@ -23,16 +24,29 @@ void AY_Enemy::Attack()
 	int32 distance = abs(StandFloor->SerialNumber - Y::GetMainCharacter()->StandFloor->SerialNumber);
 	if (distance <= 1) {
 		ReadyAttack.BindUObject(this, &AY_Enemy::ShortAttack);
+		CharacterAttackTime += 20;
+		Y::GetGameInstance()->AddAtk(this);
 	}
 	else if (distance <= 2) {
-		ReadyAttack.BindUObject(this, &AY_Enemy::HardAttack);
+		ReadyAttack.BindUObject(this, &AY_Enemy::HardAttack); 
+		CharacterAttackTime += 40;
+		Y::GetGameInstance()->AddAtk(this);
 	}
-	else ReadyAttack.BindUObject(this, &AY_Enemy::MoveMotion);
+	else { 
+		ReadyAttack.BindUObject(this, &AY_Enemy::MoveMotion);
+		CharacterAttackTime += 15;
+		Y::GetGameInstance()->AddAtk(this);
+	}
 }
 
 void AY_Enemy::Injured()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Character Injured!"));
+}
+
+void AY_Enemy::BeginPlay()
+{
+	Super::BeginPlay();
 }
 
 void AY_Enemy::ShortAttack()
