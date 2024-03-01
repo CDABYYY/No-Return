@@ -6,6 +6,7 @@
 #include "CameraPawn.h"
 #include "Y_Card.h"
 #include "Y_Floor.h"
+#include "Y_TimeLine.h"
 
 UY_GameInstance* UY_GameInstance::YGI = nullptr;
 
@@ -24,6 +25,11 @@ UY_GameInstance::UY_GameInstance()
 
 void UY_GameInstance::AddAtk(AY_Character* owner)
 {
+	if(IsValid(UY_TimeLine::YTimeLine))
+	{
+		UY_TimeLine::YTimeLine->AddCharacterProfile(owner);
+	}
+
 	for (int32 i = 0; i < AtkOrder.Num(); i++) {
 		if (owner->CharacterAttackTime<AtkOrder[i]->CharacterAttackTime ||
 			owner->CharacterAttackTime == AtkOrder[i]->CharacterAttackTime &&

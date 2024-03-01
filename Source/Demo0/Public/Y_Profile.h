@@ -13,5 +13,17 @@ UCLASS()
 class DEMO0_API UY_Profile : public UUserWidget
 {
 	GENERATED_BODY()
-	
+public:
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class AY_Character* Character;
+
+	float* RunTime;
+
+	int32* AttackTime;
+
+	UFUNCTION(BlueprintCallable)
+	int GetRelativePosition();
+
+	UFUNCTION(BlueprintCallable)
+	void ProfileInit(class AY_Character* ReadCharacter);
 };
