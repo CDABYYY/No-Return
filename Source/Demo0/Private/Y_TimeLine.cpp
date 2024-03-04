@@ -12,5 +12,6 @@ void UY_TimeLine::TimeLineInit()
 {
 	YTimeLine = this;
 	GameInstance = UY_GameInstance::YGI;
+	UE_LOG(LogTemp, Warning, TEXT("TimeLineInit"));
 }
 

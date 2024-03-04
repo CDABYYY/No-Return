@@ -21,13 +21,18 @@ UY_GameInstance::UY_GameInstance()
 	AtkOrder.SetNum(0);
 	for (auto& p : Cards)p = nullptr;
 	for (auto& p : Floors)p = nullptr;
+
+	//RandomStream = FRandomStream(0);
+	HaveRandoms = 0;
 }
 
 void UY_GameInstance::AddAtk(AY_Character* owner)
 {
 	if(IsValid(UY_TimeLine::YTimeLine))
 	{
-		UY_TimeLine::YTimeLine->AddCharacterProfile(owner);
+		UE_LOG(LogTemp, Warning, TEXT("Call AddCharacterProfile"));
+		//Correct On first Run. Will Crash on the next. Maybe the order of BeginPlay effect it.
+		//UY_TimeLine::YTimeLine->AddCharacterProfile(owner);
 	}
 
 	for (int32 i = 0; i < AtkOrder.Num(); i++) {

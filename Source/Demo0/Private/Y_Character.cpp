@@ -36,6 +36,7 @@ AY_Character::AY_Character()
 void AY_Character::BeginPlay()
 {
 	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("Call AddAtk"));
 	Y::GetGameInstance()->AddAtk(this);
 }
 

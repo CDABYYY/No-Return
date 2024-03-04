@@ -36,3 +36,11 @@ AY_Character* Y::GetMainCharacter()
 {
 	return UY_GameInstance::YGI->MainCharacter;
 }
+
+float Y::getRandom()
+{
+	GetGameInstance()->HaveRandoms++;
+	return GetGameInstance()->RandomStream.GetFraction();
+}
+
+

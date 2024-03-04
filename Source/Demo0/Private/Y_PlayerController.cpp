@@ -19,6 +19,7 @@ void AY_PlayerController::BeginPlay()
 				YHUD->YGameInstance = UY_GameInstance::YGI;
 		}
 		MyHUD->AddToViewport();
+		UE_LOG(LogTemp, Warning, TEXT("TimeLine Create"));
 	}
 	//else GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Failed"));
 	//MyHUD->MarkPendingKill();

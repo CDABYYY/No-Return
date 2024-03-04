@@ -38,9 +38,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RunTime = 0;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<class AY_Character*> AtkOrder;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FRandomStream RandomStream;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 HaveRandoms;
 
 	void AddAtk(class AY_Character* owner);
 	void HelpTick(float DeltaTime);

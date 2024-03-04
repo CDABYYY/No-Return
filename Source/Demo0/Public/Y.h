@@ -21,4 +21,32 @@ public:
 	static TArray<class AY_Floor*>& GetFloors();
 
 	static class AY_Character* GetMainCharacter();
+
+	static float getRandom();
+
+	template<typename ...Argv>
+	static void Log(bool test, const TCHAR Format[], Argv... Params) {
+		FString s = FString::Printf(Format, Params...);
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, s);
+		//UE_LOG(LogTemp, Warning, Format, Params...);
+	}
+
+	template<typename ...Argv>
+	static void Log(const TCHAR Format[], Argv... Params) {
+		FString s = FString::Printf(Format, Params...);
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, s);
+		//UE_LOG(LogTemp, Warning, Format, Params...);
+	}
+
+	template<typename T>
+	static T getRandom(TMap<T, float> m) {
+		float tot = 0;
+		for (auto&& p : m)tot += p.Value;
+		float choosed = getRandom() * tot;
+		for (auto&& p : m) {
+			if (choosed < p.Value)return p.Key;
+			choosed -= p.Value;
+		}
+		return m.begin()->Key;
+	}
 };
