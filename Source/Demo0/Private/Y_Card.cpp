@@ -7,7 +7,13 @@
 #include "Y_Character.h"
 #include "Y_Floor.h"
 #include "CameraPawn.h"
+#include "Y.h"
+#include "YCard01.h"
 #include "Kismet/KismetMaterialLibrary.h"
+
+FName AY_Card::CardName = FName(TEXT("Card0"));
+
+TMap<FName, TSubclassOf<AY_Card>>& AY_Card::CM = AY_Card::AddMap(TEXT("Card0"), AY_Card::StaticClass());
 
 // Sets default values
 AY_Card::AY_Card()
@@ -58,7 +64,14 @@ void AY_Card::CardShapeInit(const TCHAR* name)
 void AY_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	FVector AF = Y::GetPlayer()->MyCamera->GetComponentLocation() + FVector(270, -52 * 4, -90);
+	if (GetActorLocation() != AF + FVector(0, ToPosition, 0)) {
+		float ToGo = DeltaTime * 200;
+		if (NowPosition + ToGo < ToPosition)NowPosition += ToGo;
+		else if (NowPosition - ToGo > ToPosition)NowPosition -= ToGo;
+		else NowPosition = ToPosition;
+		SetActorLocation(AF + FVector(0, NowPosition, 0));
+	}
 }
 
 void AY_Card::Clicked()
@@ -73,7 +86,8 @@ void AY_Card::Clicked()
 void AY_Card::Play()
 {
 	UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, true);
-	UY_GameInstance::YGI->MainCharacter->StandFloor = UY_GameInstance::YGI->YC->ChoosedFloor;
+	Y::GetMainCharacter()->CharacterLogicalMove(Y::GetPlayer()->ChoosedFloor);
+	DrawCard(TEXT("Card0"));
 }
 
 void AY_Card::SetColor(FName MaterialName)
@@ -90,5 +104,47 @@ bool AY_Card::AcceptFloor(AY_Floor* TargetFloor)
 		return TargetFloor->SerialNumber <= nowFloor->SerialNumber + 3 && TargetFloor->SerialNumber >= nowFloor->SerialNumber - 3;
 	}
 	return false;
+}
+
+void AY_Card::UseCard(AY_Card* UsedCard)
+{
+	int32 pos = Y::GetCards().Find(UsedCard);
+	if(pos>=0)
+	{
+		Y::GetCards().RemoveAt(pos);
+		for (int32 i = pos; i < Y::GetCards().Num(); i++)
+		{
+			if (IsValid(Y::GetCards()[i]))
+				Y::GetCards()[i]->ToPosition -= 52;
+		}
+		UsedCard->Destroy();
+	}
+}
+
+void AY_Card::DrawCard(FName DrawCardName)
+{
+	AddMap(TEXT("Card1"), AYCard01::StaticClass());
+	UE_LOG(LogTemp, Warning, TEXT("Try Draw"));
+
+	UE_LOG(LogTemp, Warning, TEXT("%d"),CM.Num());
+
+	FVector AF = UY_GameInstance::YGI->YC->MyCamera->GetComponentLocation();
+	AF += FVector(270, -208 + 52 * 15, -90);//Base Location
+	if (CM.Contains(DrawCardName)) {
+		AY_Card* NewCard = Cast<AY_Card>(UY_GameInstance::YGI->YC->GetWorld()->SpawnActor(CM.Find(DrawCardName)->Get(), &AF));
+		NewCard->ToPosition = Y::GetCards().Num() * 52;
+		NewCard->NowPosition = -4 * 52 + 15 * 52;
+		Y::GetCards().Add(NewCard);
+		UE_LOG(LogTemp, Warning, TEXT("Draw"));
+	}
+}
+
+TMap<FName, TSubclassOf<AY_Card>>& AY_Card::AddMap(FName AddCardName, TSubclassOf<AY_Card> AddCardClass)
+{
+	static TMap<FName, TSubclassOf<AY_Card>> Map;
+	if (AddCardName != FName() && !Map.Contains(AddCardName)) {
+		Map.Add(AddCardName, AddCardClass);
+	}
+	return Map;
 }
 

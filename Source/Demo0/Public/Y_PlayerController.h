@@ -14,10 +14,13 @@ class DEMO0_API AY_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
+	static AY_PlayerController* ThisPlayerController;
+		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UUserWidget> HUDAsset;
 
-	UUserWidget* MyHUD;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UUserWidget* MyY_HUD;
 protected:
 	virtual void BeginPlay() override;
 };

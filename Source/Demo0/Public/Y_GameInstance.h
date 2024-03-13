@@ -31,10 +31,31 @@ public:
 	TArray<class AY_Floor*>Floors;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<class AY_Enemy*>Enemys;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FVector NowVector;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FRotator NowRotator;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AY_Character* MainCharacter;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetColor(UMeshComponent* MeshComponent, FName MaterialName);
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TMap<FString, TSubclassOf<class AY_Ally>> AllyClasses;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FString, TSubclassOf<class AY_Enemy>> EnemyClasses;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FString, TSubclassOf<class AY_Card>> CardClasses;
+
+	UFUNCTION(BlueprintCallable)
+	void EndRoom();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RunTime = 0;

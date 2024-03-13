@@ -11,14 +11,15 @@ void AY_PlayerController::BeginPlay()
 	MyHUD = CreateWidget<UUserWidget>(this, WidgetClass.Class);
 	if (MyHUD)MyHUD->AddToViewport();
 	else GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Failed"));*/
+	UE_LOG(LogTemp, Warning, TEXT("Controller BeginPlay"));
 	if (HUDAsset) {
-		MyHUD = CreateWidget<UUserWidget>(this, HUDAsset);
+		MyY_HUD = CreateWidget<UUserWidget>(this, HUDAsset);
 	}
 	if (MyHUD) {
-		if (UY_HUD* YHUD = Cast<UY_HUD>(MyHUD)) {
+		if (UY_HUD* YHUD = Cast<UY_HUD>(MyY_HUD)) {
 				YHUD->YGameInstance = UY_GameInstance::YGI;
 		}
-		MyHUD->AddToViewport();
+		MyY_HUD->AddToViewport();
 		UE_LOG(LogTemp, Warning, TEXT("TimeLine Create"));
 	}
 	//else GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Failed"));

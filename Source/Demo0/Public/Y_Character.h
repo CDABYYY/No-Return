@@ -50,11 +50,20 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
 
+	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class Y_StatusBar* Buffs;
+
+	//UFUNCTION(BlueprintCallable)
+	virtual int32 ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition,FString TriggerAction, bool TryAttack = false);
+
 	UFUNCTION(BlueprintCallable)
 	virtual void Attack();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Injured();
+	virtual void CharacterDead();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void CharacterLogicalMove(class AY_Floor* TargetFloor);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MyPlayMontage(FName PlayName, class AY_Floor* ToFloor, float PlayRate, bool Offset);

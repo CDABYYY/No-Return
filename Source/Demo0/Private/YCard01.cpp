@@ -6,6 +6,9 @@
 #include "Y_Floor.h"
 #include "CameraPawn.h"
 #include "Y_Character.h"
+#include "Y_StatusBar.h"
+
+TMap<FName, TSubclassOf<AY_Card>>& AYCard01::CM1 = AY_Card::AddMap(TEXT("Card1"), AYCard01::StaticClass());
 
 AYCard01::AYCard01() {
 	CardShapeInit(TEXT("/Script/Engine.Material'/Game/Resource/Png/JayceE.JayceE'"));
@@ -15,6 +18,17 @@ AYCard01::AYCard01() {
 
 void AYCard01::Play()
 {
+	Y_StatusBar ToBuff;
+	Y_Buff* HealthBuff = new Y_Buff();
+	HealthBuff->BuffCount = 10;
+	ToBuff.AddBuff(HealthBuff);
+	DrawCard(TEXT("Card1"));
+	UE_LOG(LogTemp, Warning, TEXT("Choosed %d"), Y::GetPlayer()->ChoosedFloor->SerialNumber);
+	if (IsValid(Y::GetPlayer()->ChoosedFloor->StandCharacter))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attack"));
+		Y::ExecuteAction(Y::GetMainCharacter(), Y::GetPlayer()->ChoosedFloor->StandCharacter, ToBuff, TEXT("ShortAttack"));
+	}
 	Y::GetMainCharacter()->MyPlayMontage(TEXT("Attack3"), Y::GetPlayer()->ChoosedFloor, 1, false);
 }
 

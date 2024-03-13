@@ -28,7 +28,7 @@ AY_Floor::AY_Floor()
 void AY_Floor::BeginPlay()
 {
 	Super::BeginPlay();
-	UY_GameInstance::YGI->Floors[SerialNumber] = this;
+	//UY_GameInstance::YGI->Floors[SerialNumber] = this;
 }
 
 // Called every frame

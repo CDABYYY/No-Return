@@ -13,6 +13,8 @@ UCLASS()
 class DEMO0_API AYCard01 : public AY_Card
 {
 	GENERATED_BODY()
+public:
+	static TMap<FName, TSubclassOf<AY_Card>>& CM1;
 	AYCard01();
 	virtual void Play() override;
 	virtual void Clicked() override;

@@ -47,7 +47,7 @@ ACameraPawn::ACameraPawn()
 
 	ChoosedCard = nullptr;
 	ChoosedFloor = nullptr;
-	ClickAble = false;
+	ClickAble = true;
 	
 }
 
@@ -118,7 +118,7 @@ void ACameraPawn::MouseLeftPress()
 							Y::GetMainCharacter()->CharacterAttackTime += ChoosedCard->CardCost;
 							Y::GetGameInstance()->AddAtk(Y::GetMainCharacter());
 
-
+							AY_Card::UseCard(ChoosedCard);
 							ChoosedCard = nullptr;
 							for (auto& f : UY_GameInstance::YGI->Floors) {
 								if (f != nullptr)f->SetColor(TEXT("None"));

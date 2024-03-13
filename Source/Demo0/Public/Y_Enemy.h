@@ -31,5 +31,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MoveMotion();
 
+	virtual void CharacterDead() override;
+
 	TDelegate<void()> ReadyAttack;
 };

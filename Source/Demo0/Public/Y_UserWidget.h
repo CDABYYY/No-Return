@@ -18,4 +18,12 @@ public:
 	int32 CurrentHealth = 100;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	int32 MaxHealth = 100;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class AY_Character* OwnerCharacter;
+
+	UFUNCTION(BlueprintCallable)
+	void UserWidgetInit(class AY_Character* Owner);
+
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPersent();
 };

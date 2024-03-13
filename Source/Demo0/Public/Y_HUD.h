@@ -18,4 +18,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UY_GameInstance* YGameInstance;
 
+	UFUNCTION(BlueprintCallable)
+	void NoticeMessage(FString message, int color = 0);
+
+	UFUNCTION(BlueprintCallable)
+	void HUDInit();
+
+	UFUNCTION(BlueprintCallable)
+	float GetProcess();
 };

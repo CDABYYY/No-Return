@@ -52,5 +52,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool AcceptFloor(class AY_Floor* TargetFloor);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	float NowPosition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	float ToPosition;
+
+	static void UseCard(AY_Card* UsedCard);
+
+	static void DrawCard(FName DrawCardName = FName());
+
+	static TMap<FName, TSubclassOf<AY_Card>>& AddMap(FName AddCardName = FName(), TSubclassOf<AY_Card> AddCardClass = TSubclassOf<AY_Card>());
+
+	static FName CardName;
+
+	static TMap<FName, TSubclassOf<AY_Card>>& CM;
 };
 

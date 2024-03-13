@@ -3,3 +3,7 @@
 
 #include "Y_EventWidget.h"
 
+void UY_EventWidget::EventInit()
+{
+
+}

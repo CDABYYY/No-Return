@@ -2,4 +2,23 @@
 
 
 #include "Y_HUD.h"
+#include "Y.h"
+#include "Y_Character.h"
 
+void UY_HUD::NoticeMessage(FString message, int color)
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, message);
+}
+
+void UY_HUD::HUDInit()
+{
+	YGameInstance = Y::GetGameInstance();
+}
+
+float UY_HUD::GetProcess()
+{
+	if (IsValid(Y::GetMainCharacter())) {
+		return (float)Y::GetMainCharacter()->Health / Y::GetMainCharacter()->MaxHealth;
+	}
+	return 0;
+}
