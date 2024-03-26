@@ -18,8 +18,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UY_GameInstance* YGameInstance;
 
-	UFUNCTION(BlueprintCallable)
-	void NoticeMessage(FString message, int color = 0);
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UY_TimeLine* TimeLine;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NoticeMessage(FName message, int color);
 
 	UFUNCTION(BlueprintCallable)
 	void HUDInit();

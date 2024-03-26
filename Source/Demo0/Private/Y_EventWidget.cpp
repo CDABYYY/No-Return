@@ -5,5 +5,8 @@
 
 void UY_EventWidget::EventInit()
 {
-
+	for (auto& s:ChoiceAction)
+	{
+		ChoiceWidgets.Add(CreateChoiceUI(s));
+	}
 }

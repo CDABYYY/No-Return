@@ -14,6 +14,8 @@ AY_Ally::AY_Ally() {
 	Health = 100;
 	Shield = 0;
 	CharacterStatus = 0;
+
+	CharacterID = 0;
 }
 
 void AY_Ally::BeginPlay()

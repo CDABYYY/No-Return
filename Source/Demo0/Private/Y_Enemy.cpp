@@ -16,6 +16,8 @@ AY_Enemy::AY_Enemy()
 	Health = 20;
 	Shield = 0;
 	CharacterStatus = 0;
+
+	CharacterID = (1 << 10);
 }
 
 void AY_Enemy::Attack()

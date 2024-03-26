@@ -21,6 +21,36 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UUserWidget* MyY_HUD;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UY_HUD* PCHUD;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_MapWidget* MapWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> MapAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_EventWidget* EventWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> EventAsset;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowMap();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void CloseMap();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowEvent();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void CloseEvent();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateMap();
 protected:
 	virtual void BeginPlay() override;
 };

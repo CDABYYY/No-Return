@@ -7,6 +7,7 @@
 #include "Y_StatusBar.h"
 #include "Y_Floor.h"
 #include "Y_UserWidget.h"
+#include "Y_TimeLine.h"
 #include "Components/WidgetComponent.h"
 
 // Sets default values
@@ -87,6 +88,13 @@ void AY_Character::CharacterLogicalMove(AY_Floor* TargetFloor)
 	}
 	TargetFloor->StandCharacter = this;
 	StandFloor = TargetFloor;
+}
+
+void AY_Character::ChangeAttackTime(int32 ChangedTime)
+{
+	UY_TimeLine::YTimeLine->RemoveCharacter(this);
+	CharacterAttackTime = ChangedTime;
+	UY_TimeLine::YTimeLine->AddCharacter(this);
 }
 
 

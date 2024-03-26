@@ -7,6 +7,32 @@
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FBuffLog
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int32 LogType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class AY_Character* FromCharacter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class AY_Character* ToCharacter;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TSharedPtr<class Y_Buff>> ExecuteBuffs;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TArray<TSharedPtr<class Y_Buff>> InfluentBuffs;
+};
+
+
+
+UCLASS()
 class DEMO0_API Y_Buff
 {
 public:
@@ -87,6 +113,12 @@ public:
 		AfterKill = (1 << 24),
 		//Reversed Events , The first Buff of ToBuff will show its Type 
 		ReversedEvent = (1 << 25),
+		//Begin Fight
+		BeginFight = (1 << 26),
+		//After Fight
+		AfterFight = (1 << 27),
+		//Character Spawn
+		CharacterSpawn = (1 << 28),
 	};
 
 	//Return Without 0 will end Following Execute				

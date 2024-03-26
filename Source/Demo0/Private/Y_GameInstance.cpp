@@ -53,7 +53,8 @@ void UY_GameInstance::AddAtk(AY_Character* owner)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Call AddCharacterProfile"));
 		//Correct On first Run. Will Crash on the next. Maybe the order of BeginPlay effect it.
-		UY_TimeLine::YTimeLine->AddCharacterProfile(owner);
+		//UY_TimeLine::YTimeLine->AddCharacterProfile(owner);
+		UY_TimeLine::YTimeLine->AddCharacter(owner);
 	}
 
 	for (int32 i = 0; i < AtkOrder.Num(); i++) {
@@ -70,20 +71,21 @@ void UY_GameInstance::AddAtk(AY_Character* owner)
 void UY_GameInstance::HelpTick(float DeltaTime)
 {
 	RunTime += DeltaTime; 
-	while (AtkOrder.Num() > 0) {
-		if(!IsValid(AtkOrder[0]))
-		{
-			AtkOrder.RemoveAt(0);
-			continue;
-		}
-		else {
-			if (RunTime * 10 >= AtkOrder[0]->CharacterAttackTime) {
-				AtkOrder[0]->Attack();
-				AtkOrder.RemoveAt(0);
-			}
-			else break;
-		}
-	}
+	UY_TimeLine::YTimeLine->UpdateTimeMark();
+	//while (AtkOrder.Num() > 0) {
+	//	if(!IsValid(AtkOrder[0]))
+	//	{
+	//		AtkOrder.RemoveAt(0);
+	//		continue;
+	//	}
+	//	else {
+	//		if (RunTime * 10 >= AtkOrder[0]->CharacterAttackTime) {
+	//			AtkOrder[0]->Attack();
+	//			AtkOrder.RemoveAt(0);
+	//		}
+	//		else break;
+	//	}
+	//}
 }
 
 void UY_GameInstance::DeleteAtk(AY_Character* owner)

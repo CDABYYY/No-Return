@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 Shield;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 CharacterID;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
 
@@ -64,6 +67,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void CharacterLogicalMove(class AY_Floor* TargetFloor);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void ChangeAttackTime(int32 ChangedTime);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MyPlayMontage(FName PlayName, class AY_Floor* ToFloor, float PlayRate, bool Offset);

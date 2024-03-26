@@ -17,6 +17,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class AY_Character* Character;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_TimeMark* TimeOwner;
+
 	float* RunTime;
 
 	int32* AttackTime;
@@ -26,4 +29,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ProfileInit(class AY_Character* ReadCharacter);
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeAttackTime(int32 ChangedTime = -1);
 };
