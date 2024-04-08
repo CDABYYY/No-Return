@@ -43,4 +43,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetColor(FName MaterialName);
+
+	TSharedPtr<class Y_FloorInfo> Info;
+};
+
+class DEMO0_API Y_FloorInfo {
+public:
+	class AY_Floor* Owner;
 };

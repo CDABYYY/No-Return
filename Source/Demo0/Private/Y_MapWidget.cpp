@@ -3,6 +3,7 @@
 
 #include "Y_MapWidget.h"
 #include "Y.h"
+#include "Y_RoomWidget.h"
 
 TArray<int32> UY_MapWidget::GetWay(int32 a0, int32 b0, int32 f0)
 {
@@ -55,6 +56,30 @@ TArray<int32> UY_MapWidget::GetWay(int32 a0, int32 b0, int32 f0)
         result.Add((f0 << 20) + (ra << 10) + rb);
     }
     return result;
+}
+
+void UY_MapWidget::ForwardRoom(UY_RoomWidget* Room)
+{
+    int32 p = plevel.Find(Room) ;
+    int32 p0 = p;
+    int32 lt = 0;
+    for (auto& l : levels) {
+        if (p < l) {
+            p0 = p0 - p + l;
+            break;
+        }
+        p -= l;
+        lt++;
+    }
+    for (auto& w : pway) {
+        if ((w >> 10) == ((lt << 10) + p + 1)) {
+            plevel[p0 + w % (1 << 10)]->SetArrivable();
+
+        }
+    }
+    for (int32 i = 0; i < p0; i++) {
+        plevel[i]->Passed();
+    }
 }
 
 void UY_MapWidget::GetMap()

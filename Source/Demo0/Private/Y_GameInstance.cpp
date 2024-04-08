@@ -10,6 +10,9 @@
 #include "Y.h"
 #include "Y_Enemy.h"
 #include "Y_RoomWidget.h"
+#include "Y_Fighting.h"
+#include "Y_CardInfo.h"
+#include "Y_EnemyInfo.h"
 
 UY_GameInstance* UY_GameInstance::YGI = nullptr;
 
@@ -29,6 +32,17 @@ UY_GameInstance::UY_GameInstance()
 
 	//RandomStream = FRandomStream(0);
 	HaveRandoms = 0;
+
+	FightInfo = MakeShared<Y_Fighting>();
+
+	Y::BuffInfos().Add(0, Y::StoreClass<Y_Buff, Y_Buff>());
+	Y::CardInfos().Add(0, Y::StoreClass<Y_CardInfo, Y_CardInfo>());
+	Y::CharacterInfos().Add(0, Y::StoreClass<Y_EnemyInfo, Y_EnemyInfo>());
+	Y::FloorInfos().Add(0, Y::StoreClass<Y_FloorInfo, Y_FloorInfo>());
+	Y::RoomInfos().Add(0, Y::StoreClass<Y_RoomInfo, Y_RoomInfo>());
+
+	for(int i = 0;i<10;i++)
+	FightInfo->UsingCards.Add(MakeShared<Y_CardInfo>());
 }
 
 
@@ -45,6 +59,11 @@ void UY_GameInstance::EndRoom()
 	if(IsValid(UY_RoomWidget::CurrentRoom))
 		UY_RoomWidget::CurrentRoom->FightEnd();
 	UY_RoomWidget::CurrentRoom = nullptr;
+}
+
+void UY_GameInstance::ChangeTopoRate(float MultiplyRate)
+{
+	TopoRate *= MultiplyRate;
 }
 
 void UY_GameInstance::AddAtk(AY_Character* owner)
@@ -72,6 +91,17 @@ void UY_GameInstance::HelpTick(float DeltaTime)
 {
 	RunTime += DeltaTime; 
 	UY_TimeLine::YTimeLine->UpdateTimeMark();
+	if (RunTime > TickTime) {
+		TickTime += 20;
+		for (auto& p : Enemys)
+		{
+			if(p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::BeginTick, TEXT("Tick")))
+			{
+				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::Ticking, TEXT("Tick"));
+				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::AfterTick, TEXT("Tick"));
+			}
+		}
+	}
 	//while (AtkOrder.Num() > 0) {
 	//	if(!IsValid(AtkOrder[0]))
 	//	{

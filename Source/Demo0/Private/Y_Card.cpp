@@ -9,6 +9,8 @@
 #include "CameraPawn.h"
 #include "Y.h"
 #include "YCard01.h"
+#include "Y_CardInfo.h"
+#include "Y_Fighting.h"
 #include "Kismet/KismetMaterialLibrary.h"
 
 FName AY_Card::CardName = FName(TEXT("Card0"));
@@ -38,6 +40,8 @@ AY_Card::AY_Card()
 
 	CardShapeInit(TEXT("/Script/Engine.Material'/Game/Resource/Png/JayceQ.JayceQ'"));
 	NowCost = CardCost = 10;
+	Info = MakeShared<Y_CardInfo>();
+	Info->Owner = this;
 }
 
 // Called when the game starts or when spawned
@@ -76,18 +80,21 @@ void AY_Card::Tick(float DeltaTime)
 
 void AY_Card::Clicked()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Card Clicked!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Card Clicked!"));
+	//SetColor(TEXT("Blue"));
+	//for (auto&& f : UY_GameInstance::YGI->Floors) {
+	//	if (f != nullptr && AcceptFloor(f))f->SetColor(TEXT("Yellow"));
+	//}
 	SetColor(TEXT("Blue"));
-	for (auto&& f : UY_GameInstance::YGI->Floors) {
-		if (f != nullptr && AcceptFloor(f))f->SetColor(TEXT("Yellow"));
-	}
+	Info->Clicked();
 }
 
 void AY_Card::Play()
 {
+	Info->Play();
 	UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, true);
 	Y::GetMainCharacter()->CharacterLogicalMove(Y::GetPlayer()->ChoosedFloor);
-	DrawCard(TEXT("Card0"));
+	DrawCard();
 }
 
 void AY_Card::SetColor(FName MaterialName)
@@ -99,45 +106,29 @@ void AY_Card::SetColor(FName MaterialName)
 
 bool AY_Card::AcceptFloor(AY_Floor* TargetFloor)
 {
-	AY_Floor* nowFloor = UY_GameInstance::YGI->MainCharacter->StandFloor;
-	if (TargetFloor != nullptr) {
-		return TargetFloor->SerialNumber <= nowFloor->SerialNumber + 3 && TargetFloor->SerialNumber >= nowFloor->SerialNumber - 3;
-	}
-	return false;
+	//AY_Floor* nowFloor = UY_GameInstance::YGI->MainCharacter->StandFloor;
+	//if (TargetFloor != nullptr) {
+	//	return TargetFloor->SerialNumber <= nowFloor->SerialNumber + 3 && TargetFloor->SerialNumber >= nowFloor->SerialNumber - 3;
+	//}
+	//return false;
+	return Info->AcceptFloor(TargetFloor);
 }
 
 void AY_Card::UseCard(AY_Card* UsedCard)
 {
-	int32 pos = Y::GetCards().Find(UsedCard);
-	if(pos>=0)
-	{
-		Y::GetCards().RemoveAt(pos);
-		for (int32 i = pos; i < Y::GetCards().Num(); i++)
-		{
-			if (IsValid(Y::GetCards()[i]))
-				Y::GetCards()[i]->ToPosition -= 52;
-		}
-		UsedCard->Destroy();
-	}
+	Y::GetGameInfo()->UseCard(UsedCard);
 }
 
-void AY_Card::DrawCard(FName DrawCardName)
+void AY_Card::DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpawn)
 {
-	AddMap(TEXT("Card1"), AYCard01::StaticClass());
-	UE_LOG(LogTemp, Warning, TEXT("Try Draw"));
-
-	UE_LOG(LogTemp, Warning, TEXT("%d"),CM.Num());
-
-	FVector AF = UY_GameInstance::YGI->YC->MyCamera->GetComponentLocation();
-	AF += FVector(270, -208 + 52 * 15, -90);//Base Location
-	if (CM.Contains(DrawCardName)) {
-		AY_Card* NewCard = Cast<AY_Card>(UY_GameInstance::YGI->YC->GetWorld()->SpawnActor(CM.Find(DrawCardName)->Get(), &AF));
-		NewCard->ToPosition = Y::GetCards().Num() * 52;
-		NewCard->NowPosition = -4 * 52 + 15 * 52;
-		Y::GetCards().Add(NewCard);
-		UE_LOG(LogTemp, Warning, TEXT("Draw"));
-	}
+	Y::GetGameInfo()->DrawCard(ToDrawCard, VoidSpawn);
 }
+
+void AY_Card::DrawCard(int32 DrawCount)
+{
+	Y::GetGameInfo()->DrawCard(DrawCount);
+}
+
 
 TMap<FName, TSubclassOf<AY_Card>>& AY_Card::AddMap(FName AddCardName, TSubclassOf<AY_Card> AddCardClass)
 {

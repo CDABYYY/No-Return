@@ -39,7 +39,7 @@ public:
 
 	//Every Level
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UUserWidget*> plevel;
+	TArray<class UY_RoomWidget*> plevel;
 
 	//(Floor << 20) + (A << 10) + B
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -49,9 +49,14 @@ public:
 	TArray<FVector2D> WayToDraw;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	UUserWidget* DrawEvent(float RateA,float RateB);
+	class UY_RoomWidget* DrawEvent(float RateA,float RateB);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PullMap(bool reverse);
 
 	TArray<int32> GetWay(int32 a0, int32 b0, int32 f0);
+
+	void ForwardRoom(class UY_RoomWidget* Room);
 
 	UFUNCTION(BlueprintCallable)
 	void GetMap();

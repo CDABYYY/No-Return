@@ -8,35 +8,85 @@
  * 
  */
 
-USTRUCT(BlueprintType)
-struct FBuffLog
+//USTRUCT(BlueprintType)
+//struct FAtomLog 
+//{
+//	GENERATED_USTRUCT_BODY()
+//
+//	//FAtomLog() {};
+//
+//	//FAtomLog(int32 ID, int32 Count, FText Description) :BuffID(ID), LevelCount(Count), BuffDescription(Description) {};
+//
+//	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+//	int32 BuffID;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	int32 LevelCount;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	FText BuffDescription;
+//};
+//
+//
+//
+//USTRUCT(BlueprintType)
+//struct FBuffLog
+//{
+//	GENERATED_USTRUCT_BODY()
+//
+//	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+//	int32 LogType;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	int32 LogID;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	int32 Cost;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	FText LogDescription;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	class AY_Character* FromCharacter;
+//
+//	//class Y_EnemyInfo* FromCharacter;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	class AY_Character* ToCharacter;
+//
+//
+//	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	TArray<TSharedPtr<class Y_Buff>> ExecuteBuffs;
+//
+//	//TArray<FAtomLog*>ExecuteBuffs;
+//
+//	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
+//	TArray<TSharedPtr<class Y_Buff>> InfluentBuffs;
+//
+//	void LogInit(class AY_Character* FC, class AY_Character* TC) {
+//		FromCharacter = FC;
+//		ToCharacter = TC;
+//	}
+//
+//	//Didn't Added To Use.
+//	static TArray<FBuffLog> FightLogs;
+//	static FBuffLog WritingLog;
+//};
+
+
+
+class DEMO0_API Y_Buff: public TSharedFromThis<Y_Buff>
 {
-	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	int32 LogType;
+	//Called that only Normal Pointer which is turned by SharedPtr can use AsShared()
+	//Because Only after MakeShareable() It's WeakPtr can be Init.
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class AY_Character* FromCharacter;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class AY_Character* ToCharacter;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSharedPtr<class Y_Buff>> ExecuteBuffs;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TArray<TSharedPtr<class Y_Buff>> InfluentBuffs;
-};
-
-
-
-UCLASS()
-class DEMO0_API Y_Buff
-{
 public:
 	Y_Buff();
+	Y_Buff(int32 i) :BuffCount(i){};
+	Y_Buff(int32 Condition, bool ToGet) :TriggerCondition(Condition) {};
+
+	virtual void Init(int32 BuffCount);
 	virtual ~Y_Buff();
 	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FString BuffName;
@@ -53,7 +103,6 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class AY_Character* OwnerCharacter;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BuffProperty;
 
 	FString CountName;
@@ -123,9 +172,36 @@ public:
 
 	//Return Without 0 will end Following Execute				
 	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs,int32 ExecuteCondition,FString TriggerAction, bool TryAttack = false);
-	virtual FString printBuff(bool PrintLog = false)const;
+
+	virtual FText printBuff(bool PrintLog = false)const;
 	virtual void AddBuff(Y_Buff* OtherBuff);
 	virtual void AddToCharacter(class AY_Character* TargetCharacter);
-	virtual void RemoveFromCharacter(class AY_Character* TargetCharacter);
+	virtual void RemoveFromCharacter();
 	virtual bool AcceptBuffAdd(Y_Buff* OtherBuff);
+
+	void AddInExecuteLog();
+	void AddInInfluentLog();
+};
+
+class DEMO0_API Y_BuffL :public Y_Buff {
+public:
+	TDelegate<int32()> ToExecute;
+	Y_BuffL(int32 ExecuteCondition, TDelegate<int32()> ToBind) : ToExecute(ToBind) { TriggerCondition = ExecuteCondition; };
+
+	//template<typename Fun,typename...Vals>
+	//Y_BuffL(int32 ExecuteCondition, Fun&& lambda, Vals&&... vals) : { ToExecute.BindLambda(Forward(lambda), Forward(vals...)); TriggerCondition = ExecuteCondition; }
+
+	//template<typename Fun, typename...Vals>
+	//Y_BuffL(int32 ExecuteCondition, Fun*&& ObjectPtr, Vals&&... vals) : { ToExecute.BindUObject(Forward(ObjectPtr), Forward(vals...)); TriggerCondition = ExecuteCondition; }
+
+	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
+
+};
+
+class DEMO0_API Y_BuffR :public Y_Buff {
+public:
+	class Y_RoomInfo* BindedWidget;
+	Y_BuffR(class Y_RoomInfo* BindWidget);
+
+	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
 };

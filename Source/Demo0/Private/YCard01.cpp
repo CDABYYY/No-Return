@@ -22,7 +22,7 @@ void AYCard01::Play()
 	Y_Buff* HealthBuff = new Y_Buff();
 	HealthBuff->BuffCount = 10;
 	ToBuff.AddBuff(HealthBuff);
-	DrawCard(TEXT("Card1"));
+	DrawCard();
 	UE_LOG(LogTemp, Warning, TEXT("Choosed %d"), Y::GetPlayer()->ChoosedFloor->SerialNumber);
 	if (IsValid(Y::GetPlayer()->ChoosedFloor->StandCharacter))
 	{

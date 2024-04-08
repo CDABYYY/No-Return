@@ -34,7 +34,7 @@ public:
 	void RemoveProfile(class AY_Character* ProfileRemoved);
 
 	UFUNCTION(BlueprintCallable)
-	void ExecuteMark();
+	virtual void ExecuteMark();
 
 	UFUNCTION(BlueprintCallable)
 	TArray<class AY_Character*>& GetCharacters();

@@ -5,6 +5,7 @@
 #include "Y_GameInstance.h"
 #include "Y_StatusBar.h"
 #include "Y_Character.h"
+#include "Y_PlayerController.h"
 
 Y::Y()
 {
@@ -34,14 +35,15 @@ TArray<class AY_Floor*>& Y::GetFloors()
 	return UY_GameInstance::YGI->Floors;
 }
 
-TArray<class AY_Enemy*>& Y::GetEnemys()
+TArray<class AY_Character*>& Y::GetEnemys()
 {
 	return UY_GameInstance::YGI->Enemys;
 }
 
 FVector& Y::GetLocation()
 {
-	return UY_GameInstance::YGI->NowVector;
+	//return UY_GameInstance::YGI->NowVector;
+	return GetGameInstance()->SceneVector;
 }
 
 FRotator& Y::GetRotation()
@@ -51,6 +53,9 @@ FRotator& Y::GetRotation()
 
 int32 Y::ExecutePureAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, FString TriggerAction, bool TryAttack)
 {
+	//FBuffLog BuffLog;
+	//BuffLog.LogInit(FromCharacter, ToCharacter);
+	//BuffLog.LogType = 1;
 	int32 UsingCondition = ToBuffs.FindCondition();
 	if (UsingCondition != 0) {
 		if (IsValid(ToCharacter) && ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition >> 1), TriggerAction, TryAttack) == 0) {
@@ -68,16 +73,21 @@ int32 Y::ExecutePureAction(AY_Character* FromCharacter, AY_Character* ToCharacte
 				ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 1), TriggerAction, TryAttack);
 		}
 	}
+	//FBuffLog::FightLogs.Add(MoveTemp(BuffLog));
 	return UsingCondition;
 }
 
 int32 Y::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, FString TriggerAction, bool TryAttack)
 {
+	//FBuffLog BuffLog;
+	//BuffLog.LogInit(FromCharacter, ToCharacter);
+	//BuffLog.LogType = 0;
 	int32 UsingCondition = ToBuffs.FindCondition();
 	if (UsingCondition != 0) {
 		if (IsValid(FromCharacter) && FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition >> 2), TriggerAction, TryAttack) == 0) {
 			if (IsValid(ToCharacter) && ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition >> 1), TriggerAction, TryAttack) == 0) {
 				ToBuffs.ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, (UsingCondition), TriggerAction, TryAttack);
+				for (auto& p : ToBuffs.Buff) { p->AddToCharacter(ToCharacter); }
 				if(ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::DetectDeath, TriggerAction, TryAttack) != 0
 					&& ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::BeginDeath, TriggerAction, TryAttack) == 0){
 					ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterDeath, TriggerAction, TryAttack);
@@ -91,6 +101,7 @@ int32 Y::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y
 			FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 2), TriggerAction, TryAttack);
 		}
 	}
+	//FBuffLog::FightLogs.Add(MoveTemp(BuffLog));
 	return UsingCondition;
 }
 
@@ -99,10 +110,25 @@ AY_Character*& Y::GetMainCharacter()
 	return UY_GameInstance::YGI->MainCharacter;
 }
 
+AY_PlayerController*& Y::GetController()
+{
+	return AY_PlayerController::ThisPlayerController;
+}
+
+Y_Fighting* Y::GetGameInfo()
+{
+	return GetGameInstance()->FightInfo.Get();
+}
+
 float Y::getRandom()
 {
 	GetGameInstance()->HaveRandoms++;
 	return GetGameInstance()->RandomStream.GetFraction();
+}
+
+UWorld* Y::GetWorld()
+{
+	return GetController()->GetWorld();
 }
 
 

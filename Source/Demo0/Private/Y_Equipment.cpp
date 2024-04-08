@@ -10,3 +10,16 @@ Y_Equipment::Y_Equipment()
 Y_Equipment::~Y_Equipment()
 {
 }
+
+int32 Y_Equipment::GetPrice()
+{
+    return 100;
+}
+
+void Y_Equipment::Equiped()
+{
+}
+
+void Y_Equipment::UnEquiped()
+{
+}

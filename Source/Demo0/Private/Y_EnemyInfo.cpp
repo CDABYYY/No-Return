@@ -2,11 +2,70 @@
 
 
 #include "Y_EnemyInfo.h"
+#include "Y_Character.h"
+#include "Y_GameInstance.h"
+#include "Y.h"
 
 Y_EnemyInfo::Y_EnemyInfo()
 {
+    Actions.Add(MakeShared<Y_CharacterAction>());
 }
 
 Y_EnemyInfo::~Y_EnemyInfo()
 {
+}
+
+int32 Y_EnemyInfo::GetRandomAction()
+{
+    TArray<float> Weights;
+    float TotalWeight = 0;
+    for (auto& p : Actions) {
+        float t = p.Get()->GetWeight();
+        TotalWeight += t;
+        Weights.Add(t);
+    }
+    float Choosed = Y::getRandom() * TotalWeight;
+    for (int32 i = 0; i < Weights.Num();i++) {
+        if (Choosed < Weights[i])return i;
+        Choosed -= Weights[i];
+    }
+    return 0;
+}
+
+void Y_EnemyInfo::EnemyAttack()
+{
+    Actions[ChoosedAction]->ActionExecute();
+    (Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::AfterAction, TEXT("AfterAction"));
+    if((Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::BeginAction, TEXT("BeginAction")) == 0)
+    {
+        ChoosedAction = GetRandomAction();
+        Actions[ChoosedAction]->ActionChoosed();
+        Owner->CharacterAttackTime += (int32)(Actions[ChoosedAction]->CurrentCost * Owner->ActionRate * Y::GetGameInstance()->TopoRate);
+        Owner->ChangeAttackTime(Owner->CharacterAttackTime);
+    }
+}
+
+void Y_EnemyInfo::EnemyDead()
+{
+    GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Dead")); 
+}
+
+float Y_CharacterAction::GetWeight()
+{
+    return 10;
+}
+
+void Y_CharacterAction::ActionChoosed()
+{
+    GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Action Choosed"));
+}
+
+void Y_CharacterAction::ActionExecute()
+{
+    GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Action Execute"));
+}
+
+FText Y_CharacterAction::LogDescript()
+{
+    return FText::FromString(TEXT("Log"));
 }

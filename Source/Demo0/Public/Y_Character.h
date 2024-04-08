@@ -30,6 +30,9 @@ public:
 	class AY_Floor* StandFloor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 CharacterType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 CharacterStatus;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
@@ -49,6 +52,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 CharacterID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	float ActionRate = 1;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
@@ -73,4 +79,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MyPlayMontage(FName PlayName, class AY_Floor* ToFloor, float PlayRate, bool Offset);
+
+	TSharedPtr<class Y_EnemyInfo> Info;
+
 };

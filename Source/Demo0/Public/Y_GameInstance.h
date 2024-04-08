@@ -31,13 +31,19 @@ public:
 	TArray<class AY_Floor*>Floors;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<class AY_Enemy*>Enemys;
+	TArray<class AY_Character*>Enemys;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FVector NowVector;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FRotator NowRotator;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector SceneVector;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SceneScale = 1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AY_Character* MainCharacter;
@@ -46,19 +52,31 @@ public:
 	void SetColor(UMeshComponent* MeshComponent, FName MaterialName);
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TMap<FString, TSubclassOf<class AY_Ally>> AllyClasses;
+	TMap<FString, TSubclassOf<class AY_Character>> AllyClasses;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FString, TSubclassOf<class AY_Enemy>> EnemyClasses;
+	TMap<FString, TSubclassOf<class AY_Character>> EnemyClasses;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<FString, TSubclassOf<class AY_Card>> CardClasses;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TMap<FName, TSubclassOf<class AY_Floor>> FloorClasses;
 
 	UFUNCTION(BlueprintCallable)
 	void EndRoom();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RunTime = 0;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float TickTime = 20;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	float TopoRate = 1;
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeTopoRate(float MultiplyRate);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<class AY_Character*> AtkOrder;
@@ -68,6 +86,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HaveRandoms;
+
+	TSharedPtr<class Y_Fighting> FightInfo;
 
 	void AddAtk(class AY_Character* owner);
 	void HelpTick(float DeltaTime);

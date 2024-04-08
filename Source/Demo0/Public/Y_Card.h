@@ -46,6 +46,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 NowCost;
 
+	TSharedPtr<class Y_CardInfo> Info;
+
 	UFUNCTION(BlueprintCallable)
 	void SetColor(FName MaterialName);
 
@@ -60,7 +62,11 @@ public:
 
 	static void UseCard(AY_Card* UsedCard);
 
-	static void DrawCard(FName DrawCardName = FName());
+	static void DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpawn = false);
+	
+	static void DrawCard(int32 DrawCount = 1);
+
+	//static void DrawCard(FName DrawCardName = FName());
 
 	static TMap<FName, TSubclassOf<AY_Card>>& AddMap(FName AddCardName = FName(), TSubclassOf<AY_Card> AddCardClass = TSubclassOf<AY_Card>());
 

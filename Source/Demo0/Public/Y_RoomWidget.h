@@ -9,6 +9,38 @@
 /**
  * 
  */
+class DEMO0_API Y_RoomInfo
+{
+public:
+
+	bool Arriveable;
+
+	//To Cooperate Buff.
+	int32 NeedKills;
+
+	UTexture2D* UsingTexture;
+
+	class UY_RoomWidget* Owner;
+
+	virtual FText GetDescribe();
+
+	virtual void SetArrivable();
+
+	virtual bool IsArrivable();
+
+	virtual void Passed();
+
+	//return nullptr if this room will execute
+	virtual TSharedPtr<Y_RoomInfo> RoomClicked();
+
+	virtual void LeaveRoom();
+
+	virtual float GetWeight();
+};
+
+
+
+
 UCLASS()
 class DEMO0_API UY_RoomWidget : public UUserWidget
 {
@@ -16,9 +48,28 @@ class DEMO0_API UY_RoomWidget : public UUserWidget
 public:
 	static UY_RoomWidget* CurrentRoom;
 
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UTexture2D* UsingTexture;
+
+	TSharedPtr<Y_RoomInfo> Info;
+
+	virtual FText GetDescribe();
+
+	virtual void SetArrivable();
+
+	virtual bool IsArrivable();
+
+	virtual void Passed();
+
 	UFUNCTION(BlueprintCallable)
 	virtual void RoomInit();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void RoomClicked();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void RoomClosed();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void FightBegin();
@@ -31,3 +82,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void EventFight();
 };
+
+

@@ -63,6 +63,10 @@ public:
     {
         return Data.end();
     }
+    void RemoveAt(int32 i) {
+        Data.RemoveAt(i);
+    }
+
     void RemoveFirst(T& t)
     {
         for (size_t i = 0; i < Data.Num(); i++)

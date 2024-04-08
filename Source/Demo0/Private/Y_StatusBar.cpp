@@ -34,7 +34,26 @@ void Y_StatusBar::AddBuff(TSharedPtr<Y_Buff> OtherBuff)
 
 void Y_StatusBar::AddBuff(Y_Buff* OtherBuff)
 {
-	AddBuff(TSharedPtr<Y_Buff>(OtherBuff));
+	AddBuff(MakeShareable(OtherBuff));
+}
+
+int32 Y_StatusBar::RemoveBuff(int32 BuffID, int32 RemoveCount)
+{
+	return RemoveBuff([BuffID](TSharedPtr<Y_Buff>& buff) {return buff->BuffNumber == BuffID; }, RemoveCount);
+}
+
+int32 Y_StatusBar::RemoveBuffLevel(int32 BuffLevel, int32 RemoveCount)
+{
+	if (BuffLevel < 0)
+		return RemoveBuff([BuffLevel](TSharedPtr<Y_Buff>& buff) {return buff->BuffLevel < 0 && buff->BuffLevel > BuffLevel; }, RemoveCount);
+	if (BuffLevel > 0)
+		return RemoveBuff([BuffLevel](TSharedPtr<Y_Buff>& buff) {return buff->BuffLevel > 0 && buff->BuffLevel < BuffLevel; }, RemoveCount);
+	return 0;
+}
+
+int32 Y_StatusBar::RemoveBuff(TSharedPtr<Y_Buff> RemovedBuff)
+{
+	return Buff.Remove(RemovedBuff);
 }
 
 int32 Y_StatusBar::FindCondition()
@@ -73,6 +92,16 @@ int32 Y_StatusBar::ExecuteBuffs(AY_Character* FromCharacter, AY_Character* ToCha
 		if (p->TriggerCondition & ExecuteCondition)
 			ExecuteStatus = p->execute(FromCharacter, ToCharacter, ToBuffs, ExecuteCondition,TriggerAction, TryAttack);
 		if (ExecuteStatus != 0) break;
+	}
+	return ExecuteStatus;
+}
+
+int32 Y_StatusBar::ExecuteBIA(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
+{
+	int32 ExecuteStatus = ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, ExecuteCondition >> 1, TriggerAction, TryAttack);
+	if (ExecuteStatus == 0) {
+		ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, ExecuteCondition, TriggerAction, TryAttack);
+		ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, ExecuteCondition << 1, TriggerAction, TryAttack);
 	}
 	return ExecuteStatus;
 }
