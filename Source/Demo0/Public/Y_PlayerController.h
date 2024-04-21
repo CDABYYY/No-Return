@@ -61,6 +61,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadHUD();
 
+	void BeginEvent(TSharedPtr<class Y_EventInfo> EventInfo);
+
 protected:
 	virtual void BeginPlay() override;
 };

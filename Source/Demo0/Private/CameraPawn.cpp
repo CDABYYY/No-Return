@@ -110,7 +110,8 @@ void ACameraPawn::MouseLeftPress()
 				if (bHit) {
 					AActor* HitActor = HitResult.GetActor();
 					if (AY_Card* HitCard = Cast<AY_Card>(HitActor)) {
-						if (ChoosedCard != nullptr)ChoosedCard->SetColor("None");
+						if (IsValid(ChoosedCard))ChoosedCard->SetColor("None");
+						for (auto& p : Y::GetFloors())if(IsValid(p))p->SetColor("None");
 						ChoosedCard = HitCard;
 						HitCard->Clicked();
 					}

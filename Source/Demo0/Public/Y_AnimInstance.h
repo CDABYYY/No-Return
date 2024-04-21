@@ -19,7 +19,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	class AY_Character* Owner;
-
+	
 	UFUNCTION(BlueprintCallable, Category = AnimationProperty)
 	void UpdateAnimationPropertiers();
 

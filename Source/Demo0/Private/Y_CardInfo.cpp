@@ -50,6 +50,9 @@ Y_CardInfo::Y_CardInfo()
 	CurrentCost = OriginalCost = 10;
 	UsedType = 0;
 	CardID = 0;
+
+	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/Png/JayceStaticField.JayceStaticField'");
+	UsingPicture = Y::LoadPicture(Path);
 }
 
 Y_CardInfo::~Y_CardInfo()

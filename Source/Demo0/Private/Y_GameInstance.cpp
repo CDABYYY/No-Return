@@ -14,6 +14,7 @@
 #include "Y_CardInfo.h"
 #include "Y_EnemyInfo.h"
 
+#include "I_Level1.h"
 #include "Y_ClassBase.h"
 
 
@@ -21,7 +22,7 @@
 #include "IImageWrapperModule.h"
 
 UY_GameInstance* UY_GameInstance::YGI = nullptr;
-
+TMap<FString, UTexture2D*> UY_GameInstance::Pictures = TMap<FString, UTexture2D*>();
 
 
 UY_GameInstance::UY_GameInstance()
@@ -49,13 +50,14 @@ UY_GameInstance::UY_GameInstance()
 	Y::LoadRoom<Y_RoomInfo>(0);
 
 	LoadY_Base();
+	IL1();
 
 	//TEMP
 	FightInfo->ReadyRooms.Add(Y::RoomClass[1]->NewObject());
 
 	//TEMP
-	for(int i = 0;i<10;i++)
-	FightInfo->UsingCards.Add(Y::CardClass[1]->NewObject());
+	for(int32 i = 2001;i<=2020;i++)
+	FightInfo->UsingCards.Add(Y::CardClass[i]->NewObject());
 
 	FightInfo->MCSkill = MakeShared<NormalSkill>();
 }

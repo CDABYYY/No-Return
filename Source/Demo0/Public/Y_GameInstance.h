@@ -87,8 +87,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HaveRandoms;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FString, UTexture2D*> Pictures;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	static TMap<FString, UTexture2D*> Pictures;
 
 	UFUNCTION(BlueprintCallable)
 	UTexture2D* LoadPicture(const FString& FilePath);

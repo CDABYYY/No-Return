@@ -209,7 +209,7 @@ public:
 	Y_BuffL(int32 ExecuteCondition, TDelegate<int32()> ToBind) : ToExecute(ToBind) { TriggerCondition = ExecuteCondition; };
 
 	template<typename Fun>
-	Y_BuffL(int32 ExecuteCondition, Fun&& lambda) { ToExecute.BindLambda(Forward(lambda)); TriggerCondition = ExecuteCondition; }
+	Y_BuffL(int32 ExecuteCondition, Fun&& lambda) { ToExecute.BindLambda(lambda); TriggerCondition = ExecuteCondition; }
 
 	template<typename Fun>
 	Y_BuffL(int32 ExecuteCondition, int32 Order, Fun&& lambda) { ToExecute.BindLambda(Forward(lambda)); TriggerCondition = ExecuteCondition; BuffOrder = Order; }

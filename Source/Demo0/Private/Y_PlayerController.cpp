@@ -3,9 +3,17 @@
 
 #include "Y_PlayerController.h"
 #include "Y_GameInstance.h"
+#include "Y_EventWidget.h"
 #include "Y_HUD.h"
 
 AY_PlayerController* AY_PlayerController::ThisPlayerController = nullptr;
+
+void AY_PlayerController::BeginEvent(TSharedPtr<class Y_EventInfo> EventInfo)
+{
+	EventWidget->LoadInfo(EventInfo);
+	EventWidget->PullEvent(false);
+	
+}
 
 void AY_PlayerController::BeginPlay()
 {

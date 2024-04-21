@@ -108,8 +108,9 @@ int32 Y::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y
 			FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 2), TriggerAction, TryAttack);
 		}
 	}
-	FromCharacter->Update();
-	ToCharacter->Update();
+
+	if(IsValid(FromCharacter))FromCharacter->Update();
+	if (IsValid(ToCharacter))ToCharacter->Update();
 	//FBuffLog::FightLogs.Add(MoveTemp(BuffLog));
 	return UsingCondition;
 }
