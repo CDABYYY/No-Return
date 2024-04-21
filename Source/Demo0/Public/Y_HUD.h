@@ -21,12 +21,20 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UY_TimeLine* TimeLine;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FText FlowingMessage;
+
+	void FlowMessage(FText NewMessage, int32 color);
+
 	UFUNCTION(BlueprintImplementableEvent)
-	void NoticeMessage(FName message, int color);
+	void NoticeMessage(FName message, int32 color);
 
 	UFUNCTION(BlueprintCallable)
 	void HUDInit();
 
 	UFUNCTION(BlueprintCallable)
 	float GetProcess();
+
+	UFUNCTION(BlueprintCallable)
+	void ExecuteSkill();
 };

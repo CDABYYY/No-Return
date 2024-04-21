@@ -9,6 +9,10 @@
 #include "Y_Floor.h"
 #include "Y_Character.h"
 #include "Y.h"
+#include "Y_PlayerController.h"
+#include "Y_MapWidget.h"
+#include "Y_CardInfo.h"
+#include "Y_Fighting.h"
 #include "Engine/LocalPlayer.h"
 
 // Sets default values
@@ -62,7 +66,10 @@ void ACameraPawn::BeginPlay()
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("GameInstance Connect Successfully!"));
 		}
 	}
-	
+	//Temp
+	Y::GetController()->UpdateMap();
+	Y::GetController()->MapWidget->PullMap(false);
+	Y::GetController()->LoadHUD();
 }
 
 // Called every frame
@@ -108,17 +115,22 @@ void ACameraPawn::MouseLeftPress()
 						HitCard->Clicked();
 					}
 					else if (AY_Floor* HitFloor = Cast<AY_Floor>(HitActor)) {
+						Y::GetMainCharacter()->ChangeFacing(HitFloor->SerialNumber - Y::GetMainCharacter()->StandFloor->SerialNumber);
 						if (ChoosedFloor != nullptr)ChoosedFloor->SetColor("None");
 						ChoosedFloor = HitFloor;
 						HitFloor->Clicked();
 						if (ChoosedCard != nullptr && ChoosedCard->AcceptFloor(ChoosedFloor)) {
 							ChoosedCard->Play();
-							ChoosedCard->SetColor(TEXT("None")); 
+							if (!IsValid(Y::GetMainCharacter())) {
+								return;
+							}
+							//ChoosedCard->SetColor(TEXT("None")); 
 
-							Y::GetMainCharacter()->CharacterAttackTime += ChoosedCard->CardCost;
-							Y::GetGameInstance()->AddAtk(Y::GetMainCharacter());
+							Y::GetMainCharacter()->CharacterAttackTime += ChoosedCard->Info->CurrentCost;
+							Y::GetMainCharacter()->ChangeAttackTime(Y::GetMainCharacter()->CharacterAttackTime);
+							//Y::GetGameInstance()->AddAtk(Y::GetMainCharacter());
 
-							AY_Card::UseCard(ChoosedCard);
+							Y::GetGameInfo()->UseCard(ChoosedCard);
 							ChoosedCard = nullptr;
 							for (auto& f : UY_GameInstance::YGI->Floors) {
 								if (f != nullptr)f->SetColor(TEXT("None"));

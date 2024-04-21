@@ -15,6 +15,11 @@ Y_EnemyInfo::~Y_EnemyInfo()
 {
 }
 
+void Y_EnemyInfo::Init(int32 Level)
+{
+    EnemyLevel = Level;
+}
+
 int32 Y_EnemyInfo::GetRandomAction()
 {
     TArray<float> Weights;
@@ -50,9 +55,30 @@ void Y_EnemyInfo::EnemyDead()
     GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Dead")); 
 }
 
+Y_CharacterAction::Y_CharacterAction()
+{
+    OriginalCost = CurrentCost = 10;
+    ActionID = 0;
+}
+
+AY_Character* Y_CharacterAction::GetOwner()
+{
+    return OwnerEnemy->Owner;
+}
+
+void Y_CharacterAction::Init(Y_EnemyInfo* Owner)
+{
+    OwnerEnemy = Owner;
+}
+
+float Y_CharacterAction::GetRate()
+{
+    return (float)CurrentCost / OriginalCost;
+}
+
 float Y_CharacterAction::GetWeight()
 {
-    return 10;
+    return 0;
 }
 
 void Y_CharacterAction::ActionChoosed()
@@ -69,3 +95,4 @@ FText Y_CharacterAction::LogDescript()
 {
     return FText::FromString(TEXT("Log"));
 }
+

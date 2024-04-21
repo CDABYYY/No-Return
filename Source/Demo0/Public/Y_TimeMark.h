@@ -18,6 +18,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	int ExecuteTime;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_TimeLine* Owner;
+
 	UFUNCTION(BlueprintCallable)
 	float GetRelativePosition();
 

@@ -29,17 +29,43 @@ class DEMO0_API UY_EventWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+
+	TSharedPtr<class Y_EventInfo> Info;
+
 	UFUNCTION(BlueprintCallable)
 	void EventInit();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	UUserWidget* CreateChoiceUI(FChoiceStruct& ChoiceI1nfo);
+	class UY_ChoiceWidget* CreateChoiceUI();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PullEvent(bool Reverse);
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	FString EventDescription;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TArray<UUserWidget*> ChoiceWidgets;
+	FText EventDescription;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FChoiceStruct> ChoiceAction;
+	UTexture2D* EventPicture;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TArray<class UY_ChoiceWidget*> ChoiceWidgets;
+
+	void LoadInfo(TSharedPtr<class Y_EventInfo> LoadingInfo);
+};
+
+class DEMO0_API Y_EventInfo {
+public:
+	Y_EventInfo();
+
+	virtual ~Y_EventInfo() {};
+
+	class UY_EventWidget* Owner;
+
+	FText EventDescription();
+
+	UTexture2D* Picture();
+
+	TArray<TSharedPtr<class Y_ChoiceInfo>> Choices;
+
+	virtual void EndEvent();
 };

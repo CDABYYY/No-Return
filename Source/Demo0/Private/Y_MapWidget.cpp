@@ -71,12 +71,13 @@ void UY_MapWidget::ForwardRoom(UY_RoomWidget* Room)
         p -= l;
         lt++;
     }
-    for (auto& w : pway) {
-        if ((w >> 10) == ((lt << 10) + p + 1)) {
-            plevel[p0 + w % (1 << 10)]->SetArrivable();
+    //Default. Need Next Try
+    //for (auto& w : pway) {
+    //    if ((w >> 10) == ((lt << 10) + p + 1)) {
+    //        plevel[p0 + w % (1 << 10)]->SetArrivable();
 
-        }
-    }
+    //    }
+    //}
     for (int32 i = 0; i < p0; i++) {
         plevel[i]->Passed();
     }

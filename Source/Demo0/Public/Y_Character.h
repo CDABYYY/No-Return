@@ -54,16 +54,33 @@ public:
 	int32 CharacterID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 Facing = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	float Rotating = 90;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	float ActionRate = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	class UY_BuffBar* BuffBar;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidgetComponent* BuffWidget;
+
 	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class Y_StatusBar* Buffs;
 
+	virtual bool ChangeFacing(int32 ToChange);
+
 	//UFUNCTION(BlueprintCallable)
 	virtual int32 ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition,FString TriggerAction, bool TryAttack = false);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Update();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Attack();
@@ -73,6 +90,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void CharacterLogicalMove(class AY_Floor* TargetFloor);
+
+	//UFUNCTION(BlueprintCallable)
+	virtual void AddBuffImmediately(TSharedPtr<class Y_Buff> AddedBuff);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeAttackTime(int32 ChangedTime);

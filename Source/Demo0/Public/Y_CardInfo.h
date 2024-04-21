@@ -9,7 +9,7 @@
  */
 class DEMO0_API Y_CardInfo
 {
-protected:
+public:
 
 	virtual int32 GetCost();
 
@@ -23,17 +23,24 @@ protected:
 
 	virtual UTexture2D* GetPicture();
 
+	virtual FText GetName();
+
 public:
 	Y_CardInfo();
 	virtual ~Y_CardInfo();
 
+	int32 UsedType;
+	int32 CardID;
+
 	int32 OriginalCost;
 	int32 CurrentCost;
 	FName UsingMontageName;
-	FName CardName;
+	FText CardName;
 	UTexture2D* UsingPicture;
 	FText CurrentCardDescribe;
 	FText CurrentPointDescribe;
+
+	int32 Weight = 0;
 
 	class AY_Card* Owner;
 

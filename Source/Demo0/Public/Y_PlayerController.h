@@ -51,6 +51,16 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateMap();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void LoadMap();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void EndRoom();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void LoadHUD();
+
 protected:
 	virtual void BeginPlay() override;
 };

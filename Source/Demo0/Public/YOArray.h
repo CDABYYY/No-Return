@@ -69,14 +69,15 @@ public:
 
     void RemoveFirst(T& t)
     {
-        for (size_t i = 0; i < Data.Num(); i++)
-        {
-            if (Data[i] == t)
-            {
-                Data.RemoveAt(i);
-                break;
-            }
-        }
+        Data.RemoveSingle(t);
+        //for (int32 i = 0; i < Data.Num(); i++)
+        //{
+        //    if (Data[i] == t)
+        //    {
+        //        Data.RemoveAt(i);
+        //        break;
+        //    }
+        //}
     }
     void RemoveAll(T& t) {
         Data.Remove(t);

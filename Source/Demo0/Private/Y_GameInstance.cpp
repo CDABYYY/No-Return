@@ -14,6 +14,12 @@
 #include "Y_CardInfo.h"
 #include "Y_EnemyInfo.h"
 
+#include "Y_ClassBase.h"
+
+
+#include "IImageWrapper.h"
+#include "IImageWrapperModule.h"
+
 UY_GameInstance* UY_GameInstance::YGI = nullptr;
 
 
@@ -35,19 +41,30 @@ UY_GameInstance::UY_GameInstance()
 
 	FightInfo = MakeShared<Y_Fighting>();
 
-	Y::BuffInfos().Add(0, Y::StoreClass<Y_Buff, Y_Buff>());
-	Y::CardInfos().Add(0, Y::StoreClass<Y_CardInfo, Y_CardInfo>());
-	Y::CharacterInfos().Add(0, Y::StoreClass<Y_EnemyInfo, Y_EnemyInfo>());
-	Y::FloorInfos().Add(0, Y::StoreClass<Y_FloorInfo, Y_FloorInfo>());
-	Y::RoomInfos().Add(0, Y::StoreClass<Y_RoomInfo, Y_RoomInfo>());
 
+	Y::LoadBuff<Y_Buff>(0);
+	Y::LoadCard<Y_CardInfo>(0);
+	Y::LoadCharacter<Y_EnemyInfo>(0);
+	Y::LoadFloor<Y_FloorInfo>(0);
+	Y::LoadRoom<Y_RoomInfo>(0);
+
+	LoadY_Base();
+
+	//TEMP
+	FightInfo->ReadyRooms.Add(Y::RoomClass[1]->NewObject());
+
+	//TEMP
 	for(int i = 0;i<10;i++)
-	FightInfo->UsingCards.Add(MakeShared<Y_CardInfo>());
+	FightInfo->UsingCards.Add(Y::CardClass[1]->NewObject());
+
+	FightInfo->MCSkill = MakeShared<NormalSkill>();
 }
 
 
 void UY_GameInstance::EndRoom()
 {
+	Y::Log(0, TEXT("EndRoom"));
+
 	if (IsValid(Y::GetMainCharacter()))Y::GetMainCharacter()->Destroy();
 	Y::GetMainCharacter() = nullptr;
 	for (auto& p : Y::GetEnemys())if (IsValid(p))p->Destroy();
@@ -65,6 +82,7 @@ void UY_GameInstance::ChangeTopoRate(float MultiplyRate)
 {
 	TopoRate *= MultiplyRate;
 }
+
 
 void UY_GameInstance::AddAtk(AY_Character* owner)
 {
@@ -101,6 +119,9 @@ void UY_GameInstance::HelpTick(float DeltaTime)
 				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::AfterTick, TEXT("Tick"));
 			}
 		}
+		Y::GetGameInfo()->EventBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->EventBuffs, Y_Buff::Ticking, TEXT("Tick"));
+		Y::GetGameInfo()->EquipmentBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->EquipmentBuffs, Y_Buff::Ticking, TEXT("Tick"));
+		Y::GetGameInfo()->ToExecuteBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->ToExecuteBuffs, Y_Buff::Ticking, TEXT("Tick"));
 	}
 	//while (AtkOrder.Num() > 0) {
 	//	if(!IsValid(AtkOrder[0]))
@@ -124,3 +145,70 @@ void UY_GameInstance::DeleteAtk(AY_Character* owner)
 }
 
 
+UTexture2D* UY_GameInstance::LoadPicture(const FString& FilePath)
+{
+	if (Pictures.Contains(FilePath))
+		return *Pictures.Find(FilePath);
+	//判断地址为空
+	auto& ImagePath = FilePath;
+	if (ImagePath.IsEmpty()) {
+		return nullptr;
+	}
+	if (!ImagePath.EndsWith(".png") && !ImagePath.EndsWith(".jpg") && !ImagePath.EndsWith(".jpeg")) {
+		Y::Log(0, TEXT("LoadSuccessfully"));
+		auto P =  LoadObject<UTexture2D>(nullptr, ImagePath.GetCharArray().GetData());
+		if (IsValid(P))
+		{
+			Pictures.Add(FilePath, P);
+			return P;
+		}
+	}
+
+	//判断是否存在文件,文件是否能转为数组
+	TArray<uint8> CompressedData;
+	if (!FFileHelper::LoadFileToArray(CompressedData, *ImagePath)) {
+		return nullptr;
+	}
+
+	//判断文件格式
+	EImageFormat imageformat = EImageFormat::Invalid;
+	if (ImagePath.EndsWith(".png"))
+		imageformat = EImageFormat::PNG;
+	else if (ImagePath.EndsWith(".jpg") || ImagePath.EndsWith(".jpeg"))
+		imageformat = EImageFormat::JPEG;
+	else
+	{
+		return nullptr;
+	}
+
+	//创建图片封装器
+	IImageWrapperModule& imageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(FName("IMageWrapper"));
+	TSharedPtr<IImageWrapper> imageWrapper = imageWrapperModule.CreateImageWrapper(imageformat);
+
+	//解码图片
+	//获取图片信息
+	if (!imageWrapper->SetCompressed(CompressedData.GetData(), CompressedData.Num())) {
+
+		return nullptr;
+	}
+
+	//创建纹理
+	TArray<uint8> UncompressedRGBA;
+	if (!imageWrapper->GetRaw(ERGBFormat::RGBA, 8, UncompressedRGBA))
+		return nullptr;
+
+	UTexture2D* texture2d = UTexture2D::CreateTransient(imageWrapper->GetWidth(), imageWrapper->GetHeight(), PF_R8G8B8A8);
+	if (!texture2d)
+		return nullptr;
+
+	//赋值纹理
+	void* texturedata = texture2d->GetPlatformData()->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
+	FMemory::Memcpy(texturedata, UncompressedRGBA.GetData(), UncompressedRGBA.Num());
+	texture2d->GetPlatformData()->Mips[0].BulkData.Unlock();
+
+	texture2d->UpdateResource();
+
+	Pictures.Add(FilePath, texture2d);
+
+	return texture2d;
+}

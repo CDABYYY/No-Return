@@ -10,16 +10,28 @@
 #include "CameraPawn.h"
 #include "Y_CardInfo.h"
 #include "Y_EnemyInfo.h"
+#include "Y_Settle.h"
+#include "Y_TimeLine.h"
 #include "Y.h"
 
 Y_Fighting::Y_Fighting()
 {
 	Equipments.reset([](TSharedPtr<Y_Equipment>& a, TSharedPtr<Y_Equipment>& b) 
 		{return a->EquipmentPriority < b->EquipmentPriority; });
+
 }
 
 Y_Fighting::~Y_Fighting()
 {
+}
+
+void Y_Fighting::ExecuteToAllCharacter(TSharedPtr<class Y_Buff> ToExecuteBuff)
+{
+	ToExecuteBuff->execute(Y::GetMainCharacter(), Y::GetMainCharacter(), *Y::GetMainCharacter()->Buffs, Y_Buff::CharacterSpawn, TEXT("Spawn Execute"));
+	for (auto& p : Y::GetEnemys()) {
+		ToExecuteBuff->execute(p, p, *p->Buffs, Y_Buff::CharacterSpawn, TEXT("Spawn Execute"));
+	}
+	ToExecuteBuffs.AddBuff(ToExecuteBuff);
 }
 
 void Y_Fighting::BeginFight()
@@ -27,6 +39,8 @@ void Y_Fighting::BeginFight()
 	EventBuffs.ExecuteBuffs(nullptr, nullptr, EventBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	EquipmentBuffs.ExecuteBuffs(nullptr, nullptr, EquipmentBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	//ToExecuteBuffs.ExecuteBuffs(nullptr, nullptr, ToExecuteBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
+	SettleInfo = MakeShared<Y_SettleInfo>();
+
 	for (auto& p : UsingCards) {
 		ToDrawCards.Add(p);
 	}
@@ -50,9 +64,13 @@ void Y_Fighting::AfterFight()
 	Y::GetCards().Empty();
 	for (auto& p : Y::GetFloors())if (IsValid(p))p->Destroy();
 	Y::GetFloors().Empty();
+
+	UY_TimeLine::YTimeLine->EndRoom();
+	
 	ToDrawCards.Empty();
 	DiscardedCards.Empty();
 	InHandCards.Empty();
+	ExhaustCards.Empty();
 
 	Y::GetPlayer()->ClickAble = true;
 }
@@ -76,6 +94,7 @@ void Y_Fighting::DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpaw
 		ToDrawCard = Y::getRandom(ToDrawCards);
 	}
 	ToDrawCards.Remove(ToDrawCard);
+	ToDrawCard->Drawed();
 	SpawnCard(ToDrawCard);
 }
 
@@ -95,11 +114,23 @@ void Y_Fighting::DrawCard(int32 DrawCount)
 }
 
 
-void Y_Fighting::UseCard(AY_Card* UsedCard)
+void Y_Fighting::UseCard(AY_Card* UsedCard, int32 LeaveType)
 {
+	if (LeaveType != 0)
+		UsedCard->Info->Discarded();
+	UsedCard->Info->Leave();
 	UsedCard->Info->Owner = nullptr;
 	InHandCards.Remove(UsedCard->Info);
-	DiscardedCards.Add(UsedCard->Info);
+	if(UsedCard->Info->UsedType == 0)
+	{
+		DiscardedCards.Add(UsedCard->Info);
+	}
+	else if (UsedCard->Info->UsedType == 1) {
+		ExhaustCards.Add(UsedCard->Info);
+	}
+	else if (UsedCard->Info->UsedType == 3) {
+
+	}
 	int32 pos = Y::GetCards().Find(UsedCard);
 	if (pos >= 0)
 	{
@@ -111,6 +142,7 @@ void Y_Fighting::UseCard(AY_Card* UsedCard)
 		}
 		UsedCard->Destroy();
 	}
+	Y::GetCards().Remove(UsedCard);
 }
 
 AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int32 SerialNumber, FName ActorClass)
@@ -136,11 +168,12 @@ AY_Card* Y_Fighting::SpawnCard(TSharedPtr<class Y_CardInfo> ToSpawnCard, FName A
 {
 	FVector AF = Y::GetPlayer()->MyCamera->GetComponentLocation();
 	AF += FVector(270, -208 + 52 * 15, -90);//Base Location
-	AY_Card* NewCard = Cast<AY_Card>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->CardClasses.Find(ActorClass.ToString())->Get(), &AF));
+	AY_Card* NewCard = Cast<AY_Card>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->CardClasses.Find(ActorClass)->Get(), &AF));
 	NewCard->ToPosition = Y::GetCards().Num() * 52;
 	NewCard->NowPosition = -4 * 52 + 15 * 52;
 	ToSpawnCard->Owner = NewCard;
 	NewCard->Info = ToSpawnCard;
+	NewCard->Init();
 	Y::GetCards().Add(NewCard);
 	InHandCards.Add(ToSpawnCard);
 	return NewCard;
@@ -154,11 +187,16 @@ AY_Character* Y_Fighting::SpawnCharacter(TSharedPtr<Y_EnemyInfo> ToSpawnCharacte
 	else 
 		ToRotator += FRotator(0, -90, 0);
 	FVector SpawnVector = FromFloor->TargetLocation();
-	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->EnemyClasses.Find(ActorClass.ToString())->Get(), &SpawnVector, &ToRotator));
+	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->EnemyClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
 	NewCharacter->StandFloor = FromFloor;
 	FromFloor->StandCharacter = NewCharacter;
 	NewCharacter->Info = ToSpawnCharacter;
 	ToSpawnCharacter->Owner = NewCharacter;
+	if (FromFloor->SerialNumber > Y::GetMainCharacter()->StandFloor->SerialNumber)
+	{
+		NewCharacter->Facing = -1;
+		NewCharacter->Rotating = -90;
+	}
 	Y::GetEnemys().Add(NewCharacter);
 	LivingEnemys.Add(ToSpawnCharacter);
 	SpawnCharacter(NewCharacter);
@@ -170,7 +208,7 @@ AY_Character* Y_Fighting::SpawnMC(AY_Floor* FromFloor, FName ActorClass)
 	FRotator ToRotator(Y::GetRotation());
 	ToRotator += FRotator(0, 90, 0);
 	FVector SpawnVector = FromFloor->TargetLocation();
-	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->AllyClasses.Find(ActorClass.ToString())->Get(), &SpawnVector, &ToRotator));
+	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->AllyClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
 	NewCharacter->StandFloor = FromFloor;
 	FromFloor->StandCharacter = NewCharacter;
 	Y::GetMainCharacter() = NewCharacter;

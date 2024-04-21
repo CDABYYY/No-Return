@@ -6,14 +6,24 @@
 #include "Y_StatusBar.h"
 #include "Y_Character.h"
 #include "Y_RoomWidget.h"
+#include "Y_BuffIcon.h"
 
 Y_Buff::Y_Buff()
 {
-	TriggerCondition = Injuring | DetectDeath;
-	BuffCount = 0;
-	BuffNumber = 1;
-	BuffOrder = 1000;
+	TriggerCondition = Buffing;
+	BuffProperty = 0;
+	BuffCount = 1;
+	BuffAsType = BuffID = 0;
+	BuffOrder = 0;
 	BuffLevel = 0;
+	Addable = true;
+	Living = true;
+	OwnerCharacter = nullptr;
+	ShowAble = true;
+	IconWidget = nullptr;
+	BuffDescribe = Y::PrintText(TEXT("Buff Describe"));
+	//FString SP = TEXT("/Script/Engine.Texture2D'/Game/Resource/Png/JayceThunderingBlow.JayceThunderingBlow'");
+	//BuffPicture = Y::LoadPicture(SP);
 }
 
 void Y_Buff::Init(int32 BuffCount0)
@@ -23,6 +33,16 @@ void Y_Buff::Init(int32 BuffCount0)
 
 Y_Buff::~Y_Buff()
 {
+}
+
+FText Y_Buff::GetDescribe()
+{
+	return BuffDescribe;
+}
+
+UTexture2D* Y_Buff::GetPicture()
+{
+	return BuffPicture;
 }
 
 
@@ -35,7 +55,7 @@ int32 Y_Buff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_
 	if (ExecuteCondition & DetectDeath) {
 		if (ToCharacter->Health <= 0)
 		{
-			return BuffNumber;
+			return BuffID;
 		}
 		else return 0;
 	}
@@ -53,16 +73,32 @@ FText Y_Buff::printBuff(bool PrintLog) const
 void Y_Buff::AddBuff(Y_Buff* OtherBuff)
 {
 	BuffCount += OtherBuff->BuffCount;
+	if (BuffCount == 0)
+	{
+		RemoveFromCharacter();
+	}
+	if (Living == false) {
+		Living = true;
+	}
+}
+
+void Y_Buff::ReplaceBuff(Y_Buff* OtherBuff)
+{
+	BuffCount = OtherBuff->BuffCount;
+	IconWidget = OtherBuff->IconWidget;
+	IconWidget->Buff = AsShared();
 }
 
 void Y_Buff::AddToCharacter(AY_Character* TargetCharacter)
 {
-	TargetCharacter->Buffs->AddBuff(AsShared());
 	OwnerCharacter = TargetCharacter;
+	TargetCharacter->Buffs->AddBuff(AsShared(),1);
 }
 
 void Y_Buff::RemoveFromCharacter()
 {
+	Living = false;
+	//OwnerCharacter->Buffs->RemoveBuff(AsShared());
 }
 
 bool Y_Buff::AcceptBuffAdd(Y_Buff* OtherBuff)
@@ -90,7 +126,7 @@ Y_BuffR::Y_BuffR(class Y_RoomInfo* BindWidget)
 	TriggerCondition = AfterDeath;
 	BuffOrder = 1000;
 	BuffCount = 1;
-	BuffNumber = 10001;
+	BuffID = 10001;
 }
 
 int32 Y_BuffR::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)

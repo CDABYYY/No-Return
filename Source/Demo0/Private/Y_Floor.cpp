@@ -57,3 +57,38 @@ void AY_Floor::SetColor(FName MaterialName)
 	}
 }
 
+void AY_Floor::Pass(AY_Character* Character)
+{
+	Info->Pass(Character);
+}
+
+void AY_Floor::Enter(AY_Character* Character)
+{
+	Info->Enter(Character);
+}
+
+void AY_Floor::Leave(AY_Character* Character)
+{
+	Info->Leave(Character);
+}
+
+Y_FloorInfo::Y_FloorInfo()
+{
+	FloorID = 0;
+}
+
+Y_FloorInfo::~Y_FloorInfo()
+{
+}
+
+void Y_FloorInfo::Pass(AY_Character* Character)
+{
+}
+
+void Y_FloorInfo::Enter(AY_Character* Character)
+{
+}
+
+void Y_FloorInfo::Leave(AY_Character* Character)
+{
+}

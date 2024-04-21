@@ -13,10 +13,17 @@ void UY_TimeLine::TimeLineInit()
 {
 	YTimeLine = this;
 	GameInstance = UY_GameInstance::YGI;
-	UE_LOG(LogTemp, Warning, TEXT("TimeLineInit"));
 
 	TimeMarks.reset([](UY_TimeMark*& a1, UY_TimeMark*& a2) 
 		{return a1->ExecuteTime < a2->ExecuteTime; });
+}
+
+void UY_TimeLine::EndRoom()
+{
+	for (auto& p : TimeMarks) {
+		p->RemoveFromParent();
+	}
+	TimeMarks.Data.Empty();
 }
 
 void UY_TimeLine::AddCharacter(AY_Character* AddedCharacter)
@@ -29,6 +36,7 @@ void UY_TimeLine::AddCharacter(AY_Character* AddedCharacter)
 	}
 	UY_TimeMark* tm = NewTimeMark();
 	tm->TimeMarkInit();
+	tm->Owner = this;
 	tm->ExecuteTime = AddedCharacter->CharacterAttackTime;
 	tm->AddProfile(AddedCharacter);
 	TimeMarks.Add(tm);
@@ -45,7 +53,7 @@ void UY_TimeLine::UpdateTimeMark()
 {
 	if (TimeMarks.Num() != 0 && UY_GameInstance::YGI->RunTime * 10 > (*(TimeMarks.begin()))->ExecuteTime) {
 		(*TimeMarks.begin())->ExecuteMark();
-		TimeMarks.RemoveFirst(*TimeMarks.begin());
+		//TimeMarks.RemoveFirst(*TimeMarks.begin());
 	}
 }
 

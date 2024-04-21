@@ -12,12 +12,19 @@
 class DEMO0_API Y_CharacterAction
 {
 public:
-	Y_CharacterAction() {};
+	Y_CharacterAction();
 	virtual ~Y_CharacterAction() {};
 	int32 OriginalCost;
 	int32 CurrentCost;
+	int32 ActionID;
 	FName UsingMontageName;
 	class Y_EnemyInfo* OwnerEnemy;
+
+	virtual class AY_Character* GetOwner();
+
+	virtual void Init(class Y_EnemyInfo* Owner);
+
+	virtual float GetRate();
 
 	virtual float GetWeight();
 
@@ -35,9 +42,11 @@ public:
 	Y_EnemyInfo();
 	virtual ~Y_EnemyInfo();
 
+	virtual void Init(int32 Level);
 	UTexture2D* EnemyProfile;
 	int32 MaxHealth;
 	int32 CurrentHealth;
+	int32 EnemyLevel;
 	TArray<TSharedPtr<Y_CharacterAction>> Actions;
 	class AY_Character* Owner;
 

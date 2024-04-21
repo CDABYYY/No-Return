@@ -2,11 +2,46 @@
 
 
 #include "Y_EventWidget.h"
+#include "Y_ChoiceWidget.h"
 
 void UY_EventWidget::EventInit()
 {
-	for (auto& s:ChoiceAction)
+	EventPicture = Info->Picture();
+	EventDescription = Info->EventDescription();
+	for (auto& s:Info->Choices)
 	{
-		ChoiceWidgets.Add(CreateChoiceUI(s));
+		auto PC = CreateChoiceUI();
+		PC->Info = s;
+		PC->Init();
+		ChoiceWidgets.Add(PC);
 	}
+}
+
+void UY_EventWidget::LoadInfo(TSharedPtr<class Y_EventInfo> LoadingInfo)
+{
+	for (auto& p : ChoiceWidgets) {
+		p->RemoveFromParent();
+	}
+	if (LoadingInfo != nullptr) {
+		Info = LoadingInfo;
+		EventInit();
+	}
+}
+
+Y_EventInfo::Y_EventInfo()
+{
+}
+
+FText Y_EventInfo::EventDescription()
+{
+	return FText();
+}
+
+UTexture2D* Y_EventInfo::Picture()
+{
+	return nullptr;
+}
+
+void Y_EventInfo::EndEvent()
+{
 }

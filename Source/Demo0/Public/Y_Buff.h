@@ -88,27 +88,45 @@ public:
 
 	virtual void Init(int32 BuffCount);
 	virtual ~Y_Buff();
-	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	FString BuffName;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool ConnectAble;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 BuffLevel;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	
+	FText BuffName;
+	
+	int32 BuffLevel;//Whether it can be cleared
+	
 	int32 BuffCount;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 BuffNumber;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 BuffOrder;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	
+	int32 BuffAsType;
+
+	int32 BuffID;
+	
+	int32 BuffOrder;//Deside the Order which buff execute. Smaller Order will execute earlier.
+	
 	class AY_Character* OwnerCharacter;
 
-	int32 BuffProperty;
+	int32 BuffProperty;//Buff belong to Damage(1),Move(2),Buff(3)
 
-	FString CountName;
-	int32 TriggerCondition;
-	bool Addable;
-	bool Living;
+	TSet<int32> BuffExtend;
+
+	FString CountName;//Temporary Abandoned.
+
+	int32 TriggerCondition;//When the Buff Execute.
+
+	bool Addable;//For Normal Buffs
+
+	//Waring:: Avoid Remove Buff From Character. Just Make It UnLiving.
+	bool Living;//If Buff Can Execute And Show;
+
+	bool ShowAble;
+	
+	FText BuffDescribe;
+
+	UTexture2D* BuffPicture;
+
+	class UY_BuffIcon* IconWidget;
+
+	virtual FText GetDescribe();
+
+	virtual UTexture2D* GetPicture();
 
 	enum : int32
 	{
@@ -175,8 +193,9 @@ public:
 
 	virtual FText printBuff(bool PrintLog = false)const;
 	virtual void AddBuff(Y_Buff* OtherBuff);
-	virtual void AddToCharacter(class AY_Character* TargetCharacter);
-	virtual void RemoveFromCharacter();
+	virtual void ReplaceBuff(Y_Buff* OtherBuff);
+	virtual void AddToCharacter(class AY_Character* TargetCharacter);//Buff will Added To Character Defaultly. Part For Special Effects.
+	virtual void RemoveFromCharacter();//Generally For Special Effects. Warning:This Fuction Will Generally Kill Self! If You Need Call it Safely, you should keep a TSharedPtr.
 	virtual bool AcceptBuffAdd(Y_Buff* OtherBuff);
 
 	void AddInExecuteLog();
@@ -186,10 +205,14 @@ public:
 class DEMO0_API Y_BuffL :public Y_Buff {
 public:
 	TDelegate<int32()> ToExecute;
+
 	Y_BuffL(int32 ExecuteCondition, TDelegate<int32()> ToBind) : ToExecute(ToBind) { TriggerCondition = ExecuteCondition; };
 
-	//template<typename Fun,typename...Vals>
-	//Y_BuffL(int32 ExecuteCondition, Fun&& lambda, Vals&&... vals) : { ToExecute.BindLambda(Forward(lambda), Forward(vals...)); TriggerCondition = ExecuteCondition; }
+	template<typename Fun>
+	Y_BuffL(int32 ExecuteCondition, Fun&& lambda) { ToExecute.BindLambda(Forward(lambda)); TriggerCondition = ExecuteCondition; }
+
+	template<typename Fun>
+	Y_BuffL(int32 ExecuteCondition, int32 Order, Fun&& lambda) { ToExecute.BindLambda(Forward(lambda)); TriggerCondition = ExecuteCondition; BuffOrder = Order; }
 
 	//template<typename Fun, typename...Vals>
 	//Y_BuffL(int32 ExecuteCondition, Fun*&& ObjectPtr, Vals&&... vals) : { ToExecute.BindUObject(Forward(ObjectPtr), Forward(vals...)); TriggerCondition = ExecuteCondition; }

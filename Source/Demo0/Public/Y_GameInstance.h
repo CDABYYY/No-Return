@@ -52,13 +52,13 @@ public:
 	void SetColor(UMeshComponent* MeshComponent, FName MaterialName);
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TMap<FString, TSubclassOf<class AY_Character>> AllyClasses;
+	TMap<FName, TSubclassOf<class AY_Character>> AllyClasses;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FString, TSubclassOf<class AY_Character>> EnemyClasses;
+	TMap<FName, TSubclassOf<class AY_Character>> EnemyClasses;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FString, TSubclassOf<class AY_Card>> CardClasses;
+	TMap<FName, TSubclassOf<class AY_Card>> CardClasses;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TMap<FName, TSubclassOf<class AY_Floor>> FloorClasses;
@@ -86,6 +86,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HaveRandoms;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FString, UTexture2D*> Pictures;
+
+	UFUNCTION(BlueprintCallable)
+	UTexture2D* LoadPicture(const FString& FilePath);
 
 	TSharedPtr<class Y_Fighting> FightInfo;
 

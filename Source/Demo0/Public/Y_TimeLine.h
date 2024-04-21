@@ -33,6 +33,9 @@ public:
 	void TimeLineInit();
 
 	UFUNCTION(BlueprintCallable)
+	void EndRoom();
+
+	UFUNCTION(BlueprintCallable)
 	void AddCharacter(class AY_Character* AddedCharacter);
 
 	UFUNCTION(BlueprintCallable)

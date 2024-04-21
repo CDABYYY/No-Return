@@ -16,7 +16,9 @@ public:
 	bool Arriveable;
 
 	//To Cooperate Buff.
-	int32 NeedKills;
+	int32 NeedKills = 0;
+
+	int32 RoomID;
 
 	UTexture2D* UsingTexture;
 

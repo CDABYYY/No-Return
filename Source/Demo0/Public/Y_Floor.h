@@ -45,9 +45,30 @@ public:
 	void SetColor(FName MaterialName);
 
 	TSharedPtr<class Y_FloorInfo> Info;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Pass(class AY_Character* Character);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Enter(class AY_Character* Character);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Leave(class AY_Character* Character);
 };
 
 class DEMO0_API Y_FloorInfo {
 public:
+	int32 FloorID;
+
 	class AY_Floor* Owner;
+
+	Y_FloorInfo();
+
+	virtual ~Y_FloorInfo();
+
+	virtual void Pass(class AY_Character* Character);
+
+	virtual void Enter(class AY_Character* Character);
+
+	virtual void Leave(class AY_Character* Character);
 };

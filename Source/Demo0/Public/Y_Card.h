@@ -46,6 +46,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	int32 NowCost;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	FText CardDescibe;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	int32 CardID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	FText CardLabel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	UTexture2D* Picture;
+
+	UFUNCTION(BlueprintCallable)
+	void Init();
+
 	TSharedPtr<class Y_CardInfo> Info;
 
 	UFUNCTION(BlueprintCallable)

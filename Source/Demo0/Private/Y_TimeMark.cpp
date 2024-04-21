@@ -5,6 +5,7 @@
 #include "Y_Profile.h"
 #include "Y_GameInstance.h"
 #include "Y_Character.h"
+#include "Y_TimeLine.h"
 
 
 float UY_TimeMark::GetRelativePosition()
@@ -26,19 +27,21 @@ void UY_TimeMark::AddProfile(AY_Character* ProfileAdded)
 void UY_TimeMark::RemoveProfile(AY_Character* ProfileRemoved)
 {
 	Profiles.RemoveFirst(ProfileRemoved);
+	if (Profiles.Num() == 0) {
+		UY_TimeMark* TM = this;
+		Owner->TimeMarks.RemoveFirst(TM);
+		RemoveFromParent();
+	}
 }
 
 void UY_TimeMark::ExecuteMark()
 {
-	while (Profiles.Num() != 0) {
+	if (Profiles.Num() != 0) {
 		(*(Profiles.begin()))->Attack();
-		auto tmpCharacter = *Profiles.begin();
-		Profiles.RemoveFirst(*(Profiles.begin()));
-		{
-			if (tmpCharacter->CharacterID < (1 << 10))return;
-		}
+		//auto tmpCharacter = *Profiles.begin();
+		//Profiles.RemoveFirst(*(Profiles.begin()));
 	}
-	RemoveFromParent();
+	//RemoveFromParent();
 }
 
 TArray<class AY_Character*>& UY_TimeMark::GetCharacters()

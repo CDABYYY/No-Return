@@ -24,6 +24,7 @@ AY_Enemy::AY_Enemy()
 void AY_Enemy::Attack()
 {
 	Info->EnemyAttack();
+	//Y::GetGameInstance()->AddAtk(this);
 	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, TEXT("Character Attack"));
 	//UE_LOG(LogTemp, Warning, TEXT("Enemy Attack"));
 	//ReadyAttack.ExecuteIfBound();

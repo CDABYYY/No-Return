@@ -45,6 +45,7 @@ void UY_RoomWidget::RoomInit()
 	Y::GetLocation() = FVector(0, 0, 300);
 	Y::GetRotation() = FRotator(0, 90, 0);
 	Info = MakeShared<Y_RoomInfo>();
+	Info->Owner = this;
 }
 
 void UY_RoomWidget::RoomClicked()
@@ -59,18 +60,17 @@ void UY_RoomWidget::RoomClicked()
 	auto TmpInfo = Info->RoomClicked();
 	while (TmpInfo != nullptr) {
 		Info = TmpInfo;
+		Info->Owner = this;
 		TmpInfo = Info->RoomClicked();
 	}
-	
-
 }
 
 void UY_RoomWidget::RoomClosed()
 {
 	Info->LeaveRoom();
-	Y::GetGameInfo()->AfterFight();
-	Y::GetController()->MapWidget->ForwardRoom(this);
-	Y::GetController()->MapWidget->PullMap(false);
+	//Need Fix(ForwardRoom Can't Use!)
+	//Y::GetController()->MapWidget->ForwardRoom(this);
+	Y::GetController()->EndRoom();
 }
 
 void UY_RoomWidget::FightBegin()
@@ -107,30 +107,7 @@ void UY_RoomWidget::FightBegin()
 
 void UY_RoomWidget::EventBegin()
 {
-	CurrentRoom = this;
 
-	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 250));
-	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
-
-	FRotator ActorRotator(0, 90, 0);
-
-	for (int32 i = 0; i < 10; i++) {
-		FVector FloorVector(130, -130 * 5 + i * 130, 64);
-		Y::GetFloors().Add((AY_Floor*)Y::GetPlayer()->GetWorld()->SpawnActor(AY_Floor::StaticClass(), &FloorVector));
-		Y::GetFloors()[i]->SerialNumber = i;
-	}
-
-	int MCnum = 2;
-	FVector AllyVector = Y::GetFloors()[MCnum]->TargetLocation() + FVector(0, 0, 90);
-	UY_GameInstance::YGI->MainCharacter = (AY_Ally*)Y::GetPlayer()->GetWorld()->SpawnActor(Y::GetGameInstance()->AllyClasses.Find(TEXT("Ally0"))->Get(), &AllyVector, &ActorRotator);
-	Y::GetMainCharacter()->StandFloor = Y::GetFloors()[MCnum];
-	Y::GetFloors()[MCnum]->StandCharacter = Y::GetMainCharacter();
-
-	int Enum = 7;
-	FVector EnemyVector = Y::GetFloors()[Enum]->TargetLocation() + FVector(0, 0, 88);
-	Y::GetEnemys().Add((AY_Enemy*)Y::GetPlayer()->GetWorld()->SpawnActor(Y::GetGameInstance()->EnemyClasses.Find(TEXT("Enemy0"))->Get(), &EnemyVector, &ActorRotator));
-	Y::GetEnemys()[0]->StandFloor = Y::GetFloors()[Enum];
-	Y::GetFloors()[Enum]->StandCharacter = Y::GetEnemys()[0];
 }
 
 void UY_RoomWidget::FightEnd()
@@ -174,27 +151,7 @@ void Y_RoomInfo::Passed()
 
 TSharedPtr<Y_RoomInfo> Y_RoomInfo::RoomClicked()
 {
-	//return Y::getRandom(Y::GetGameInfo()->ReadyRooms);
-
-	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
-	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
-	Y::GetPlayer()->ClickAble = false;
-
-	FRotator ActorRotator(0, 90, 0);
-
-	for (int32 i = 0; i < 10; i++) {
-		Y::GetGameInfo()->SpawnFloor(Y::FloorInfos().Find(0)->Get()->NewObject(), i);
-	}
-
-	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[2]);
-
-	auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterInfos().Find(0)->Get()->NewObject(), Y::GetFloors()[7]);
-	TC->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
-
-	Y::GetGameInfo()->DrawCard(5);
-	return nullptr;
-
-
+	return Y::getRandom(Y::GetGameInfo()->ReadyRooms);
 }
 
 void Y_RoomInfo::LeaveRoom()

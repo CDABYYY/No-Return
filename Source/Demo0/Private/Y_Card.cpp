@@ -92,9 +92,18 @@ void AY_Card::Clicked()
 void AY_Card::Play()
 {
 	Info->Play();
-	UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, true);
-	Y::GetMainCharacter()->CharacterLogicalMove(Y::GetPlayer()->ChoosedFloor);
-	DrawCard();
+	//UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, true);
+	//Y::GetMainCharacter()->CharacterLogicalMove(Y::GetPlayer()->ChoosedFloor);
+	//DrawCard();
+}
+
+void AY_Card::Init()
+{
+	CardDescibe = Info->GetCardDescribe();
+	CardCost = Info->GetCost();
+	Picture = Info->GetPicture();
+	CardID = Info->CardID;
+	CardLabel = Info->GetName();
 }
 
 void AY_Card::SetColor(FName MaterialName)

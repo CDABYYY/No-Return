@@ -14,16 +14,53 @@ class DEMO0_API UY_ChoiceWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	class UY_EventWidget* Owner;
+
+	TSharedPtr<class Y_ChoiceInfo> Info;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString DescriptionText;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TDelegate<void()>* ChoiceAction;
+	FText DescriptionText;
 
 	UFUNCTION(BlueprintCallable)
 	void ExecuteAction();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void ChoiceInit(struct FChoiceStruct& ChoiceInfo);
+	UFUNCTION(BlueprintCallable)
+	void Init();
+};
+
+class DEMO0_API Y_ChoiceInfo {
+public:
+	Y_ChoiceInfo();
+
+	virtual ~Y_ChoiceInfo() {};
+
+	class UY_ChoiceWidget* Owner;
+
+	virtual FText GetDescribe();
+
+	virtual TSharedPtr<class Y_EventInfo> Execute();
+};
+
+class DEMO0_API Y_ChoiceInfoL :public Y_ChoiceInfo {
+public:
+	TDelegate<void()> Action;
+
+	TSharedPtr<class Y_EventInfo> ToEvent;
+
+	FText Describe;
+
+	template<typename T>
+	Y_ChoiceInfoL(FText Description, T&& Lambda, TSharedPtr<class Y_EventInfo> NextEvent = nullptr) {
+		Describe = Description;
+		Action.BindLambda(Lambda);
+		ToEvent = NextEvent;
+	}
+	virtual FText GetDescribe()override {
+		return Describe;
+	}
+
+	virtual TSharedPtr<class Y_EventInfo> Execute()override {
+		Action.ExecuteIfBound();
+		return ToEvent;
+	}
 };

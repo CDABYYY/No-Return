@@ -40,9 +40,16 @@ UTexture2D* Y_CardInfo::GetPicture()
 	return UsingPicture;
 }
 
+FText Y_CardInfo::GetName()
+{
+	return CardName;
+}
+
 Y_CardInfo::Y_CardInfo()
 {
 	CurrentCost = OriginalCost = 10;
+	UsedType = 0;
+	CardID = 0;
 }
 
 Y_CardInfo::~Y_CardInfo()

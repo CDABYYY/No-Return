@@ -5,6 +5,7 @@
 #include "Y_GameInstance.h"
 #include "Y_StatusBar.h"
 #include "Y_Character.h"
+#include "CameraPawn.h"
 #include "Y_PlayerController.h"
 
 Y::Y()
@@ -14,6 +15,12 @@ Y::Y()
 Y::~Y()
 {
 }
+
+TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_CardInfo>>> Y::CardClass;
+TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_EnemyInfo>>> Y::CharacterClass;
+TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_Buff>>> Y::BuffClass;
+TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_RoomInfo>>> Y::RoomClass;
+TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_FloorInfo>>> Y::FloorClass;
 
 UY_GameInstance*& Y::GetGameInstance()
 {
@@ -101,6 +108,8 @@ int32 Y::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y
 			FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 2), TriggerAction, TryAttack);
 		}
 	}
+	FromCharacter->Update();
+	ToCharacter->Update();
 	//FBuffLog::FightLogs.Add(MoveTemp(BuffLog));
 	return UsingCondition;
 }
@@ -120,6 +129,16 @@ Y_Fighting* Y::GetGameInfo()
 	return GetGameInstance()->FightInfo.Get();
 }
 
+AY_Floor*& Y::GetChoosedFloor()
+{
+	return GetPlayer()->ChoosedFloor;
+}
+
+AY_Card*& Y::GetChoosedCard()
+{
+	return GetPlayer()->ChoosedCard;
+}
+
 float Y::getRandom()
 {
 	GetGameInstance()->HaveRandoms++;
@@ -129,6 +148,11 @@ float Y::getRandom()
 UWorld* Y::GetWorld()
 {
 	return GetController()->GetWorld();
+}
+
+UTexture2D* Y::LoadPicture(const FString& FilePath)
+{
+	return GetGameInstance()->LoadPicture(FilePath);
 }
 
 

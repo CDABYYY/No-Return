@@ -22,6 +22,10 @@ public:
 
 	static class Y_Fighting* GetGameInfo();
 
+	static class AY_Floor*& GetChoosedFloor();
+
+	static class AY_Card*& GetChoosedCard();
+
 	static TArray<class AY_Card*>& GetCards();
 
 	static TArray<class AY_Floor*>& GetFloors();
@@ -40,18 +44,31 @@ public:
 
 	static class UWorld* GetWorld();
 
-	template<typename ...Argv>
-	static void Log(bool test, const TCHAR Format[], Argv... Params) {
+	static UTexture2D* LoadPicture(const FString& FilePath);
+
+	template<typename FType,typename ...Argv>
+	static void Log(int32 TestColor, const FType& Format, Argv... Params) {
 		FString s = FString::Printf(Format, Params...);
-		GetGameInstance()->GetEngine()->AddOnScreenDebugMessage(-1, 10, FColor::Red, s);
-		//UE_LOG(LogTemp, Warning, Format, Params...);
+		if(TestColor == 0)
+		{
+			if(IsValid(GEngine))
+				GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, s);
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *s);
+		}
+		else {
+			if(IsValid(GEngine))
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, s);
+				UE_LOG(LogTemp, Error, TEXT("%s"), *s);
+		}
+
+		//::ELogVerbosity::
 	}
 
-	template<typename ...Argv>
-	static void Log(const TCHAR Format[], Argv... Params) {
+	template<typename FType,typename ...Argv>
+	static void Log(const FType& Format, Argv... Params) {
 		FString s = FString::Printf(Format, Params...);
-		GetGameInstance()->GetEngine()->AddOnScreenDebugMessage(-1, 5, FColor::Blue, s);
-		//UE_LOG(LogTemp, Warning, Format, Params...);
+		//GetGameInstance()->GetEngine()->AddOnScreenDebugMessage(-1, 5, FColor::Blue, s);
+		UE_LOG(LogTemp, Log, TEXT("%s"), *s);
 	}
 
 	template<typename T>
@@ -66,6 +83,22 @@ public:
 		return m.begin()->Key;
 	}
 	
+	template <typename FType,typename...Argv>
+	static FText PrintText(const FType& type, Argv... argv) {
+		return FText::FromString(FString::Printf(type, argv...));
+	}
+
+	template <typename T,typename...Argv>
+	static TSharedPtr<T> YMakeShared(Argv...argv) {
+		TSharedPtr<T> TmpP = MakeShared<T>();
+		TmpP->Init(argv...);
+		return TmpP;
+	}
+
+	template<typename T>
+	static TSharedPtr<T> YMakeShared() {
+		return MakeShared<T>();
+	}
 
 	template<class T1>
 	class Y_SubClassIF {
@@ -91,51 +124,42 @@ public:
 			return MakeShared<T3>();
 		}
 	};
+
 	
 	template<class T1,class T2>
-	static TUniquePtr<Y_SubClassIF<T1>> StoreClass() {
-		return MakeUnique<Y_SubClassIM<T1, T2>>();
+	static TSharedPtr<Y_SubClassIF<T1>> StoreClass() {
+		return MakeShared<Y_SubClassIM<T1, T2>>();
 	}
 
-	static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_CardInfo>>>& CardInfos(int32 ID = -1, TUniquePtr<Y_SubClassIF<class Y_CardInfo>> StoredClass = nullptr){
-		static TMap<int32,TUniquePtr<Y_SubClassIF<class Y_CardInfo>>> Cardclass;
-		if (ID > 0) {
-			Cardclass.Add(ID, MoveTemp(StoredClass));
-		}
-		return Cardclass;
-	};
+	static TMap<int32, TSharedPtr<Y_SubClassIF<class Y_CardInfo>>> CardClass;
+	template<class T>
+	static void LoadCard(int32 ID) {
+		CardClass.Add(ID, StoreClass<Y_CardInfo, T>());
+	}
 
-	static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_EnemyInfo>>>& CharacterInfos(int32 ID = -1, TUniquePtr<Y_SubClassIF<class Y_EnemyInfo>> StoredClass = nullptr) {
-		static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_EnemyInfo>>> Cardclass;
-		if (ID > 0) {
-			Cardclass.Add(ID, MoveTemp(StoredClass));
-		}
-		return Cardclass;
-	};
+	static TMap<int32, TSharedPtr<Y_SubClassIF<class Y_EnemyInfo>>> CharacterClass;
+	template<class T>
+	static void LoadCharacter(int32 ID) {
+		CharacterClass.Add(ID, StoreClass<Y_EnemyInfo, T>());
+	}
 
-	static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_FloorInfo>>>& FloorInfos(int32 ID = -1, TUniquePtr<Y_SubClassIF<class Y_FloorInfo>> StoredClass = nullptr) {
-		static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_FloorInfo>>> Cardclass;
-		if (ID > 0) {
-			Cardclass.Add(ID, MoveTemp(StoredClass));
-		}
-		return Cardclass;
-	};
+	static TMap<int32, TSharedPtr<Y_SubClassIF<class Y_FloorInfo>>> FloorClass;
+	template<class T>
+	static void LoadFloor(int32 ID) {
+		FloorClass.Add(ID, StoreClass<Y_FloorInfo, T>());
+	}
 
-	static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_RoomInfo>>>& RoomInfos(int32 ID = -1, TUniquePtr<Y_SubClassIF<class Y_RoomInfo>> StoredClass = nullptr) {
-		static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_RoomInfo>>> Cardclass;
-		if (ID > 0) {
-			Cardclass.Add(ID, MoveTemp(StoredClass));
-		}
-		return Cardclass;
-	};
+	static TMap<int32, TSharedPtr<Y_SubClassIF<class Y_Buff>>> BuffClass;
+	template<class T>
+	static void LoadBuff(int32 ID) {
+		BuffClass.Add(ID, StoreClass<Y_Buff, T>());
+	}
 
-	static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_Buff>>>& BuffInfos(int32 ID = -1, TUniquePtr<Y_SubClassIF<class Y_Buff>> StoredClass = nullptr) {
-		static TMap<int32, TUniquePtr<Y_SubClassIF<class Y_Buff>>> Cardclass;
-		if (ID > 0) {
-			Cardclass.Add(ID, MoveTemp(StoredClass));
-		}
-		return Cardclass;
-	};
+	static TMap<int32, TSharedPtr<Y_SubClassIF<class Y_RoomInfo>>> RoomClass;
+	template<class T>
+	static void LoadRoom(int32 ID) {
+		RoomClass.Add(ID, StoreClass<Y_RoomInfo, T>());
+	}
 
 	template<typename T>
 	static TSharedPtr<T> getRandom(TArray<TSharedPtr<T>>& randomArray) {
