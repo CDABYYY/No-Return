@@ -6,8 +6,8 @@
 
 void UY_EventWidget::EventInit()
 {
-	EventPicture = Info->Picture();
-	EventDescription = Info->EventDescription();
+	EventPicture = Info->GetPicture();
+	EventDescription = Info->GetDescription();
 	for (auto& s:Info->Choices)
 	{
 		auto PC = CreateChoiceUI();
@@ -30,17 +30,19 @@ void UY_EventWidget::LoadInfo(TSharedPtr<class Y_EventInfo> LoadingInfo)
 
 Y_EventInfo::Y_EventInfo()
 {
+	Description = FText::FromString(TEXT("UnNamed"));
 }
 
-FText Y_EventInfo::EventDescription()
+FText Y_EventInfo::GetDescription()
 {
-	return FText();
+	return Description;
 }
 
-UTexture2D* Y_EventInfo::Picture()
+UTexture2D* Y_EventInfo::GetPicture()
 {
-	return nullptr;
+	return Picture;
 }
+
 
 void Y_EventInfo::EndEvent()
 {

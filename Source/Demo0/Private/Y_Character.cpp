@@ -10,6 +10,7 @@
 #include "Y_TimeLine.h"
 #include "Y_BuffBar.h"
 #include "Components/WidgetComponent.h"
+#include "Y_ClassBase.h"
 
 // Sets default values
 AY_Character::AY_Character()
@@ -48,6 +49,7 @@ AY_Character::AY_Character()
 	StandFloor = nullptr;
 
 	Buffs = new Y_StatusBar();
+	ShowBuffs = new Y_StatusBar();
 	//Buffs->AddBuff(new Y_Buff());
 }
 
@@ -109,6 +111,12 @@ void AY_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 }
 
 
+void AY_Character::AddBuff(TSharedPtr<class Y_Buff> Buff, bool Execute)
+{
+	if (Execute)Buffs->AddBuff(Buff);
+	else ShowBuffs->AddBuff(Buff);
+}
+
 bool AY_Character::ChangeFacing(int32 ToChange)
 {
 	if (ToChange * Facing < 0) {
@@ -121,6 +129,16 @@ bool AY_Character::ChangeFacing(int32 ToChange)
 int32 AY_Character::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs,int32 ExecuteCondition,FString TriggerAction, bool TryAttack)
 {
 	return Buffs->ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, ExecuteCondition, TriggerAction, TryAttack);
+}
+
+void AY_Character::CharacterMove(int32 Distance, bool Execute, FText Causer)
+{
+	Y_StatusBar S{ Y::YMakeShared<MoveBuff>(Distance) };
+	Y::ExecuteAction(this,this, S, Causer.ToString(), Execute);
+	int32 ToPos = StandFloor->SerialNumber + Distance;
+	if (Execute && ToPos>=0 && ToPos < Y::GetFloors().Num() && IsValid(Y::GetFloors()[ToPos]) && !IsValid(Y::GetFloors()[ToPos]->StandCharacter)) {
+		CharacterLogicalMove(Y::GetFloors()[ToPos]);
+	}
 }
 
 void AY_Character::Update()

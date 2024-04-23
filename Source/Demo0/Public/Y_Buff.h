@@ -197,6 +197,7 @@ public:
 	virtual void AddToCharacter(class AY_Character* TargetCharacter);//Buff will Added To Character Defaultly. Part For Special Effects.
 	virtual void RemoveFromCharacter();//Generally For Special Effects. Warning:This Fuction Will Generally Kill Self! If You Need Call it Safely, you should keep a TSharedPtr.
 	virtual bool AcceptBuffAdd(Y_Buff* OtherBuff);
+	virtual FString PrinCount();
 
 	void AddInExecuteLog();
 	void AddInInfluentLog();
@@ -227,4 +228,19 @@ public:
 	Y_BuffR(class Y_RoomInfo* BindWidget);
 
 	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
+};
+
+class DEMO0_API CardBuff :public Y_Buff {
+public:
+	TSharedPtr<class Y_CardInfo> CardInfo;
+	CardBuff(TSharedPtr<class Y_CardInfo> Card);
+	virtual void AddToCharacter(class AY_Character* TargetCharacter);
+};
+
+
+class DEMO0_API ActionBuff :public Y_Buff {
+public:
+	TSharedPtr<class Y_CharacterAction> ActionInfo;
+	ActionBuff(TSharedPtr<class Y_CharacterAction> Action);
+	virtual void AddToCharacter(class AY_Character* TargetCharacter);
 };

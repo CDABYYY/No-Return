@@ -7,6 +7,8 @@
 #include "Y_Character.h"
 #include "Y_RoomWidget.h"
 #include "Y_BuffIcon.h"
+#include "Y_CardInfo.h"
+#include "Y_EnemyInfo.h"
 
 Y_Buff::Y_Buff()
 {
@@ -106,6 +108,11 @@ bool Y_Buff::AcceptBuffAdd(Y_Buff* OtherBuff)
 	return Addable && OtherBuff->Addable;
 }
 
+FString Y_Buff::PrinCount()
+{
+	return FString::Printf(TEXT("%d²ã%s"), BuffCount, *(BuffName.ToString()));
+}
+
 void Y_Buff::AddInExecuteLog()
 {
 	//FBuffLog::WritingLog.ExecuteBuffs.Add(this->AsShared());
@@ -141,4 +148,27 @@ int32 Y_BuffR::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y
 int32 Y_BuffL::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
 {
 	return ToExecute.Execute(); 
+}
+
+CardBuff::CardBuff(TSharedPtr<class Y_CardInfo> Card)
+{
+	BuffID = 10000 + Card->CardID;
+	BuffCount = Card->OriginalCost;
+	CardInfo = Card;
+}
+
+void CardBuff::AddToCharacter(AY_Character* TargetCharacter)
+{
+
+}
+
+ActionBuff::ActionBuff(TSharedPtr<class Y_CharacterAction> Action)
+{
+	BuffID = 20000 + Action->ActionID;
+	BuffCount = 20000 + Action->OriginalCost;
+	ActionInfo = Action;
+}
+
+void ActionBuff::AddToCharacter(AY_Character* TargetCharacter)
+{
 }

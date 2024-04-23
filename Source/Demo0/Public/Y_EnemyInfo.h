@@ -18,11 +18,22 @@ public:
 	int32 CurrentCost;
 	int32 ActionID;
 	FName UsingMontageName;
+	UTexture2D* UsingPicture;
+	FText ActionDescribe;
+	FText ActionName;
+	float Weight = 0;
+
 	class Y_EnemyInfo* OwnerEnemy;
 
 	virtual class AY_Character* GetOwner();
 
+	virtual int32 GetCost();
+
 	virtual void Init(class Y_EnemyInfo* Owner);
+
+	void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
+
+	void Move(int32 Distance, bool Execute);
 
 	virtual float GetRate();
 
@@ -33,6 +44,10 @@ public:
 	virtual void ActionExecute();
 
 	virtual FText LogDescript();
+
+	virtual FText GetName();
+
+	virtual FText GetDescribe();
 };
 
 

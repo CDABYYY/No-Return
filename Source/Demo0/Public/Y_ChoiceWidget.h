@@ -36,6 +36,8 @@ public:
 
 	class UY_ChoiceWidget* Owner;
 
+	FText Describe;
+
 	virtual FText GetDescribe();
 
 	virtual TSharedPtr<class Y_EventInfo> Execute();

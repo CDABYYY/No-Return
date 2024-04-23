@@ -74,10 +74,17 @@ public:
 	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class Y_StatusBar* Buffs;
 
+	class Y_StatusBar* ShowBuffs;
+
+	virtual void AddBuff(TSharedPtr<class Y_Buff> Buff, bool Execute);
+
 	virtual bool ChangeFacing(int32 ToChange);
 
 	//UFUNCTION(BlueprintCallable)
 	virtual int32 ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition,FString TriggerAction, bool TryAttack = false);
+
+	UFUNCTION(BlueprintCallable)
+	void CharacterMove(int32 Distance, bool Execute, FText Causer);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Update();

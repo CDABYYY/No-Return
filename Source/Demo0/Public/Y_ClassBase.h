@@ -109,6 +109,18 @@ public:
 	virtual float GetWeight()override;
 };
 
+class DEMO0_API EventRoom : public Y_RoomInfo
+{
+public:
+	EventRoom();
+
+	virtual FText GetDescribe()override;
+
+	virtual TSharedPtr<Y_RoomInfo> RoomClicked()override;
+
+	virtual void LeaveRoom()override;
+};
+
 class DEMO0_API NormalFloor : public Y_FloorInfo
 {
 public:

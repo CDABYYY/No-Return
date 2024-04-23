@@ -5,6 +5,9 @@
 #include "Y_Character.h"
 #include "Y_Fighting.h"
 #include "CameraPawn.h"
+#include "Y_EventWidget.h"
+#include "Y_ChoiceWidget.h"
+#include "Y_PlayerController.h"
 #include "Y.h"
 
 void LoadY_Base()
@@ -222,6 +225,7 @@ bool NormalCard::AcceptFloor(AY_Floor* GetFloor)
 
 FText NormalCard::GetCardDescribe()
 {
+
 	return Y::PrintText(TEXT("Move to Front of Enemy, Attack 5"));
 }
 
@@ -304,8 +308,6 @@ TSharedPtr<Y_RoomInfo> NormalRoom::RoomClicked()
 	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
 	Y::GetPlayer()->ClickAble = false;
 
-	FRotator ActorRotator(0, 90, 0);
-
 	for (int32 i = 0; i < 10; i++) {
 		Y::GetGameInfo()->SpawnFloor(Y::FloorClass[1]->NewObject(), i);
 	}
@@ -326,7 +328,48 @@ void NormalRoom::LeaveRoom()
 
 float NormalRoom::GetWeight()
 {
-	return 0.0f;
+	return 10;
+}
+
+EventRoom::EventRoom()
+{
+	RoomID = 2;
+}
+
+FText EventRoom::GetDescribe()
+{
+	return Y::PrintText(TEXT("Normal Event"));
+}
+
+TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
+{
+	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
+	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
+
+	for (int32 i = 0; i < 10; i++) {
+		Y::GetGameInfo()->SpawnFloor(Y::FloorClass[1]->NewObject(), i);
+	}
+
+	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[2]);
+
+	auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[1]->NewObject(), Y::GetFloors()[7]);
+	TC->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
+	TC->Update();
+
+	Y::GetGameInfo()->DrawCard(5);
+	
+	auto EP = MakeShared<Y_EventInfo>();
+	EP->Description = Y::PrintText(TEXT("Event Room"));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Quit"), []() {})));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("DrawCard"), []() {Y::GetGameInfo()->DrawCard(); })));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Reload"), []() {},EP)));
+	Y::GetController()->BeginEvent(EP);
+
+	return nullptr;
+}
+
+void EventRoom::LeaveRoom()
+{
 }
 
 NormalFloor::NormalFloor()

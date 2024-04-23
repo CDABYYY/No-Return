@@ -42,10 +42,16 @@ public:
 
 	int32 Weight = 0;
 
+	bool NeedTarget;
+
 	class AY_Card* Owner;
 
 	void CardUpdate();
 
+	void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
+
+	void Move(int32 Distance, bool Execute);
+	
 	virtual FText LogDescript();
 
 	virtual void Play();

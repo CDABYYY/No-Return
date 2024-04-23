@@ -6,6 +6,9 @@
 #include "Y_GameInstance.h"
 #include "Y.h"
 
+#include "Y_ClassBase.h"
+#include "Y_Floor.h"
+
 Y_EnemyInfo::Y_EnemyInfo()
 {
     Actions.Add(MakeShared<Y_CharacterAction>());
@@ -40,6 +43,7 @@ int32 Y_EnemyInfo::GetRandomAction()
 void Y_EnemyInfo::EnemyAttack()
 {
     Actions[ChoosedAction]->ActionExecute();
+    //(Owner->Buffs)->ExecuteBuffs(Owner, Owner, MakeShared<ActionBuff>(Actions[ChoosedAction]), Y_Buff::AfterAction, TEXT("AfterAction"));
     (Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::AfterAction, TEXT("AfterAction"));
     if((Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::BeginAction, TEXT("BeginAction")) == 0)
     {
@@ -78,7 +82,12 @@ float Y_CharacterAction::GetRate()
 
 float Y_CharacterAction::GetWeight()
 {
-    return 0;
+    return Weight;
+}
+
+int32 Y_CharacterAction::GetCost()
+{
+    return CurrentCost;
 }
 
 void Y_CharacterAction::ActionChoosed()
@@ -91,8 +100,33 @@ void Y_CharacterAction::ActionExecute()
     GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Action Execute"));
 }
 
+void Y_CharacterAction::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
+{
+    Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, GetName().ToString(), TryExecute);
+}
+
 FText Y_CharacterAction::LogDescript()
 {
     return FText::FromString(TEXT("Log"));
+}
+
+void Y_CharacterAction::Move(int32 Distance, bool Execute)
+{
+    Y_StatusBar S{ Y::YMakeShared<MoveBuff>(Distance) };
+    ExecuteAction(GetOwner(), GetOwner(), S, Execute);
+    if (Execute) {
+        GetOwner()->CharacterLogicalMove(Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + Distance]);
+    }
+}
+
+
+FText Y_CharacterAction::GetName()
+{
+    return ActionName;
+}
+
+FText Y_CharacterAction::GetDescribe()
+{
+    return ActionDescribe;
 }
 

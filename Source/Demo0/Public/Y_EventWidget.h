@@ -61,11 +61,16 @@ public:
 
 	class UY_EventWidget* Owner;
 
-	FText EventDescription();
+	FText Description;
 
-	UTexture2D* Picture();
+	UTexture2D* Picture;
+
+	virtual FText GetDescription();
+
+	virtual UTexture2D* GetPicture();
 
 	TArray<TSharedPtr<class Y_ChoiceInfo>> Choices;
 
+	//Abondoned
 	virtual void EndEvent();
 };

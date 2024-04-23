@@ -10,6 +10,8 @@
 #include "CameraPawn.h"
 #include "Y_Fighting.h"
 
+#include "Y_ClassBase.h"
+
 int32 Y_CardInfo::GetCost()
 {
 	return CurrentCost;
@@ -51,6 +53,8 @@ Y_CardInfo::Y_CardInfo()
 	UsedType = 0;
 	CardID = 0;
 
+	NeedTarget = true;
+
 	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/Png/JayceStaticField.JayceStaticField'");
 	UsingPicture = Y::LoadPicture(Path);
 }
@@ -69,6 +73,20 @@ void Y_CardInfo::CardUpdate()
 	UsingMontageName = GetMontageName();
 
 	UsingPicture = GetPicture();
+}
+
+void Y_CardInfo::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
+{
+	Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, GetName().ToString(), TryExecute);
+}
+
+void Y_CardInfo::Move(int32 Distance, bool Execute)
+{
+	Y_StatusBar S{ Y::YMakeShared<MoveBuff>(Distance) };
+	ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), S, Execute);
+	if (Execute) {
+		Y::GetMainCharacter()->CharacterLogicalMove(Y::GetFloors()[Y::GetMainCharacter()->StandFloor->SerialNumber + Distance]);
+	}
 }
 
 FText Y_CardInfo::LogDescript()
