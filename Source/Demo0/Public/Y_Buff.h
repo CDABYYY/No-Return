@@ -194,6 +194,7 @@ public:
 	virtual FText printBuff(bool PrintLog = false)const;
 	virtual void AddBuff(Y_Buff* OtherBuff);
 	virtual void ReplaceBuff(Y_Buff* OtherBuff);
+	//Need Rewrite : Add Param bool to be called by Y::ExecuteAction
 	virtual void AddToCharacter(class AY_Character* TargetCharacter);//Buff will Added To Character Defaultly. Part For Special Effects.
 	virtual void RemoveFromCharacter();//Generally For Special Effects. Warning:This Fuction Will Generally Kill Self! If You Need Call it Safely, you should keep a TSharedPtr.
 	virtual bool AcceptBuffAdd(Y_Buff* OtherBuff);

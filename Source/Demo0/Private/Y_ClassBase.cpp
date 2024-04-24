@@ -19,6 +19,7 @@ void LoadY_Base()
 	Y::LoadCard<NormalCard>(1);
 	Y::LoadCharacter<NormalEnemy>(1);
 	Y::LoadRoom<NormalRoom>(1);
+	Y::LoadRoom<EventRoom>(2);
 	Y::LoadFloor<NormalFloor>(1);
 }
 
@@ -343,6 +344,7 @@ FText EventRoom::GetDescribe()
 
 TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 {
+	Y::Log(0, TEXT("InEventRoom"));
 	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
 	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
 
@@ -360,9 +362,9 @@ TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 	
 	auto EP = MakeShared<Y_EventInfo>();
 	EP->Description = Y::PrintText(TEXT("Event Room"));
-	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Quit"), []() {})));
-	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("DrawCard"), []() {Y::GetGameInfo()->DrawCard(); })));
-	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Reload"), []() {},EP)));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Quit")), []() {}));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("DrawCard")), []() {Y::GetGameInfo()->DrawCard(); }));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Reload")), []() {},EP));
 	Y::GetController()->BeginEvent(EP);
 
 	return nullptr;
@@ -438,7 +440,7 @@ NormalSkill::NormalSkill()
 void NormalSkill::Play()
 {
 	while (Y::GetGameInfo()->InHandCards.Num() > 5) {
-		Y::GetGameInfo()->UseCard(Y::GetGameInfo()->InHandCards[0]->Owner);
+		Y::GetGameInfo()->UseCard(Y::GetGameInfo()->InHandCards[0]);
 	}
 	Y::GetGameInfo()->DrawCard(2);
 }

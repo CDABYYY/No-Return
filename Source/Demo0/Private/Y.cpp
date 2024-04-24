@@ -6,6 +6,8 @@
 #include "Y_StatusBar.h"
 #include "Y_Character.h"
 #include "CameraPawn.h"
+#include "Y_CardH.h"
+#include "Y_CardW.h"
 #include "Y_PlayerController.h"
 
 Y::Y()
@@ -45,6 +47,16 @@ TArray<class AY_Floor*>& Y::GetFloors()
 TArray<class AY_Character*>& Y::GetEnemys()
 {
 	return UY_GameInstance::YGI->Enemys;
+}
+
+TSharedPtr<class Y_CardInfo>& Y::GetChoosingCard()
+{
+	return GetController()->CardWidget->ChoosedCard->CardInfo;
+}
+
+bool& Y::IsPressingCard()
+{
+	return GetController()->CardWidget->Pressing;
 }
 
 FVector& Y::GetLocation()

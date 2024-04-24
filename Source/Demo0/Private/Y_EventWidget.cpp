@@ -12,6 +12,7 @@ void UY_EventWidget::EventInit()
 	{
 		auto PC = CreateChoiceUI();
 		PC->Info = s;
+		PC->Owner = this;
 		PC->Init();
 		ChoiceWidgets.Add(PC);
 	}
@@ -20,8 +21,10 @@ void UY_EventWidget::EventInit()
 void UY_EventWidget::LoadInfo(TSharedPtr<class Y_EventInfo> LoadingInfo)
 {
 	for (auto& p : ChoiceWidgets) {
-		p->RemoveFromParent();
+		if(IsValid(p))
+			p->RemoveFromParent();
 	}
+	ChoiceWidgets.Empty();
 	if (LoadingInfo != nullptr) {
 		Info = LoadingInfo;
 		EventInit();

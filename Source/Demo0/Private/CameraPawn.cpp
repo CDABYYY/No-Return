@@ -52,7 +52,7 @@ ACameraPawn::ACameraPawn()
 	ChoosedCard = nullptr;
 	ChoosedFloor = nullptr;
 	ClickAble = true;
-	
+	FindingObject = false;
 }
 
 // Called when the game starts or when spawned
@@ -70,6 +70,7 @@ void ACameraPawn::BeginPlay()
 	Y::GetController()->UpdateMap();
 	Y::GetController()->MapWidget->PullMap(false);
 	Y::GetController()->LoadHUD();
+	Y::GetController()->ShowCards(false);
 }
 
 // Called every frame
@@ -148,6 +149,61 @@ void ACameraPawn::MouseLeftPress()
 
 void ACameraPawn::MouseLeftRelease()
 {
+
+	if (Y::IsPressingCard() && Y::GetChoosingCard().IsValid()) {
+		if (ClickAble) {
+			FVector MouseLocation, MouseRotation, EndLocation;
+			FHitResult HitResult;
+			if (APlayerController* PlayerController = Cast<APlayerController>(Controller)) {
+				if (PlayerController->DeprojectMousePositionToWorld(MouseLocation, MouseRotation))
+				{
+					EndLocation = MouseLocation + MouseRotation * 10000;
+					bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, MouseLocation, EndLocation, ECC_Visibility);
+					if (bHit) {
+						AActor* HitActor = HitResult.GetActor();
+						AY_Floor* HitFloor = Cast<AY_Floor>(HitActor);
+						if (!IsValid(HitFloor)) {
+							AY_Character* HitCharacter = Cast<AY_Character>(HitActor);
+							if (IsValid(HitCharacter))HitFloor = HitCharacter->StandFloor;
+						}
+						if (IsValid(HitFloor)) {
+							Y::GetMainCharacter()->ChangeFacing(HitFloor->SerialNumber - Y::GetMainCharacter()->StandFloor->SerialNumber);
+							if (ChoosedFloor != nullptr)ChoosedFloor->SetColor("None");
+							ChoosedFloor = HitFloor;
+							HitFloor->Clicked();
+							if (Y::GetChoosingCard()->AcceptFloor(ChoosedFloor))
+							{
+								Y::GetChoosingCard()->Play();
+
+								if (!IsValid(Y::GetMainCharacter())) {
+									return;
+								}
+								//ChoosedCard->SetColor(TEXT("None")); 
+
+								Y::GetMainCharacter()->CharacterAttackTime += Y::GetChoosingCard()->CurrentCost;
+								Y::GetMainCharacter()->ChangeAttackTime(Y::GetMainCharacter()->CharacterAttackTime);
+								//Y::GetGameInstance()->AddAtk(Y::GetMainCharacter());
+
+								Y::GetGameInfo()->UseCard(Y::GetChoosingCard());
+								
+
+								ChoosedCard = nullptr;
+								for (auto& f : Y::GetFloors()) {
+									if (IsValid(f))f->SetColor(TEXT("None"));
+								}
+
+								ClickAble = false;
+							}
+						}
+					}
+				}
+			}
+		}
+		for (auto& p : Y::GetFloors())if (IsValid(p))p->SetColor(TEXT("None"));
+		Y::GetChoosingCard() = nullptr;
+		Y::IsPressingCard() = false;
+		Y::GetController()->ShowCards(false);
+	}
 }
 
 //void ACameraPawn::Move(const FInputActionValue& Value)

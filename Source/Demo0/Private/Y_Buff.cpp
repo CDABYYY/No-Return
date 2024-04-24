@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Y_Buff.h"
@@ -110,7 +110,8 @@ bool Y_Buff::AcceptBuffAdd(Y_Buff* OtherBuff)
 
 FString Y_Buff::PrinCount()
 {
-	return FString::Printf(TEXT("%d²ã%s"), BuffCount, *(BuffName.ToString()));
+	FString TmpString = BuffName.ToString();
+	return FString::Printf(TEXT("%då±‚%s"), BuffCount, *(TmpString));
 }
 
 void Y_Buff::AddInExecuteLog()

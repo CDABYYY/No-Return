@@ -10,6 +10,10 @@ AY_PlayerController* AY_PlayerController::ThisPlayerController = nullptr;
 
 void AY_PlayerController::BeginEvent(TSharedPtr<class Y_EventInfo> EventInfo)
 {
+	if (!IsValid(EventWidget))
+	{
+		ShowEvent();
+	}
 	EventWidget->LoadInfo(EventInfo);
 	EventWidget->PullEvent(false);
 	

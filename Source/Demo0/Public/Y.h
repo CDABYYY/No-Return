@@ -32,6 +32,10 @@ public:
 
 	static TArray<class AY_Character*>& GetEnemys();
 
+	static TSharedPtr<class Y_CardInfo>& GetChoosingCard();
+
+	static bool& IsPressingCard();
+
 	static FVector& GetLocation();
 
 	static FRotator& GetRotation();

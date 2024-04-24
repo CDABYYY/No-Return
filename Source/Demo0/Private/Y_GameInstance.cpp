@@ -53,7 +53,7 @@ UY_GameInstance::UY_GameInstance()
 	IL1();
 
 	//TEMP
-	FightInfo->ReadyRooms.Add(Y::RoomClass[1]->NewObject());
+	FightInfo->ReadyRooms.Add(Y::RoomClass[2]->NewObject());
 
 	//TEMP
 	for(int32 i = 2001;i<=2020;i++)

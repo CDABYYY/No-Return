@@ -63,11 +63,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyValue")
 	bool ClickAble;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyValue")
+	bool FindingObject;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
 	class AY_Card* ChoosedCard;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
 	class AY_Floor* ChoosedFloor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
+	class AY_Floor* LookingFloor;
 
 	void MoveRight(float Value);
 

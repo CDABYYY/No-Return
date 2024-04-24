@@ -46,6 +46,8 @@ public:
 
 	class AY_Card* Owner;
 
+	class UY_CardW* OwnerWidget;
+
 	void CardUpdate();
 
 	void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);

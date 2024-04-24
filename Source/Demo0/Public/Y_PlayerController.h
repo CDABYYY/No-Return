@@ -37,6 +37,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UUserWidget> EventAsset;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_CardH* CardWidget;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowCards(bool Reversed);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowMap();
 

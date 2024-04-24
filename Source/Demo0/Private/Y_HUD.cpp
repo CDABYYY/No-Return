@@ -35,5 +35,6 @@ void UY_HUD::ExecuteSkill()
 		ChoosedCard->Play();
 		Y::GetMainCharacter()->CharacterAttackTime += ChoosedCard->CurrentCost;
 		Y::GetMainCharacter()->ChangeAttackTime(Y::GetMainCharacter()->CharacterAttackTime);
+		Y::GetPlayer()->ClickAble = false;
 	}
 }

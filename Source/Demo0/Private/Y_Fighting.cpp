@@ -12,6 +12,8 @@
 #include "Y_EnemyInfo.h"
 #include "Y_Settle.h"
 #include "Y_TimeLine.h"
+#include "Y_PlayerController.h"
+#include "Y_CardH.h"
 #include "Y.h"
 
 Y_Fighting::Y_Fighting()
@@ -66,6 +68,7 @@ void Y_Fighting::AfterFight()
 	Y::GetFloors().Empty();
 
 	UY_TimeLine::YTimeLine->EndRoom();
+	Y::GetController()->CardWidget->Clear();
 	
 	ToDrawCards.Empty();
 	DiscardedCards.Empty();
@@ -90,12 +93,18 @@ void Y_Fighting::AddEquipment(TSharedPtr<Y_Equipment> GetEquipment)
 
 void Y_Fighting::DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpawn)
 {
-	if (ToDrawCard == nullptr) {
-		ToDrawCard = Y::getRandom(ToDrawCards);
+
+	if(!VoidSpawn)
+	{
+		if (ToDrawCard == nullptr) {
+			ToDrawCard = Y::getRandom(ToDrawCards);
+		}
+		ToDrawCards.Remove(ToDrawCard);
 	}
-	ToDrawCards.Remove(ToDrawCard);
 	ToDrawCard->Drawed();
-	SpawnCard(ToDrawCard);
+	InHandCards.Add(ToDrawCard);
+	//SpawnCard(ToDrawCard);
+	Y::GetController()->CardWidget->AddCard(ToDrawCard);
 }
 
 void Y_Fighting::DrawCard(int32 DrawCount)
@@ -143,6 +152,26 @@ void Y_Fighting::UseCard(AY_Card* UsedCard, int32 LeaveType)
 		UsedCard->Destroy();
 	}
 	Y::GetCards().Remove(UsedCard);
+}
+
+void Y_Fighting::UseCard(TSharedPtr<class Y_CardInfo> UsedCard, int32 DiscardReason)
+{
+	if (DiscardReason != 0)
+		UsedCard->Discarded();
+	UsedCard->Leave();
+	UsedCard->Owner = nullptr;
+	InHandCards.Remove(UsedCard);
+	if (UsedCard->UsedType == 0)
+	{
+		DiscardedCards.Add(UsedCard);
+	}
+	else if (UsedCard->UsedType == 1) {
+		ExhaustCards.Add(UsedCard);
+	}
+	else if (UsedCard->UsedType == 3) {
+
+	}
+	Y::GetController()->CardWidget->RemoveCard(UsedCard->OwnerWidget);
 }
 
 AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int32 SerialNumber, FName ActorClass)

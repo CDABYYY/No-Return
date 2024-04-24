@@ -35,9 +35,10 @@ public:
 	void DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpawn = false);
 	void DrawCard(int32 DrawCount = 1);
 
-	//LeaveType: 0:Played 1:Discarded
+	//LeaveType: 0:Played, 1:Discarded
 	void UseCard(class AY_Card* UsedCard, int32 LeaveType = 0);
-
+	//DiscardReason: 0:Played, 1:Discarded
+	void UseCard(TSharedPtr<class Y_CardInfo> UsedCard, int32 DiscardReason = 0);
 
 	class AY_Floor* SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor,int32 SerialNumber,FName ActorClass = TEXT("Default"));
 	class AY_Card* SpawnCard(TSharedPtr<class Y_CardInfo> ToSpawnCard, FName ActorClass = TEXT("Default"));
