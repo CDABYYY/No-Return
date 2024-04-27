@@ -14,7 +14,7 @@
 #include "Y_CardInfo.h"
 #include "Y_EnemyInfo.h"
 
-#include "I_Level1.h"
+//#include "I_Level1.h"
 #include "Y_ClassBase.h"
 
 
@@ -50,14 +50,13 @@ UY_GameInstance::UY_GameInstance()
 	Y::LoadRoom<Y_RoomInfo>(0);
 
 	LoadY_Base();
-	IL1();
 
 	//TEMP
 	FightInfo->ReadyRooms.Add(Y::RoomClass[2]->NewObject());
 
 	//TEMP
-	for(int32 i = 2001;i<=2020;i++)
-	FightInfo->UsingCards.Add(Y::CardClass[i]->NewObject());
+	for(int32 i = 0;i<=10;i++)
+	FightInfo->UsingCards.Add(Y::CardClass[1]->NewObject());
 
 	FightInfo->MCSkill = MakeShared<NormalSkill>();
 }
@@ -90,21 +89,21 @@ void UY_GameInstance::AddAtk(AY_Character* owner)
 {
 	if(IsValid(UY_TimeLine::YTimeLine))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Call AddCharacterProfile"));
+		//UE_LOG(LogTemp, Warning, TEXT("Call AddCharacterProfile"));
 		//Correct On first Run. Will Crash on the next. Maybe the order of BeginPlay effect it.
 		//UY_TimeLine::YTimeLine->AddCharacterProfile(owner);
 		UY_TimeLine::YTimeLine->AddCharacter(owner);
 	}
 
-	for (int32 i = 0; i < AtkOrder.Num(); i++) {
-		if (owner->CharacterAttackTime<AtkOrder[i]->CharacterAttackTime ||
-			owner->CharacterAttackTime == AtkOrder[i]->CharacterAttackTime &&
-			owner->CharacterPriority> AtkOrder[i]->CharacterPriority) {
-			AtkOrder.Insert(owner, i);
-			return;
-		}
-	}
-	AtkOrder.Add(owner);
+	//for (int32 i = 0; i < AtkOrder.Num(); i++) {
+	//	if (owner->CharacterAttackTime<AtkOrder[i]->CharacterAttackTime ||
+	//		owner->CharacterAttackTime == AtkOrder[i]->CharacterAttackTime &&
+	//		owner->CharacterPriority> AtkOrder[i]->CharacterPriority) {
+	//		AtkOrder.Insert(owner, i);
+	//		return;
+	//	}
+	//}
+	//AtkOrder.Add(owner);
 }
 
 void UY_GameInstance::HelpTick(float DeltaTime)

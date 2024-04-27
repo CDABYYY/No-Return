@@ -2,6 +2,7 @@
 
 
 #include "Y_StatusBar.h"
+#include "Y_Character.h"
 #include "CoreMinimal.h"
 
 Y_StatusBar::Y_StatusBar()
@@ -133,7 +134,7 @@ int32 Y_StatusBar::ExecuteBuffs(AY_Character* FromCharacter, AY_Character* ToCha
 {
 	int ExecuteStatus = 0;
 	for (auto& p : Buff) {
-		if (p->TriggerCondition & ExecuteCondition && p->Living)
+		if (p->TriggerCondition & ExecuteCondition && p->Living &&(FromCharacter == nullptr || FromCharacter->CheckValid()) && (ToCharacter == nullptr || ToCharacter->CheckValid()))
 			ExecuteStatus = p->execute(FromCharacter, ToCharacter, ToBuffs, ExecuteCondition,TriggerAction, TryAttack);
 		if (ExecuteStatus != 0) break;
 	}

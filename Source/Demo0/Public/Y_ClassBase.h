@@ -20,7 +20,7 @@ class DEMO0_API MoveBuff:public Y_Buff
 public:
 	MoveBuff();
 	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
-	virtual void AddToCharacter(class AY_Character* TargetCharacter)override;
+	virtual void AddToCharacter(class AY_Character* TargetCharacter,bool Execute)override;
 	virtual FText printBuff(bool PrintLog = false)const override;
 };
 
@@ -29,7 +29,7 @@ class DEMO0_API DemageBuff :public Y_Buff
 public:
 	DemageBuff();
 	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
-	virtual void AddToCharacter(class AY_Character* TargetCharacter)override;
+	virtual void AddToCharacter(class AY_Character* TargetCharacter,bool Execute)override;
 	virtual FText printBuff(bool PrintLog = false)const override;
 };
 
@@ -54,7 +54,7 @@ class DEMO0_API NormalCard : public Y_CardInfo
 public:
 	NormalCard();
 	virtual FText LogDescript()override;
-	virtual void Play()override;
+	virtual void Play(bool Execute)override;
 	virtual bool AcceptFloor(class AY_Floor* GetFloor)override;
 
 	virtual FText GetCardDescribe()override;
@@ -69,7 +69,7 @@ public:
 
 	virtual void ActionChoosed()override;
 
-	virtual void ActionExecute()override;
+	virtual void ActionExecute(bool Execute)override;
 
 	virtual FText LogDescript()override;
 };
@@ -82,7 +82,7 @@ public:
 
 	virtual void ActionChoosed()override;
 
-	virtual void ActionExecute()override;
+	virtual void ActionExecute(bool Execute)override;
 
 	virtual FText LogDescript()override;
 };
@@ -138,5 +138,5 @@ class DEMO0_API NormalSkill : public Y_CardInfo
 public:
 	NormalSkill();
 
-	virtual void Play()override;
+	virtual void Play(bool Execute)override;
 };

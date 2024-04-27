@@ -34,6 +34,8 @@ public:
 
 	static TSharedPtr<class Y_CardInfo>& GetChoosingCard();
 
+	static float& GetRunTime();
+
 	static bool& IsPressingCard();
 
 	static FVector& GetLocation();

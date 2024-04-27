@@ -9,6 +9,7 @@
 #include "Y_CardH.h"
 #include "Y_CardW.h"
 #include "Y_PlayerController.h"
+#include "Y_Fighting.h"
 
 Y::Y()
 {
@@ -52,6 +53,11 @@ TArray<class AY_Character*>& Y::GetEnemys()
 TSharedPtr<class Y_CardInfo>& Y::GetChoosingCard()
 {
 	return GetController()->CardWidget->ChoosedCard->CardInfo;
+}
+
+float& Y::GetRunTime()
+{
+	return GetGameInstance()->RunTime;
 }
 
 bool& Y::IsPressingCard()
@@ -101,28 +107,31 @@ int32 Y::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y
 	//FBuffLog BuffLog;
 	//BuffLog.LogInit(FromCharacter, ToCharacter);
 	//BuffLog.LogType = 0;
+	if (FromCharacter != nullptr && FromCharacter->CheckValid())return -1;
+	if (ToCharacter != nullptr && ToCharacter->CheckValid())return -2;
 	int32 UsingCondition = ToBuffs.FindCondition();
 	if (UsingCondition != 0) {
-		if (IsValid(FromCharacter) && FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition >> 2), TriggerAction, TryAttack) == 0) {
-			if (IsValid(ToCharacter) && ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition >> 1), TriggerAction, TryAttack) == 0) {
+		if (FromCharacter == nullptr || FromCharacter->CheckValid() && FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition >> 2), TriggerAction, TryAttack) == 0) {
+			if (ToCharacter == nullptr || ToCharacter->CheckValid() && ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition >> 1), TriggerAction, TryAttack) == 0) {
 				ToBuffs.ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, (UsingCondition), TriggerAction, TryAttack);
-				for (auto& p : ToBuffs.Buff) { p->AddToCharacter(ToCharacter); }
-				if(ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::DetectDeath, TriggerAction, TryAttack) != 0
+				for (auto& p : ToBuffs.Buff) { p->AddToCharacter(ToCharacter,TryAttack); }
+				if(ToCharacter->CheckValid() && ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::DetectDeath, TriggerAction, TryAttack) != 0
 					&& ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::BeginDeath, TriggerAction, TryAttack) == 0){
-					ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterDeath, TriggerAction, TryAttack);
+					GetGameInfo()->PrepareDie(ToCharacter);
 					ToCharacter->CharacterDead();
+					ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterDeath, TriggerAction, TryAttack);
 					ToBuffs.ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterKill, TriggerAction, TryAttack);
 					FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterKill, TriggerAction, TryAttack);
+					GetGameInfo()->DestroyCharacter(ToCharacter);	
 				}
-				else
-					ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 1), TriggerAction, TryAttack);
+				if(ToCharacter->CheckValid())	ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 1), TriggerAction, TryAttack);
 			}
-			FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 2), TriggerAction, TryAttack);
+			if(FromCharacter->CheckValid())FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 2), TriggerAction, TryAttack);
 		}
 	}
 
-	if(IsValid(FromCharacter))FromCharacter->Update();
-	if (IsValid(ToCharacter))ToCharacter->Update();
+	if(FromCharacter->CheckValid())FromCharacter->Update();
+	if (ToCharacter->CheckValid())ToCharacter->Update();
 	//FBuffLog::FightLogs.Add(MoveTemp(BuffLog));
 	return UsingCondition;
 }

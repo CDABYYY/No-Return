@@ -38,12 +38,9 @@ int32 MoveBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, 
 	return 0;
 }
 
-void MoveBuff::AddToCharacter(AY_Character* TargetCharacter)
+void MoveBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 {
-	int32 ToSerial = TargetCharacter->StandFloor->SerialNumber + BuffCount;
-	if (BuffCount == 0 || ToSerial < 0 || ToSerial > Y::GetFloors().Num() || Y::GetFloors()[ToSerial] == nullptr || IsValid(Y::GetFloors()[ToSerial]->StandCharacter)) {
-		TargetCharacter->CharacterLogicalMove(Y::GetFloors()[ToSerial]);
-	}
+	
 }
 
 FText MoveBuff::printBuff(bool PrintLog) const
@@ -70,9 +67,10 @@ int32 DemageBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter
 	return 0;
 }
 
-void DemageBuff::AddToCharacter(AY_Character* TargetCharacter)
+void DemageBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 {
-	Y_Buff::AddToCharacter(TargetCharacter);
+	Y_Buff::AddToCharacter(TargetCharacter,Execute);
+	if(Execute)
 	TargetCharacter->Health -= BuffCount;
 }
 
@@ -93,36 +91,39 @@ ShieldBuff::ShieldBuff()
 
 int32 ShieldBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
 {
-	if (ExecuteCondition == BeginInjured) {
-		auto T = ToBuffs.FindBuffExtend(3);//DemageBuff.ID
-		for (auto& p : T) {
-			if (p->BuffCount < BuffCount) {
-				BuffCount -= p->BuffCount;
-				p->BuffCount = 0;
-				p->Living = false;
-			}
-			else if (p->BuffCount == BuffCount){
-				p->BuffCount = 0;
-				p->Living = false;
-				BuffCount = 0;
-				RemoveFromCharacter();
-			}
-			else {
-				p->BuffCount -= BuffCount;
-				BuffCount = 0;
-				RemoveFromCharacter();
+	if(TryAttack)
+	{
+		if (ExecuteCondition == BeginInjured) {
+			auto T = ToBuffs.FindBuffExtend(3);//DemageBuff.ID
+			for (auto& p : T) {
+				if (p->BuffCount < BuffCount) {
+					BuffCount -= p->BuffCount;
+					p->BuffCount = 0;
+					p->Living = false;
+				}
+				else if (p->BuffCount == BuffCount) {
+					p->BuffCount = 0;
+					p->Living = false;
+					BuffCount = 0;
+					RemoveFromCharacter();
+				}
+				else {
+					p->BuffCount -= BuffCount;
+					BuffCount = 0;
+					RemoveFromCharacter();
+				}
 			}
 		}
-	}
-	else if (ExecuteCondition == AfterAttack) {
-		BuffCount = 0.5 * BuffCount;
-		if (BuffCount == 0)
-			RemoveFromCharacter();
-	}
-	else if (ExecuteCondition == AfterMove) {
-		BuffCount = 0.25 * BuffCount;
-		if (BuffCount == 0)
-			RemoveFromCharacter();
+		else if (ExecuteCondition == AfterAttack) {
+			BuffCount = 0.5 * BuffCount;
+			if (BuffCount == 0)
+				RemoveFromCharacter();
+		}
+		else if (ExecuteCondition == AfterMove) {
+			BuffCount = 0.25 * BuffCount;
+			if (BuffCount == 0)
+				RemoveFromCharacter();
+		}
 	}
 	return 0;
 }
@@ -145,12 +146,14 @@ BurnBuff::BurnBuff()
 
 int32 BurnBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
 {
-	Y_StatusBar TS;
-	TS.AddBuff(Y::YMakeShared<DemageBuff>(BuffCount));
-	Y::ExecuteAction(OwnerCharacter, OwnerCharacter, TS, TEXT("Burn"),TryAttack);
-	BuffCount = 0.5 * BuffCount;
-	if (BuffCount == 0)
-		RemoveFromCharacter();
+	if(TryAttack){
+		Y_StatusBar TS;
+		TS.AddBuff(Y::YMakeShared<DemageBuff>(BuffCount));
+		Y::ExecuteAction(OwnerCharacter, OwnerCharacter, TS, TEXT("Burn"), TryAttack);
+		BuffCount = 0.5 * BuffCount;
+		if (BuffCount == 0)
+			RemoveFromCharacter();
+	}
 	return 0;
 }
 
@@ -177,7 +180,7 @@ FText NormalCard::LogDescript()
 	return FText();
 }
 
-void NormalCard::Play()
+void NormalCard::Play( bool Execute)
 {
 	int32 Pos = Y::GetMainCharacter()->StandFloor->SerialNumber;
 	int32 ToPos = Y::GetChoosedFloor()->SerialNumber;
@@ -187,16 +190,17 @@ void NormalCard::Play()
 	}
 	if(ToPos - Pos != 0)
 	{
-		Y_StatusBar S{ Y::YMakeShared<MoveBuff>(ToPos - Pos) };
-		Y::ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), S, TEXT("Charge Move"));
-		Y::GetMainCharacter()->CharacterLogicalMove(Y::GetFloors()[ToPos]);
+		Move(ToPos - Pos, Execute);
 	}
 	if (IsValid(Y::GetChoosedFloor()->StandCharacter) && Y::GetChoosedFloor()->StandCharacter != Y::GetMainCharacter()) {
 		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(5) };
-		Y::ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S1, TEXT("Charge Attack"));
+		ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S1, Execute);
 	}
-	Y::GetMainCharacter()->MyPlayMontage(GetMontageName(), Y::GetFloors()[ToPos], GetRate(), true);
-	Y::GetGameInfo()->DrawCard();
+	DrawCard(1, Execute);
+	if(Execute)
+	{
+		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos], GetRate());
+	}
 }
 
 bool NormalCard::AcceptFloor(AY_Floor* GetFloor)
@@ -259,14 +263,13 @@ void NormalAction::ActionChoosed()
 	GetOwner()->ChangeFacing(Y::GetMainCharacter()->StandFloor->SerialNumber - GetOwner()->StandFloor->SerialNumber);
 }
 
-void NormalAction::ActionExecute()
+void NormalAction::ActionExecute(bool Execute)
 {
 	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * 1;
 	if (ToPos >= 0 && ToPos < Y::GetFloors().Num() && IsValid(Y::GetFloors()[ToPos]) && !IsValid(Y::GetFloors()[ToPos]->StandCharacter)) {
-		Y_StatusBar S1{ Y::YMakeShared<MoveBuff>(GetOwner()->Facing * 1) };
-		Y::ExecuteAction(GetOwner(), GetOwner(), S1, TEXT("AI Move"));
-		GetOwner()->CharacterLogicalMove(Y::GetFloors()[ToPos]);
-		GetOwner()->MyPlayMontage(UsingMontageName, Y::GetFloors()[ToPos], GetRate(), true);
+		Move(GetOwner()->Facing * 1, Execute);
+		if(Execute)
+		PlayMontage(UsingMontageName, Y::GetFloors()[ToPos]);
 	}
 }
 
@@ -415,14 +418,15 @@ void AttackAction::ActionChoosed()
 	GetOwner()->ChangeFacing(Y::GetMainCharacter()->StandFloor->SerialNumber - GetOwner()->StandFloor->SerialNumber);
 }
 
-void AttackAction::ActionExecute()
+void AttackAction::ActionExecute(bool Execute)
 {
 	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * 1;
 	if (ToPos >= 0 && ToPos < Y::GetFloors().Num() && IsValid(Y::GetFloors()[ToPos]) && IsValid(Y::GetFloors()[ToPos]->StandCharacter)) {
 		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(5) };
-		Y::ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, TEXT("AI Attack"));
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
 	}
-	GetOwner()->MyPlayMontage(UsingMontageName, Y::GetFloors()[ToPos], GetRate(), true);
+	if(Execute)
+	PlayMontage(UsingMontageName, Y::GetFloors()[ToPos]);
 }
 
 FText AttackAction::LogDescript()
@@ -437,10 +441,11 @@ NormalSkill::NormalSkill()
 	UsingMontageName = TEXT("AS");
 }
 
-void NormalSkill::Play()
+void NormalSkill::Play(bool Execute)
 {
+	if(Execute)
 	while (Y::GetGameInfo()->InHandCards.Num() > 5) {
 		Y::GetGameInfo()->UseCard(Y::GetGameInfo()->InHandCards[0]);
 	}
-	Y::GetGameInfo()->DrawCard(2);
+	DrawCard(2,Execute);
 }

@@ -42,13 +42,16 @@ int32 Y_EnemyInfo::GetRandomAction()
 
 void Y_EnemyInfo::EnemyAttack()
 {
-    Actions[ChoosedAction]->ActionExecute();
-    //(Owner->Buffs)->ExecuteBuffs(Owner, Owner, MakeShared<ActionBuff>(Actions[ChoosedAction]), Y_Buff::AfterAction, TEXT("AfterAction"));
-    (Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::AfterAction, TEXT("AfterAction"));
-    if((Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::BeginAction, TEXT("BeginAction")) == 0)
+    Actions[ChoosedAction]->ActionExecute(true);
+    Y_StatusBar AA{ MakeShared<ActionBuff>(Actions[ChoosedAction]) };
+    (Owner->Buffs)->ExecuteBuffs(Owner, Owner, AA, Y_Buff::AfterAction, Actions[ChoosedAction]->GetName().ToString(),true);
+    //(Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::AfterAction, TEXT("AfterAction"));
+    ChoosedAction = GetRandomAction();
+    Actions[ChoosedAction]->ActionChoosed();
+    Y_StatusBar BA{ MakeShared<ActionBuff>(Actions[ChoosedAction]) };
+    if((Owner->Buffs)->ExecuteBuffs(Owner, Owner, BA, Y_Buff::BeginAction, Actions[ChoosedAction]->GetName().ToString(), true) == 0)
     {
-        ChoosedAction = GetRandomAction();
-        Actions[ChoosedAction]->ActionChoosed();
+        Actions[ChoosedAction]->CurrentCost = BA.Buff[0]->BuffCount;
         Owner->CharacterAttackTime += (int32)(Actions[ChoosedAction]->CurrentCost * Owner->ActionRate * Y::GetGameInstance()->TopoRate);
         Owner->ChangeAttackTime(Owner->CharacterAttackTime);
     }
@@ -87,7 +90,7 @@ float Y_CharacterAction::GetWeight()
 
 int32 Y_CharacterAction::GetCost()
 {
-    return CurrentCost;
+    return OriginalCost;
 }
 
 void Y_CharacterAction::ActionChoosed()
@@ -95,7 +98,7 @@ void Y_CharacterAction::ActionChoosed()
     GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Action Choosed"));
 }
 
-void Y_CharacterAction::ActionExecute()
+void Y_CharacterAction::ActionExecute(bool Execute)
 {
     GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Action Execute"));
 }
@@ -120,13 +123,42 @@ void Y_CharacterAction::Move(int32 Distance, bool Execute)
 }
 
 
+bool Y_CharacterAction::AttackFloor(AY_Floor* TargetFloor)
+{
+    return false;
+}
+
 FText Y_CharacterAction::GetName()
 {
     return ActionName;
 }
 
+bool Y_CharacterAction::CanAttackFloor(AY_Floor* TargetFloor)
+{
+    return false;
+}
+
+void Y_CharacterAction::PlayMontage(FName MontageName, AY_Floor* ChoosedFloor, float PlayRate)
+{
+    if (GetOwner()->CheckValid()) {
+        if (PlayRate == 0)PlayRate = GetRate();
+        bool offset = true;
+        if (ChoosedFloor == nullptr) {
+            ChoosedFloor = GetOwner()->StandFloor;
+            offset = false;
+        }
+        GetOwner()->MyPlayMontage(MontageName, ChoosedFloor, PlayRate, offset);
+        
+    }
+}
+
 FText Y_CharacterAction::GetDescribe()
 {
     return ActionDescribe;
+}
+
+UTexture2D* Y_CharacterAction::GetPicture()
+{
+    return UsingPicture;
 }
 

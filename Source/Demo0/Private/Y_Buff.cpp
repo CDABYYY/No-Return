@@ -91,10 +91,10 @@ void Y_Buff::ReplaceBuff(Y_Buff* OtherBuff)
 	IconWidget->Buff = AsShared();
 }
 
-void Y_Buff::AddToCharacter(AY_Character* TargetCharacter)
+void Y_Buff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 {
 	OwnerCharacter = TargetCharacter;
-	TargetCharacter->Buffs->AddBuff(AsShared(),1);
+	TargetCharacter->AddBuff(AsShared(), Execute);
 }
 
 void Y_Buff::RemoveFromCharacter()
@@ -158,7 +158,7 @@ CardBuff::CardBuff(TSharedPtr<class Y_CardInfo> Card)
 	CardInfo = Card;
 }
 
-void CardBuff::AddToCharacter(AY_Character* TargetCharacter)
+void CardBuff::AddToCharacter(AY_Character* TargetCharacter,bool Execute)
 {
 
 }
@@ -170,6 +170,7 @@ ActionBuff::ActionBuff(TSharedPtr<class Y_CharacterAction> Action)
 	ActionInfo = Action;
 }
 
-void ActionBuff::AddToCharacter(AY_Character* TargetCharacter)
+void ActionBuff::AddToCharacter(AY_Character* TargetCharacter,bool Execute)
 {
+
 }

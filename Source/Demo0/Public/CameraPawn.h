@@ -75,6 +75,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
 	class AY_Floor* LookingFloor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
+	float LookingTime;
+
 	void MoveRight(float Value);
 
 	UFUNCTION(BlueprintCallable)

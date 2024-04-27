@@ -40,6 +40,10 @@ public:
 	//DiscardReason: 0:Played, 1:Discarded
 	void UseCard(TSharedPtr<class Y_CardInfo> UsedCard, int32 DiscardReason = 0);
 
+	void PrepareDie(class AY_Character* ToDieCharacter);
+	void DestroyCharacter(class AY_Character* ToDestroyCharacter);
+
+
 	class AY_Floor* SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor,int32 SerialNumber,FName ActorClass = TEXT("Default"));
 	class AY_Card* SpawnCard(TSharedPtr<class Y_CardInfo> ToSpawnCard, FName ActorClass = TEXT("Default"));
 	class AY_Character* SpawnCharacter(TSharedPtr<class Y_EnemyInfo> ToSpawnCharacter,class AY_Floor* FromFloor, FName ActorClass = TEXT("Default"));
@@ -53,6 +57,7 @@ public:
 	TArray<TSharedPtr<class Y_CardInfo>> ExhaustCards;
 
 	TArray<TSharedPtr<class Y_EnemyInfo>> LivingEnemys;
+	TArray<TSharedPtr<class Y_EnemyInfo>> AppearedEnemys;
 	TArray<TSharedPtr<class Y_RoomInfo>> ReadyRooms;
 
 	TSharedPtr<class Y_SettleInfo> SettleInfo;

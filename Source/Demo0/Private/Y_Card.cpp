@@ -91,7 +91,7 @@ void AY_Card::Clicked()
 
 void AY_Card::Play()
 {
-	Info->Play();
+	Info->Play(true);
 	//UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, true);
 	//Y::GetMainCharacter()->CharacterLogicalMove(Y::GetPlayer()->ChoosedFloor);
 	//DrawCard();

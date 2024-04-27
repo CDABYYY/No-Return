@@ -32,7 +32,7 @@ void UY_HUD::ExecuteSkill()
 {
 	if(Y::GetPlayer()->ClickAble){
 		auto& ChoosedCard = Y::GetGameInfo()->MCSkill;
-		ChoosedCard->Play();
+		ChoosedCard->Play(true);
 		Y::GetMainCharacter()->CharacterAttackTime += ChoosedCard->CurrentCost;
 		Y::GetMainCharacter()->ChangeAttackTime(Y::GetMainCharacter()->CharacterAttackTime);
 		Y::GetPlayer()->ClickAble = false;

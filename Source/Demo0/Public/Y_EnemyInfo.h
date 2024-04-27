@@ -31,9 +31,10 @@ public:
 
 	virtual void Init(class Y_EnemyInfo* Owner);
 
-	void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
+	//Nullptr 将被视作无来源伤害，非Nullptr的指针如果指向对象不存在则停止执行
+	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
 
-	void Move(int32 Distance, bool Execute);
+	virtual void Move(int32 Distance, bool Execute);
 
 	virtual float GetRate();
 
@@ -41,13 +42,21 @@ public:
 
 	virtual void ActionChoosed();
 
-	virtual void ActionExecute();
+	virtual void ActionExecute(bool Execute);
+
+	virtual bool AttackFloor(class AY_Floor* TargetFloor);
+	
+	virtual bool CanAttackFloor(class AY_Floor* TargetFloor);
+
+	virtual void PlayMontage(FName MontageName ,class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
 
 	virtual FText LogDescript();
 
 	virtual FText GetName();
 
 	virtual FText GetDescribe();
+
+	virtual UTexture2D* GetPicture();
 };
 
 

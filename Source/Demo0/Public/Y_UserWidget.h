@@ -21,6 +21,29 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class AY_Character* OwnerCharacter;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText BuffDiscribe;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* ActionPicture;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText ActionTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText ActionDamage;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowBuffs();
+
+	UFUNCTION(BlueprintCallable)
+	void ClearShow();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateAction();
+
 	UFUNCTION(BlueprintCallable)
 	void UserWidgetInit(class AY_Character* Owner);
 

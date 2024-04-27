@@ -3,6 +3,29 @@
 
 #include "Y_UserWidget.h"
 #include "Y_Character.h"
+#include "Y_EnemyInfo.h"
+#include "Y.h"
+
+void UY_UserWidget::ShowBuffs()
+{
+	FString ToDiscribe;
+	for (auto& p : OwnerCharacter->ShowBuffs->Buff) {
+		ToDiscribe.Append(p->PrinCount());
+	}
+}
+
+void UY_UserWidget::ClearShow()
+{
+	OwnerCharacter->ShowBuffs->Buff.Empty();
+	BuffDiscribe = FText::GetEmpty();
+}
+
+void UY_UserWidget::UpdateAction()
+{
+	ActionPicture = OwnerCharacter->Info->Actions[OwnerCharacter->Info->ChoosedAction]->GetPicture();
+	ActionTime = FText::FromString(FString::Printf(TEXT("%d"),(int32)(OwnerCharacter->CharacterAttackTime - Y::GetRunTime() * 10)));
+}
+
 
 void UY_UserWidget::UserWidgetInit(AY_Character* Owner)
 {

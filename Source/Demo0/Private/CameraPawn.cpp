@@ -71,6 +71,8 @@ void ACameraPawn::BeginPlay()
 	Y::GetController()->MapWidget->PullMap(false);
 	Y::GetController()->LoadHUD();
 	Y::GetController()->ShowCards(false);
+	LookingTime = 0;
+	LookingFloor = nullptr;
 }
 
 // Called every frame
@@ -80,6 +82,58 @@ void ACameraPawn::Tick(float DeltaTime)
 	SetActorLocation(GetActorLocation() + CurrentVelocity * DeltaTime);
 	if(!ClickAble){
 		Y::GetGameInstance()->HelpTick(DeltaTime);
+	}
+	if (Y::IsPressingCard() && Y::GetChoosingCard().IsValid()) {
+		FVector MouseLocation, MouseRotation, EndLocation;
+		FHitResult HitResult;
+		if (APlayerController* PlayerController = Cast<APlayerController>(Controller)) {
+			if (PlayerController->DeprojectMousePositionToWorld(MouseLocation, MouseRotation))
+			{
+				EndLocation = MouseLocation + MouseRotation * 10000;
+				bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, MouseLocation, EndLocation, ECC_Visibility);
+				if (bHit) {
+					AActor* HitActor = HitResult.GetActor();
+					AY_Floor* HitFloor = Cast<AY_Floor>(HitActor);
+					if (!IsValid(HitFloor)) {
+						AY_Character* HitCharacter = Cast<AY_Character>(HitActor);
+						if (IsValid(HitCharacter))HitFloor = HitCharacter->StandFloor;
+					}
+					if (IsValid(HitFloor)) {
+						Y::GetMainCharacter()->ChangeFacing(HitFloor->SerialNumber - Y::GetMainCharacter()->StandFloor->SerialNumber);
+						if (LookingFloor != HitFloor) {
+							if (IsValid(LookingFloor)) {
+								if (Y::GetChoosingCard()->AcceptFloor(LookingFloor))LookingFloor->SetColor("Yellow");
+								else LookingFloor->SetColor("None");
+							}
+							LookingFloor = HitFloor;
+							ChoosedFloor = HitFloor;
+							LookingTime = 0;
+							for (auto& p : Y::GetEnemys())p->ShowToExecute(false);
+							Y::GetMainCharacter()->ShowToExecute(false);
+						}
+						else {
+							if (LookingTime < 0.5 && LookingTime + DeltaTime >= 0.5) {
+								LookingFloor->SetColor(TEXT("Blue")); 
+								
+								Y_StatusBar BA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
+								if (Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), BA, Y_Buff::BeginAction, Y::GetChoosingCard()->GetName().ToString(), false) == 0)
+								{
+									Y::GetChoosingCard()->CurrentCost = BA.Buff[0]->BuffCount;
+									Y::GetChoosingCard()->Play(false);
+
+									Y_StatusBar AA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
+									Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), AA, Y_Buff::AfterAction, Y::GetChoosingCard()->GetName().ToString(), false);
+								}
+
+								for (auto& p : Y::GetEnemys())p->ShowToExecute(true);
+								Y::GetMainCharacter()->ShowToExecute(true);
+							}
+							LookingTime += DeltaTime;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -109,38 +163,8 @@ void ACameraPawn::MouseLeftPress()
 				EndLocation = MouseLocation + MouseRotation * 10000;
 				bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, MouseLocation, EndLocation, ECC_Visibility);
 				if (bHit) {
-					AActor* HitActor = HitResult.GetActor();
-					if (AY_Card* HitCard = Cast<AY_Card>(HitActor)) {
-						if (IsValid(ChoosedCard))ChoosedCard->SetColor("None");
-						for (auto& p : Y::GetFloors())if(IsValid(p))p->SetColor("None");
-						ChoosedCard = HitCard;
-						HitCard->Clicked();
-					}
-					else if (AY_Floor* HitFloor = Cast<AY_Floor>(HitActor)) {
-						Y::GetMainCharacter()->ChangeFacing(HitFloor->SerialNumber - Y::GetMainCharacter()->StandFloor->SerialNumber);
-						if (ChoosedFloor != nullptr)ChoosedFloor->SetColor("None");
-						ChoosedFloor = HitFloor;
-						HitFloor->Clicked();
-						if (ChoosedCard != nullptr && ChoosedCard->AcceptFloor(ChoosedFloor)) {
-							ChoosedCard->Play();
-							if (!IsValid(Y::GetMainCharacter())) {
-								return;
-							}
-							//ChoosedCard->SetColor(TEXT("None")); 
-
-							Y::GetMainCharacter()->CharacterAttackTime += ChoosedCard->Info->CurrentCost;
-							Y::GetMainCharacter()->ChangeAttackTime(Y::GetMainCharacter()->CharacterAttackTime);
-							//Y::GetGameInstance()->AddAtk(Y::GetMainCharacter());
-
-							Y::GetGameInfo()->UseCard(ChoosedCard);
-							ChoosedCard = nullptr;
-							for (auto& f : UY_GameInstance::YGI->Floors) {
-								if (f != nullptr)f->SetColor(TEXT("None"));
-							}
-							
-							ClickAble = false;
-						}
-					}
+					
+					
 				}
 			}
 		}
@@ -151,7 +175,7 @@ void ACameraPawn::MouseLeftRelease()
 {
 
 	if (Y::IsPressingCard() && Y::GetChoosingCard().IsValid()) {
-		if (ClickAble) {
+		if (ClickAble) {	
 			FVector MouseLocation, MouseRotation, EndLocation;
 			FHitResult HitResult;
 			if (APlayerController* PlayerController = Cast<APlayerController>(Controller)) {
@@ -173,14 +197,18 @@ void ACameraPawn::MouseLeftRelease()
 							HitFloor->Clicked();
 							if (Y::GetChoosingCard()->AcceptFloor(ChoosedFloor))
 							{
-								Y::GetChoosingCard()->Play();
+								Y_StatusBar BA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
+								if (Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), BA, Y_Buff::BeginAction, Y::GetChoosingCard()->GetName().ToString(), true) == 0)
+								{
+									Y::GetChoosingCard()->CurrentCost = BA.Buff[0]->BuffCount;
+									Y::GetChoosingCard()->Play(true);
 
-								if (!IsValid(Y::GetMainCharacter())) {
-									return;
+									Y_StatusBar AA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
+									Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), AA, Y_Buff::AfterAction, Y::GetChoosingCard()->GetName().ToString(), true);
 								}
-								//ChoosedCard->SetColor(TEXT("None")); 
 
-								Y::GetMainCharacter()->CharacterAttackTime += Y::GetChoosingCard()->CurrentCost;
+
+								Y::GetMainCharacter()->CharacterAttackTime += BA.Buff[0]->BuffCount;
 								Y::GetMainCharacter()->ChangeAttackTime(Y::GetMainCharacter()->CharacterAttackTime);
 								//Y::GetGameInstance()->AddAtk(Y::GetMainCharacter());
 
@@ -203,6 +231,9 @@ void ACameraPawn::MouseLeftRelease()
 		Y::GetChoosingCard() = nullptr;
 		Y::IsPressingCard() = false;
 		Y::GetController()->ShowCards(false);
+
+		for (auto& p : Y::GetEnemys())p->ShowToExecute(false);
+		Y::GetMainCharacter()->ShowToExecute(false);
 	}
 }
 

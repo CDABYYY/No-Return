@@ -65,6 +65,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	class UY_BuffBar* BuffBar;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	class UY_UserWidget* UpWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	bool Living;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
 
@@ -72,9 +78,9 @@ public:
 	class UWidgetComponent* BuffWidget;
 
 	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	class Y_StatusBar* Buffs;
+	TSharedPtr<class Y_StatusBar> Buffs;
 
-	class Y_StatusBar* ShowBuffs;
+	TSharedPtr<class Y_StatusBar> ShowBuffs;
 
 	virtual void AddBuff(TSharedPtr<class Y_Buff> Buff, bool Execute);
 
@@ -82,6 +88,8 @@ public:
 
 	//UFUNCTION(BlueprintCallable)
 	virtual int32 ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition,FString TriggerAction, bool TryAttack = false);
+
+	void ShowToExecute(bool ToShow);
 
 	UFUNCTION(BlueprintCallable)
 	void CharacterMove(int32 Distance, bool Execute, FText Causer);
@@ -98,14 +106,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void CharacterLogicalMove(class AY_Floor* TargetFloor);
 
-	//UFUNCTION(BlueprintCallable)
-	virtual void AddBuffImmediately(TSharedPtr<class Y_Buff> AddedBuff);
-
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeAttackTime(int32 ChangedTime);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MyPlayMontage(FName PlayName, class AY_Floor* ToFloor, float PlayRate, bool Offset);
+
+	bool CheckValid();
 
 	TSharedPtr<class Y_EnemyInfo> Info;
 

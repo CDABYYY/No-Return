@@ -14,7 +14,7 @@
 
 int32 Y_CardInfo::GetCost()
 {
-	return CurrentCost;
+	return OriginalCost;
 }
 
 float Y_CardInfo::GetRate()
@@ -64,6 +64,11 @@ Y_CardInfo::~Y_CardInfo()
 }
 
 
+AY_Character* Y_CardInfo::GetOwner()
+{
+	return Y::GetMainCharacter();
+}
+
 void Y_CardInfo::CardUpdate()
 {
 	CurrentCost = GetCost();
@@ -89,14 +94,21 @@ void Y_CardInfo::Move(int32 Distance, bool Execute)
 	}
 }
 
+void Y_CardInfo::DrawCard(int32 DrawCount, bool Execute)
+{
+	if (Execute) {
+		Y::GetGameInfo()->DrawCard(DrawCount);
+	}
+}
+
 FText Y_CardInfo::LogDescript()
 {
 	return FText::FromString(TEXT("Card Log"));
 }
 
-void Y_CardInfo::Play()
+void Y_CardInfo::Play(bool Execute)
 {
-	UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, true);
+	UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, Execute);
 	Y::GetMainCharacter()->CharacterLogicalMove(Y::GetPlayer()->ChoosedFloor);
 	Y::GetGameInfo()->DrawCard();
 }

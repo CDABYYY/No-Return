@@ -3,17 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Y_EnemyInfo.h"
 
 /**
  * 
  */
-class DEMO0_API Y_CardInfo
+class DEMO0_API Y_CardInfo:public Y_CharacterAction
 {
 public:
 
 	virtual int32 GetCost();
 
-	virtual float GetRate();
+	virtual float GetRate()override;
 
 	virtual FText GetCardDescribe();
 
@@ -40,6 +41,9 @@ public:
 	FText CurrentCardDescribe;
 	FText CurrentPointDescribe;
 
+	//The Status when Pressing this Card
+	int32 PressingStatus;
+
 	int32 Weight = 0;
 
 	bool NeedTarget;
@@ -48,15 +52,19 @@ public:
 
 	class UY_CardW* OwnerWidget;
 
-	void CardUpdate();
+	virtual class AY_Character* GetOwner();
 
-	void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
+	virtual void CardUpdate();
 
-	void Move(int32 Distance, bool Execute);
+	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
+
+	virtual void Move(int32 Distance, bool Execute);
+
+	static void DrawCard(int32 DrawCount,bool Execute);
 	
 	virtual FText LogDescript();
 
-	virtual void Play();
+	virtual void Play(bool Execute);
 
 	virtual void Drawed();
 

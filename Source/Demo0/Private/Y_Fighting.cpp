@@ -74,6 +74,8 @@ void Y_Fighting::AfterFight()
 	DiscardedCards.Empty();
 	InHandCards.Empty();
 	ExhaustCards.Empty();
+	AppearedEnemys.Empty();
+	LivingEnemys.Empty();
 
 	Y::GetPlayer()->ClickAble = true;
 }
@@ -174,6 +176,16 @@ void Y_Fighting::UseCard(TSharedPtr<class Y_CardInfo> UsedCard, int32 DiscardRea
 	Y::GetController()->CardWidget->RemoveCard(UsedCard->OwnerWidget);
 }
 
+void Y_Fighting::PrepareDie(AY_Character* ToDieCharacter)
+{
+	LivingEnemys.Remove(ToDieCharacter->Info);
+	Y::GetEnemys().Remove(ToDieCharacter);
+}
+
+void Y_Fighting::DestroyCharacter(AY_Character* ToDestroyCharacter)
+{
+}
+
 AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int32 SerialNumber, FName ActorClass)
 {
 	FVector ToVector(Y::GetLocation());
@@ -228,6 +240,7 @@ AY_Character* Y_Fighting::SpawnCharacter(TSharedPtr<Y_EnemyInfo> ToSpawnCharacte
 	}
 	Y::GetEnemys().Add(NewCharacter);
 	LivingEnemys.Add(ToSpawnCharacter);
+	AppearedEnemys.Add(ToSpawnCharacter);
 	SpawnCharacter(NewCharacter);
 	return NewCharacter;
 }

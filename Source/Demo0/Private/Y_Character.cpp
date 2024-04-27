@@ -23,7 +23,7 @@ AY_Character::AY_Character()
 	MyWidgetHealth->SetWidgetClass(WidgetClass.Class);
 	MyWidgetHealth->SetRelativeLocation(FVector(0, 0, 150));
 	MyWidgetHealth->SetWidgetSpace(EWidgetSpace::Screen);
-	MyWidgetHealth->SetDrawSize(FVector2D(200, 30));
+	MyWidgetHealth->SetDrawSize(FVector2D(200, 60));
 
 	BuffWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("BuffWidgetComponent"));
 	BuffWidget->SetupAttachment(RootComponent);
@@ -48,18 +48,19 @@ AY_Character::AY_Character()
 
 	StandFloor = nullptr;
 
-	Buffs = new Y_StatusBar();
-	ShowBuffs = new Y_StatusBar();
+	Buffs = MakeShared<Y_StatusBar>();
+	ShowBuffs = MakeShared<Y_StatusBar>();
 	//Buffs->AddBuff(new Y_Buff());
+	Living = true;
 }
 
 // Called when the game starts or when spawned
 void AY_Character::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Call AddAtk"));
 	Y::GetGameInstance()->AddAtk(this);
 	if (UY_UserWidget* WidgetHealth = Cast<UY_UserWidget>(MyWidgetHealth->GetUserWidgetObject())) {
+		UpWidget = WidgetHealth;
 		WidgetHealth->UserWidgetInit(this);
 	}
 	if (UY_BuffBar* P = Cast<UY_BuffBar>(BuffWidget->GetUserWidgetObject()))
@@ -128,7 +129,22 @@ bool AY_Character::ChangeFacing(int32 ToChange)
 
 int32 AY_Character::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs,int32 ExecuteCondition,FString TriggerAction, bool TryAttack)
 {
-	return Buffs->ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, ExecuteCondition, TriggerAction, TryAttack);
+	int ExecuteStatus = 0;
+	for (auto& p : Buffs->Buff) {
+		if (p->TriggerCondition & ExecuteCondition && p->Living)
+			ExecuteStatus = p->execute(FromCharacter, ToCharacter, ToBuffs, ExecuteCondition, TriggerAction, TryAttack);
+		if (ExecuteStatus != 0) break;
+		if (!CheckValid())return -1;
+	}
+	return ExecuteStatus;
+}
+
+void AY_Character::ShowToExecute(bool ToShow)
+{
+	if (IsValid(UpWidget)) {
+		if (ToShow)UpWidget->ShowBuffs();
+		else UpWidget->ClearShow();
+	}
 }
 
 void AY_Character::CharacterMove(int32 Distance, bool Execute, FText Causer)
@@ -153,6 +169,7 @@ void AY_Character::Attack()
 
 void AY_Character::CharacterDead()
 {
+	Living = false;
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Character Dead!"));
 }
 
@@ -175,16 +192,17 @@ void AY_Character::CharacterLogicalMove(AY_Floor* TargetFloor)
 	StandFloor = TargetFloor;
 }
 
-void AY_Character::AddBuffImmediately(TSharedPtr<class Y_Buff> AddedBuff)
-{
-	AddedBuff->AddToCharacter(this);
-}
 
 void AY_Character::ChangeAttackTime(int32 ChangedTime)
 {
 	UY_TimeLine::YTimeLine->RemoveCharacter(this);
 	CharacterAttackTime = ChangedTime;
 	UY_TimeLine::YTimeLine->AddCharacter(this);
+}
+
+bool AY_Character::CheckValid()
+{
+	return IsValid(this) && Living;
 }
 
 
