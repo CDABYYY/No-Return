@@ -13,6 +13,7 @@
 #include "Y_MapWidget.h"
 #include "Y_CardInfo.h"
 #include "Y_Fighting.h"
+#include "Y_CardH.h"
 #include "Engine/LocalPlayer.h"
 
 // Sets default values
@@ -200,11 +201,16 @@ void ACameraPawn::MouseLeftRelease()
 								Y_StatusBar BA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
 								if (Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), BA, Y_Buff::BeginAction, Y::GetChoosingCard()->GetName().ToString(), true) == 0)
 								{
+
+									Y::Log(0, TEXT("Execute Successfully"));
 									Y::GetChoosingCard()->CurrentCost = BA.Buff[0]->BuffCount;
 									Y::GetChoosingCard()->Play(true);
 
 									Y_StatusBar AA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
 									Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), AA, Y_Buff::AfterAction, Y::GetChoosingCard()->GetName().ToString(), true);
+								}
+								else {
+									Y::GetChoosingCard()->CurrentCost = BA.Buff[0]->BuffCount;
 								}
 
 
@@ -228,8 +234,9 @@ void ACameraPawn::MouseLeftRelease()
 			}
 		}
 		for (auto& p : Y::GetFloors())if (IsValid(p))p->SetColor(TEXT("None"));
-		Y::GetChoosingCard() = nullptr;
+		Y::GetController()->CardWidget->ChoosedCard = nullptr;
 		Y::IsPressingCard() = false;
+		Y::GetController()->CardWidget->Update();
 		Y::GetController()->ShowCards(false);
 
 		for (auto& p : Y::GetEnemys())p->ShowToExecute(false);

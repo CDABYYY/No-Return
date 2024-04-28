@@ -54,6 +54,7 @@ Y_CardInfo::Y_CardInfo()
 	CardID = 0;
 
 	NeedTarget = true;
+	PressingStatus = 1;
 
 	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/Png/JayceStaticField.JayceStaticField'");
 	UsingPicture = Y::LoadPicture(Path);
@@ -132,6 +133,7 @@ void Y_CardInfo::Clicked()
 			f->SetColor(TEXT("Yellow"));
 		}
 	}
+	GetOwner()->CharacterStatus = PressingStatus;
 }
 
 float Y_CardInfo::GetWeight()

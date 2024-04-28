@@ -28,13 +28,16 @@ void UY_CardW::Update()
 
 void UY_CardW::Enter()
 {
-	Owner->ChoosedCard = this;
-	Owner->Update();
+	if(IsValid(Owner))
+	{
+		Owner->ChoosedCard = this;
+		Owner->Update();
+	}
 }
 
 void UY_CardW::Leave()
 {
-	if (Owner->ChoosedCard == this && !Owner->Pressing)
+	if (IsValid(Owner) && Owner->ChoosedCard == this && !Owner->Pressing)
 	{
 		Owner->ChoosedCard = nullptr;
 		Owner->Update();
@@ -43,12 +46,15 @@ void UY_CardW::Leave()
 
 void UY_CardW::Press()
 {
-	Owner->ChoosedCard = this;
-	Owner->Pressing = true;
-	Owner->Update();
-	Y::GetController()->ShowCards(true);
+	if(IsValid(Owner))
+	{
+		Owner->ChoosedCard = this;
+		Owner->Pressing = true;
+		Owner->Update();
+		Y::GetController()->ShowCards(true);
 
-	CardInfo->Clicked();
+		CardInfo->Clicked();
+	}
 }
 
 void UY_CardW::HelpTick(float DeltaTime)

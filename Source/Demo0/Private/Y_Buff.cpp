@@ -166,7 +166,7 @@ void CardBuff::AddToCharacter(AY_Character* TargetCharacter,bool Execute)
 ActionBuff::ActionBuff(TSharedPtr<class Y_CharacterAction> Action)
 {
 	BuffID = 20000 + Action->ActionID;
-	BuffCount = 20000 + Action->OriginalCost;
+	BuffCount = Action->OriginalCost;
 	ActionInfo = Action;
 }
 

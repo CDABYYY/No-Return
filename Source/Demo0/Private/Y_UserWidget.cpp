@@ -12,6 +12,7 @@ void UY_UserWidget::ShowBuffs()
 	for (auto& p : OwnerCharacter->ShowBuffs->Buff) {
 		ToDiscribe.Append(p->PrinCount());
 	}
+	BuffDiscribe = FText::FromString(ToDiscribe);
 }
 
 void UY_UserWidget::ClearShow()
@@ -30,6 +31,8 @@ void UY_UserWidget::UpdateAction()
 void UY_UserWidget::UserWidgetInit(AY_Character* Owner)
 {
 	OwnerCharacter = Owner;
+	//Temp
+	BuffDiscribe = FText::FromString(TEXT("Init UW"));
 }
 
 float UY_UserWidget::GetHealthPersent()

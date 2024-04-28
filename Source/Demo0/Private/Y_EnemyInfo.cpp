@@ -12,6 +12,7 @@
 Y_EnemyInfo::Y_EnemyInfo()
 {
     Actions.Add(MakeShared<Y_CharacterAction>());
+    ChoosedAction = 0;
 }
 
 Y_EnemyInfo::~Y_EnemyInfo()
@@ -42,18 +43,24 @@ int32 Y_EnemyInfo::GetRandomAction()
 
 void Y_EnemyInfo::EnemyAttack()
 {
-    Actions[ChoosedAction]->ActionExecute(true);
-    Y_StatusBar AA{ MakeShared<ActionBuff>(Actions[ChoosedAction]) };
-    (Owner->Buffs)->ExecuteBuffs(Owner, Owner, AA, Y_Buff::AfterAction, Actions[ChoosedAction]->GetName().ToString(),true);
-    //(Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::AfterAction, TEXT("AfterAction"));
+    if(ChoosedAction > 0)
+    {
+        Actions[ChoosedAction]->ActionExecute(true);
+        Y_StatusBar AA{ MakeShared<ActionBuff>(Actions[ChoosedAction]) };
+        (Owner->Buffs)->ExecuteBuffs(Owner, Owner, AA, Y_Buff::AfterAction, Actions[ChoosedAction]->GetName().ToString(), true);
+        //(Owner->Buffs)->ExecuteBuffs(Owner, Owner, *(Owner->Buffs), Y_Buff::AfterAction, TEXT("AfterAction"));
+    }
     ChoosedAction = GetRandomAction();
     Actions[ChoosedAction]->ActionChoosed();
     Y_StatusBar BA{ MakeShared<ActionBuff>(Actions[ChoosedAction]) };
     if((Owner->Buffs)->ExecuteBuffs(Owner, Owner, BA, Y_Buff::BeginAction, Actions[ChoosedAction]->GetName().ToString(), true) == 0)
     {
+        //Temp
+        Y::Log(0, TEXT("Execute Action"));
         Actions[ChoosedAction]->CurrentCost = BA.Buff[0]->BuffCount;
         Owner->CharacterAttackTime += (int32)(Actions[ChoosedAction]->CurrentCost * Owner->ActionRate * Y::GetGameInstance()->TopoRate);
         Owner->ChangeAttackTime(Owner->CharacterAttackTime);
+        Y::Log(0, TEXT("Action Cost:%d"),Actions[ChoosedAction]->CurrentCost);
     }
 }
 

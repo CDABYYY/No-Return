@@ -69,6 +69,7 @@ int32 DemageBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter
 
 void DemageBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 {
+	Y::Log(0, TEXT("Try AddToCharacter"));
 	Y_Buff::AddToCharacter(TargetCharacter,Execute);
 	if(Execute)
 	TargetCharacter->Health -= BuffCount;

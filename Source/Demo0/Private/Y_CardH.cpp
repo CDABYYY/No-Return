@@ -21,6 +21,7 @@ void UY_CardH::Update()
 	const float ReservedHeight = 80;
 	if (Pos < 0)Pos = Cards.Num() / 2;
 	else Choosed = true;
+
 	float XPos = 1920 / 2 - Cards.Num() * 50 - 50;
 	if (Choosed)XPos -= 50;
 	for (int32 i = 0; i < Pos;i++) {

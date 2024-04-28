@@ -44,7 +44,8 @@ void UY_TimeLine::AddCharacter(AY_Character* AddedCharacter)
 
 void UY_TimeLine::RemoveCharacter(AY_Character* RemovedCharacter)
 {
-	for (auto& p : TimeMarks) {
+	TArray<UY_TimeMark*> TmpTimeMarks = TimeMarks.Data;
+	for (auto& p : TmpTimeMarks) {
 		p->RemoveProfile(RemovedCharacter);
 	}
 }

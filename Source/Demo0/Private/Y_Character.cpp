@@ -114,8 +114,8 @@ void AY_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AY_Character::AddBuff(TSharedPtr<class Y_Buff> Buff, bool Execute)
 {
-	if (Execute)Buffs->AddBuff(Buff);
-	else ShowBuffs->AddBuff(Buff);
+	if (Execute)Buffs->AddBuff(Buff,1);
+	else ShowBuffs->AddBuff(Buff,1);
 }
 
 bool AY_Character::ChangeFacing(int32 ToChange)
