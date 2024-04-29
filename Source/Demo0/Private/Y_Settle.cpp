@@ -25,11 +25,28 @@ void UY_Settle::EndWork()
 	Info->EndWork();
 	Y::GetGameInfo()->AfterFight();
 	Y::GetController()->MapWidget->PullMap(false);
+	Y::GetController()->ShowSettle(true);
+}
+
+void UY_Settle::LoadInfo(TSharedPtr<class Y_SettleInfo> LoadingInfo)
+{
+	Info = LoadingInfo;
+	Tittle = Info->Describe();
+	for (auto& p : Info->TrophyInfos) {
+		auto TP = CreateTrophy();
+		TP->LoadInfo(p);
+		Trophys.Add(TP);
+	}
+}
+
+Y_SettleInfo::Y_SettleInfo()
+{
+	TittleDescribe = FText::FromString(TEXT("Victory"));
 }
 
 FText Y_SettleInfo::Describe()
 {
-	return FText::FromString(TEXT("Victory"));
+	return TittleDescribe;
 }
 
 void Y_SettleInfo::EndWork()

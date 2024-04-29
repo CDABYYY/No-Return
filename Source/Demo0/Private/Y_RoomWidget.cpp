@@ -40,16 +40,25 @@ void UY_RoomWidget::Passed()
 	Info->Passed();
 }
 
+void UY_RoomWidget::LoadInfo(TSharedPtr<class Y_RoomInfo> LoadingInfo)
+{
+	Info = LoadingInfo;
+	Info->Owner = this;
+}
+
 void UY_RoomWidget::RoomInit()
 {
 	Y::GetLocation() = FVector(0, 0, 300);
 	Y::GetRotation() = FRotator(0, 90, 0);
 	Info = MakeShared<Y_RoomInfo>();
 	Info->Owner = this;
+	Cleared = false;
 }
 
 void UY_RoomWidget::RoomClicked()
 {
+	CurrentRoom = this;
+	Y::GetController()->MapWidget->CurrentRoom = this;
 	Y::GetController()->MapWidget->PullMap(true);
 
 	Y::GetGameInfo()->BeginFight();
@@ -59,8 +68,7 @@ void UY_RoomWidget::RoomClicked()
 	
 	auto TmpInfo = Info->RoomClicked();
 	while (TmpInfo != nullptr) {
-		Info = TmpInfo;
-		Info->Owner = this;
+		LoadInfo(TmpInfo);
 		TmpInfo = Info->RoomClicked();
 	}
 }
@@ -68,9 +76,6 @@ void UY_RoomWidget::RoomClicked()
 void UY_RoomWidget::RoomClosed()
 {
 	Info->LeaveRoom();
-	//Need Fix(ForwardRoom Can't Use!)
-	//Y::GetController()->MapWidget->ForwardRoom(this);
-	Y::GetController()->EndRoom();
 }
 
 void UY_RoomWidget::FightBegin()
@@ -156,9 +161,17 @@ TSharedPtr<Y_RoomInfo> Y_RoomInfo::RoomClicked()
 
 void Y_RoomInfo::LeaveRoom()
 {
+	DoToEndRoom();
 }
 
 float Y_RoomInfo::GetWeight()
 {
 	return 10;
+}
+
+void Y_RoomInfo::DoToEndRoom()
+{
+	//Need Fix(ForwardRoom Can't Use!)
+	//Y::GetController()->MapWidget->ForwardRoom(this);
+	Y::GetGameInfo()->EndRoom();
 }

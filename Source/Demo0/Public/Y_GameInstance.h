@@ -33,6 +33,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<class AY_Character*>Enemys;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 Money;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FVector NowVector;
 

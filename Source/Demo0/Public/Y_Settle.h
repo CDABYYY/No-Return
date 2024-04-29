@@ -30,11 +30,17 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void EndWork();
+
+	void LoadInfo(TSharedPtr<class Y_SettleInfo> LoadingInfo);
 };
 
 class DEMO0_API Y_SettleInfo 
 {
 public:
+	Y_SettleInfo();
+
+	FText TittleDescribe;
+
 	virtual ~Y_SettleInfo() {};
 
 	virtual FText Describe();

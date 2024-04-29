@@ -18,6 +18,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UUserWidget> Profileclass;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UY_RoomWidget* CurrentRoom;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (DisplayName = "Occupation Ratio"))
 	float a = 0.5;
 

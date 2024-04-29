@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Y_ClassBase.h"
@@ -8,6 +8,8 @@
 #include "Y_EventWidget.h"
 #include "Y_ChoiceWidget.h"
 #include "Y_PlayerController.h"
+#include "Y_Settle.h"
+#include "Y_Trophy.h"
 #include "Y.h"
 
 void LoadY_Base()
@@ -45,7 +47,7 @@ void MoveBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 
 FText MoveBuff::printBuff(bool PrintLog) const
 {
-	return FText::FromString(FString::Printf(TEXT("Move %d"), BuffCount));
+	return Y::PrintText(TEXT("Move %d"), BuffCount);
 }
 
 DemageBuff::DemageBuff()
@@ -56,6 +58,7 @@ DemageBuff::DemageBuff()
 	BuffOrder = 0;
 	BuffLevel = 0;
 	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("伤害"));
 }
 
 int32 DemageBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
@@ -376,6 +379,12 @@ TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 
 void EventRoom::LeaveRoom()
 {
+	auto EP = MakeShared<Y_EventInfo>();
+	EP->Description = Y::PrintText(TEXT("Will End Room"));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("EndRoom")), [this]() {this->DoToEndRoom(); }));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Get New Card")), []() { Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() })); }));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Reload")), []() {}, EP));
+	Y::GetController()->BeginEvent(EP);
 }
 
 NormalFloor::NormalFloor()

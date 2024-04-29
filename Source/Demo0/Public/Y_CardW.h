@@ -44,6 +44,9 @@ public:
 	int32 Cost;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 CardID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* Picture;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

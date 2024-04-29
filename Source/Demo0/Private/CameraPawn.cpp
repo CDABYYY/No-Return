@@ -14,6 +14,10 @@
 #include "Y_CardInfo.h"
 #include "Y_Fighting.h"
 #include "Y_CardH.h"
+#include "Y_Settle.h"
+#include "Y_Trophy.h"
+#include "Y_ChooseCard.h"
+#include "Y_RoomWidget.h"
 #include "Engine/LocalPlayer.h"
 
 // Sets default values
@@ -242,6 +246,17 @@ void ACameraPawn::MouseLeftRelease()
 		for (auto& p : Y::GetEnemys())p->ShowToExecute(false);
 		Y::GetMainCharacter()->ShowToExecute(false);
 	}
+}
+
+void ACameraPawn::TryExperimentFunction()
+{
+	//auto ChoosePtr = MakeShared<Y_ChooseCardInfo>();
+	//ChoosePtr->Cards.Add(Y::CardClass[1]->NewObject());
+	//ChoosePtr->Cards.Add(Y::CardClass[1]->NewObject());
+	//ChoosePtr->Cards.Add(Y::CardClass[1]->NewObject());
+	//Y::GetController()->BeginChoose(ChoosePtr);
+	Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() }));
+	Y::GetController()->MapWidget->CurrentRoom->RoomClosed();
 }
 
 //void ACameraPawn::Move(const FInputActionValue& Value)

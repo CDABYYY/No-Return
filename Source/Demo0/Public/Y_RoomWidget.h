@@ -38,6 +38,8 @@ public:
 	virtual void LeaveRoom();
 
 	virtual float GetWeight();
+
+	void DoToEndRoom();
 };
 
 
@@ -63,6 +65,10 @@ public:
 	virtual bool IsArrivable();
 
 	virtual void Passed();
+
+	bool Cleared;
+
+	virtual void LoadInfo(TSharedPtr<class Y_RoomInfo> LoadingInfo);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void RoomInit();

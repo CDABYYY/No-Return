@@ -70,7 +70,7 @@ int32 Y_StatusBar::RemoveBuff(TSharedPtr<Y_Buff> RemovedBuff)
 
 int32 Y_StatusBar::FindCondition()
 {
-	int32 FindedCondition = Y_Buff::Buffing;
+	int32 FindedCondition = 0;
 /*	for (auto& p : Buff) {
 		if (p->TriggerCondition & Y_Buff::Injuring) {
 			FindedCondition = Y_Buff::Injuring;

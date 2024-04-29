@@ -80,6 +80,12 @@ void Y_Fighting::AfterFight()
 	Y::GetPlayer()->ClickAble = true;
 }
 
+void Y_Fighting::EndRoom()
+{
+	Y::GetController()->ShowSettle(false);
+	Y::GetController()->SettleWidget->LoadInfo(SettleInfo);
+}
+
 void Y_Fighting::SpawnCharacter(AY_Character* SpawnedCharacter)
 {
 	EventBuffs.ExecuteBuffs(nullptr, SpawnedCharacter, EventBuffs, Y_Buff::CharacterSpawn, TEXT("Character Spawn"));

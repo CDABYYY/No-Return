@@ -85,4 +85,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void MouseLeftRelease();
+
+	UFUNCTION(BlueprintCallable)
+	void TryExperimentFunction();
 };

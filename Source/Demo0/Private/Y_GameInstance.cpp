@@ -39,6 +39,7 @@ UY_GameInstance::UY_GameInstance()
 
 	//RandomStream = FRandomStream(0);
 	HaveRandoms = 0;
+	Money = 0;
 
 	FightInfo = MakeShared<Y_Fighting>();
 

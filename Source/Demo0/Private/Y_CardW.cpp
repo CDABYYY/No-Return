@@ -23,6 +23,7 @@ void UY_CardW::Update()
 		CardDescribe = CardInfo->GetCardDescribe();
 		Cost = CardInfo->GetCost();
 		Picture = CardInfo->GetPicture();
+		CardID = CardInfo->CardID;
 	}
 }
 

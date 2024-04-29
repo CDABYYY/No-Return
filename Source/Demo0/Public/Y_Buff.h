@@ -103,7 +103,7 @@ public:
 	
 	class AY_Character* OwnerCharacter;
 
-	int32 BuffProperty;//Buff belong to Damage(1),Move(2),Buff(3)
+	int32 BuffProperty;//Buff belong to Damage(1),Move(2),Buff(3),Mark(4)
 
 	TSet<int32> BuffExtend;
 

@@ -3,15 +3,21 @@
 
 #include "Y_Trophy.h"
 #include "Y.h"
+#include "Y_ChooseCard.h"
+#include "Y_PlayerController.h"
+
+Y_TrophyInfo::~Y_TrophyInfo()
+{
+}
 
 UTexture2D* Y_TrophyInfo::Picture()
 {
-	return nullptr;
+	return UsingPicture;
 }
 
 FText Y_TrophyInfo::Describe()
 {
-	return FText();
+	return UsingDescibe;
 }
 
 FText Y_TrophyInfo::Amount()
@@ -28,8 +34,10 @@ void Y_TrophyInfo::Clicked()
 
 void UY_Trophy::Clicked()
 {
-	Info->Clicked();
-	RemoveFromParent();
+	if(Info.IsValid()){
+		Info->Clicked();
+		RemoveFromParent();
+	}
 }
 
 void UY_Trophy::Init()
@@ -37,4 +45,29 @@ void UY_Trophy::Init()
 	UsingPicture = Info->Picture();
 	TrophyDescribe = Info->Describe();
 	TrophyAmount = Info->Amount();
+}
+
+void UY_Trophy::LoadInfo(TSharedPtr<class Y_TrophyInfo> LoadingInfo)
+{
+	Info = LoadingInfo;
+	Init();
+}
+
+TSharedPtr<CardTrophy> CardTrophy::Share(std::initializer_list<TSharedPtr<class Y_CardInfo>> ToLoadInfos)
+{
+	auto p = new CardTrophy{ ToLoadInfos };
+	TSharedPtr<CardTrophy> TP = TSharedPtr<CardTrophy>(p);
+	return TP;
+}
+
+CardTrophy::CardTrophy(std::initializer_list<TSharedPtr<class Y_CardInfo>> ToLoadInfos)
+{
+	for (auto& p : ToLoadInfos)CardInfos.Add(p);
+}
+
+void CardTrophy::Clicked()
+{
+	auto ChooseInfo = MakeShared<Y_ChooseCardInfo>();
+	ChooseInfo->Cards = CardInfos;
+	Y::GetController()->BeginChoose(ChooseInfo);
 }

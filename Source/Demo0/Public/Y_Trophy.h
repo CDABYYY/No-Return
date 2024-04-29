@@ -20,6 +20,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Init();
 
+	void LoadInfo(TSharedPtr<class Y_TrophyInfo> LoadingInfo);
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UTexture2D* UsingPicture;
 	
@@ -35,9 +37,20 @@ public:
 class DEMO0_API Y_TrophyInfo 
 {
 public:
+	virtual ~Y_TrophyInfo();
 	int32 Counts;
+	UTexture2D* UsingPicture;
+	FText UsingDescibe;
 	virtual UTexture2D* Picture();
 	virtual FText Describe();
 	virtual FText Amount();
 	virtual void Clicked();
+};
+
+class DEMO0_API CardTrophy:public Y_TrophyInfo {
+public:
+	static TSharedPtr<CardTrophy> Share(std::initializer_list <TSharedPtr< class Y_CardInfo >> ToLoadInfos);
+	TArray<TSharedPtr<class Y_CardInfo>> CardInfos;
+	CardTrophy(std::initializer_list <TSharedPtr< class Y_CardInfo >> ToLoadInfos);
+	virtual void Clicked() override;
 };

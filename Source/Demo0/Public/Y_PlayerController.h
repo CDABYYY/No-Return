@@ -40,8 +40,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UY_CardH* CardWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_ChooseCard* ChooseWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_Settle* SettleWidget;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowCards(bool Reversed);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowChoosing(bool Reversed);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowSettle(bool Reversed);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowMap();
@@ -68,6 +80,8 @@ public:
 	void LoadHUD();
 
 	void BeginEvent(TSharedPtr<class Y_EventInfo> EventInfo);
+
+	void BeginChoose(TSharedPtr<class Y_ChooseCardInfo> ChooseInfo);
 
 protected:
 	virtual void BeginPlay() override;

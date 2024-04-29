@@ -29,6 +29,7 @@ public:
 
 	void BeginFight();
 	void AfterFight();
+	void EndRoom();
 	void SpawnCharacter(class AY_Character* SpawnedCharacter);
 	void AddEquipment(TSharedPtr<class Y_Equipment> GetEquipment);
 

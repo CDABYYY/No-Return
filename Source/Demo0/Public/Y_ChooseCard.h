@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class UY_CardW*> CardWidgets;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText Discribe;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	class UY_CardW* CreateShowCard(float RelativePosition);
 
@@ -42,7 +45,7 @@ public:
 	TArray<TSharedPtr<class Y_CardInfo>> Cards;
 	int32 ChooseCount;
 	bool NeedChooseMax;
-
+	FString ChooseDiscribe;
 	virtual void CardClicked(TSharedPtr<class Y_CardInfo> ClickedInfo);
 
 	virtual void AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedCards);
