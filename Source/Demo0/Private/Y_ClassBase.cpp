@@ -10,6 +10,7 @@
 #include "Y_PlayerController.h"
 #include "Y_Settle.h"
 #include "Y_Trophy.h"
+#include "Y_Equipment.h"
 #include "Y.h"
 
 void LoadY_Base()
@@ -91,6 +92,7 @@ ShieldBuff::ShieldBuff()
 	BuffOrder = 0;
 	BuffLevel = 20;
 	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("护盾"));
 }
 
 int32 ShieldBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
@@ -370,6 +372,7 @@ TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 	auto EP = MakeShared<Y_EventInfo>();
 	EP->Description = Y::PrintText(TEXT("Event Room"));
 	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Quit")), []() {}));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Add Equipment")), []() {Y::GetGameInfo()->AddEquipment(MakeShared<Y_Equipment>()); }));
 	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("DrawCard")), []() {Y::GetGameInfo()->DrawCard(); }));
 	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Reload")), []() {},EP));
 	Y::GetController()->BeginEvent(EP);
@@ -382,7 +385,7 @@ void EventRoom::LeaveRoom()
 	auto EP = MakeShared<Y_EventInfo>();
 	EP->Description = Y::PrintText(TEXT("Will End Room"));
 	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("EndRoom")), [this]() {this->DoToEndRoom(); }));
-	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Get New Card")), []() { Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() })); }));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Get New Card")), [this]() { Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() })); this->DoToEndRoom(); }));
 	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Reload")), []() {}, EP));
 	Y::GetController()->BeginEvent(EP);
 }

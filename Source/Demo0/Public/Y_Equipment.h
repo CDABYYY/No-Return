@@ -11,11 +11,31 @@ class DEMO0_API Y_Equipment
 {
 public:
 	Y_Equipment();
-	~Y_Equipment();
+	virtual ~Y_Equipment();
 	TSharedPtr<Y_Buff> EquipmentBuff;
-	int32 EquipmentPriority;
+	int32 EquipmentID;
+	int32 SkillCD;
+	int32 CanUseCount;
 	int32 GetPrice();
-	void Equiped();
+	FText EquipmentName;
+	UTexture2D* UsingPicture;
+	int32 PressingStatus;
+	bool UseAble;
+	bool NeedTarget;
+	class UY_EquipmentW* Owner;
+	virtual void Update();
+	virtual void Play(bool Execute);
+	virtual void Equiped();
 	//TSharedPtr<Y_Buff> AddInFight();
-	void UnEquiped();
+	virtual void UnEquiped();
+
+	virtual class AY_Character* GetOwner();
+
+	static void DrawCard(int32 DrawCount, bool Execute);
+
+	void Clicked();
+
+	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
+
+	virtual bool AcceptFloor(class AY_Floor* GetFloor);
 };

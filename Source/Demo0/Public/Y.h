@@ -32,11 +32,15 @@ public:
 
 	static TArray<class AY_Character*>& GetEnemys();
 
-	static TSharedPtr<class Y_CardInfo>& GetChoosingCard();
+	static bool& IsPressingCard();
+
+	static TSharedPtr<class Y_CardInfo> GetChoosingCard();
 
 	static float& GetRunTime();
 
-	static bool& IsPressingCard();
+	static TSharedPtr<class Y_Equipment> GetChoosingEquipment();
+
+	static bool& IsPressingEquipment();
 
 	static FVector& GetLocation();
 

@@ -17,12 +17,12 @@ public:
 	
 	//Equipments And Buffs Will Only Run On BeginFight, AfterFight, CharacterSpawn
 	//If you want to Add Trigger To Other Times, Put it On Character when CharacterSpawn so it will run
-	YOArray<TSharedPtr<class Y_Equipment>> Equipments;
+	TArray<TSharedPtr<class Y_Equipment>> Equipments;
 
 	//This is for Event. Recommand to Delete it when end event.
 	Y_StatusBar EventBuffs;
-	Y_StatusBar EquipmentBuffs;
-	Y_StatusBar ToExecuteBuffs;
+	Y_StatusBar AlwaysBuffs;
+	Y_StatusBar FightingBuffs;
 	
 	//Using Execute Method
 	void ExecuteToAllCharacter(TSharedPtr<class Y_Buff> ToExecuteBuff);

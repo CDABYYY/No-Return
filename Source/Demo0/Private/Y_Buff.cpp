@@ -155,6 +155,7 @@ CardBuff::CardBuff(TSharedPtr<class Y_CardInfo> Card)
 {
 	BuffID = 10000 + Card->CardID;
 	BuffCount = Card->OriginalCost;
+	BuffExtend = Card->CardTypes;
 	CardInfo = Card;
 }
 

@@ -69,6 +69,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
 	class AY_Card* ChoosedCard;
 
+	TSharedPtr<class Y_Equipment> ChoosedEquipment;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
 	class AY_Floor* ChoosedFloor;
 

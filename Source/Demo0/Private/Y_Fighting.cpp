@@ -13,13 +13,13 @@
 #include "Y_Settle.h"
 #include "Y_TimeLine.h"
 #include "Y_PlayerController.h"
+#include "Y_EquipmentH.h"
 #include "Y_CardH.h"
+#include "Y_HUD.h"
 #include "Y.h"
 
 Y_Fighting::Y_Fighting()
 {
-	Equipments.reset([](TSharedPtr<Y_Equipment>& a, TSharedPtr<Y_Equipment>& b) 
-		{return a->EquipmentPriority < b->EquipmentPriority; });
 
 }
 
@@ -33,13 +33,14 @@ void Y_Fighting::ExecuteToAllCharacter(TSharedPtr<class Y_Buff> ToExecuteBuff)
 	for (auto& p : Y::GetEnemys()) {
 		ToExecuteBuff->execute(p, p, *p->Buffs, Y_Buff::CharacterSpawn, TEXT("Spawn Execute"));
 	}
-	ToExecuteBuffs.AddBuff(ToExecuteBuff);
+	FightingBuffs.AddBuff(ToExecuteBuff);
 }
 
 void Y_Fighting::BeginFight()
 {
 	EventBuffs.ExecuteBuffs(nullptr, nullptr, EventBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
-	EquipmentBuffs.ExecuteBuffs(nullptr, nullptr, EquipmentBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
+	AlwaysBuffs.ExecuteBuffs(nullptr, nullptr, AlwaysBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
+	FightingBuffs.ExecuteBuffs(nullptr, nullptr, FightingBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	//ToExecuteBuffs.ExecuteBuffs(nullptr, nullptr, ToExecuteBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	SettleInfo = MakeShared<Y_SettleInfo>();
 
@@ -53,10 +54,10 @@ void Y_Fighting::BeginFight()
 
 void Y_Fighting::AfterFight()
 {
-	ToExecuteBuffs.ExecuteBuffs(nullptr, nullptr, ToExecuteBuffs, Y_Buff::AfterFight, TEXT("After Fight"));
-	EquipmentBuffs.ExecuteBuffs(nullptr, nullptr, EquipmentBuffs, Y_Buff::AfterFight, TEXT("After Fight"));
+	FightingBuffs.ExecuteBuffs(nullptr, nullptr, FightingBuffs, Y_Buff::AfterFight, TEXT("After Fight"));
+	AlwaysBuffs.ExecuteBuffs(nullptr, nullptr, AlwaysBuffs, Y_Buff::AfterFight, TEXT("After Fight"));
 	EventBuffs.ExecuteBuffs(nullptr, nullptr, EventBuffs, Y_Buff::AfterFight, TEXT("After Fight"));
-	ToExecuteBuffs = Y_StatusBar();
+	FightingBuffs = Y_StatusBar();
 
 	if (IsValid(Y::GetMainCharacter()))Y::GetMainCharacter()->Destroy();
 	Y::GetMainCharacter() = nullptr;
@@ -89,14 +90,15 @@ void Y_Fighting::EndRoom()
 void Y_Fighting::SpawnCharacter(AY_Character* SpawnedCharacter)
 {
 	EventBuffs.ExecuteBuffs(nullptr, SpawnedCharacter, EventBuffs, Y_Buff::CharacterSpawn, TEXT("Character Spawn"));
-	EquipmentBuffs.ExecuteBuffs(nullptr, SpawnedCharacter, EquipmentBuffs, Y_Buff::CharacterSpawn, TEXT("Character Spawn"));
-	ToExecuteBuffs.ExecuteBuffs(nullptr, SpawnedCharacter, ToExecuteBuffs, Y_Buff::CharacterSpawn, TEXT("Character Spawn"));
+	AlwaysBuffs.ExecuteBuffs(nullptr, SpawnedCharacter, AlwaysBuffs, Y_Buff::CharacterSpawn, TEXT("Character Spawn"));
+	FightingBuffs.ExecuteBuffs(nullptr, SpawnedCharacter, FightingBuffs, Y_Buff::CharacterSpawn, TEXT("Character Spawn"));
 }
 
 void Y_Fighting::AddEquipment(TSharedPtr<Y_Equipment> GetEquipment)
 {
 	Equipments.Add(GetEquipment);
 	GetEquipment->Equiped();
+	Y::GetController()->PCHUD->EquipmentWidget->AddEquipment(GetEquipment);
 }
 
 void Y_Fighting::DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpawn)

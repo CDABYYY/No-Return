@@ -13,6 +13,7 @@
 #include "Y_Fighting.h"
 #include "Y_CardInfo.h"
 #include "Y_EnemyInfo.h"
+#include "Y_Equipment.h"
 
 //#include "I_Level1.h"
 #include "Y_ClassBase.h"
@@ -58,6 +59,7 @@ UY_GameInstance::UY_GameInstance()
 	//TEMP
 	for(int32 i = 0;i<=10;i++)
 	FightInfo->UsingCards.Add(Y::CardClass[1]->NewObject());
+
 
 	FightInfo->MCSkill = MakeShared<NormalSkill>();
 }
@@ -122,8 +124,8 @@ void UY_GameInstance::HelpTick(float DeltaTime)
 			}
 		}
 		Y::GetGameInfo()->EventBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->EventBuffs, Y_Buff::Ticking, TEXT("Tick"));
-		Y::GetGameInfo()->EquipmentBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->EquipmentBuffs, Y_Buff::Ticking, TEXT("Tick"));
-		Y::GetGameInfo()->ToExecuteBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->ToExecuteBuffs, Y_Buff::Ticking, TEXT("Tick"));
+		Y::GetGameInfo()->AlwaysBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->AlwaysBuffs, Y_Buff::Ticking, TEXT("Tick"));
+		Y::GetGameInfo()->FightingBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->FightingBuffs, Y_Buff::Ticking, TEXT("Tick"));
 	}
 	//while (AtkOrder.Num() > 0) {
 	//	if(!IsValid(AtkOrder[0]))

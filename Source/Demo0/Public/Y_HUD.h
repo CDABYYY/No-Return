@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UY_TimeLine* TimeLine;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_EquipmentH* EquipmentWidget;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FText FlowingMessage;
 

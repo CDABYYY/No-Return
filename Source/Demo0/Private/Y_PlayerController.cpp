@@ -31,6 +31,7 @@ void AY_PlayerController::BeginChoose(TSharedPtr<class Y_ChooseCardInfo> ChooseI
 void AY_PlayerController::BeginPlay()
 {
 	ThisPlayerController = this;
+	//EquipmentWidget = PCHUD->EquipmentWidget;
 	/*static ConstructorHelpers::FClassFinder<UUserWidget>WidgetClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/BluePrint/BP_Y_HUD.BP_Y_HUD_C'"));
 	MyHUD = CreateWidget<UUserWidget>(this, WidgetClass.Class);
 	if (MyHUD)MyHUD->AddToViewport();

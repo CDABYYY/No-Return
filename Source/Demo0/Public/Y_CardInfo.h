@@ -46,6 +46,8 @@ public:
 
 	int32 Weight = 0;
 
+	TSet<int32> CardTypes;
+
 	bool NeedTarget;
 
 	class AY_Card* Owner;
@@ -63,6 +65,10 @@ public:
 	static void DrawCard(int32 DrawCount,bool Execute);
 	
 	virtual FText LogDescript();
+
+	virtual void AddToCards(int32 InType);
+
+	virtual void RemoveFromCards(int32 InType);
 
 	virtual void Play(bool Execute);
 

@@ -107,6 +107,14 @@ FText Y_CardInfo::LogDescript()
 	return FText::FromString(TEXT("Card Log"));
 }
 
+void Y_CardInfo::AddToCards(int32 InType)
+{
+}
+
+void Y_CardInfo::RemoveFromCards(int32 InType)
+{
+}
+
 void Y_CardInfo::Play(bool Execute)
 {
 	UY_GameInstance::YGI->MainCharacter->MyPlayMontage(TEXT("Attack4"), UY_GameInstance::YGI->YC->ChoosedFloor, 1, Execute);

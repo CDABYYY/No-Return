@@ -46,6 +46,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UY_Settle* SettleWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_EquipmentH* EquipmentWidget;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowCards(bool Reversed);
 

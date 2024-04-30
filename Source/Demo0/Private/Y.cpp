@@ -8,8 +8,11 @@
 #include "CameraPawn.h"
 #include "Y_CardH.h"
 #include "Y_CardW.h"
+#include "Y_EquipmentH.h"
+#include "Y_EquipmentW.h"
 #include "Y_PlayerController.h"
 #include "Y_Fighting.h"
+#include "Y_HUD.h"
 
 Y::Y()
 {
@@ -50,14 +53,28 @@ TArray<class AY_Character*>& Y::GetEnemys()
 	return UY_GameInstance::YGI->Enemys;
 }
 
-TSharedPtr<class Y_CardInfo>& Y::GetChoosingCard()
+TSharedPtr<class Y_CardInfo> Y::GetChoosingCard()
 {
+	if(IsValid(GetController()->CardWidget->ChoosedCard))
 	return GetController()->CardWidget->ChoosedCard->CardInfo;
+	return nullptr;
 }
 
 float& Y::GetRunTime()
 {
 	return GetGameInstance()->RunTime;
+}
+
+TSharedPtr<class Y_Equipment> Y::GetChoosingEquipment()
+{
+	if(IsValid(GetController()->PCHUD->EquipmentWidget->ChoosedEquipment))
+	return GetController()->PCHUD->EquipmentWidget->ChoosedEquipment->Info;
+	return nullptr;
+}
+
+bool& Y::IsPressingEquipment()
+{
+	return GetController()->PCHUD->EquipmentWidget->Pressing;
 }
 
 bool& Y::IsPressingCard()
