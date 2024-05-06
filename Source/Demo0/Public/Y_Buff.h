@@ -233,7 +233,8 @@ public:
 
 class DEMO0_API CardBuff :public Y_Buff {
 public:
-	TSharedPtr<class Y_CardInfo> CardInfo;
+	class Y_CardInfo* CardInfo;
+	CardBuff(class Y_CardInfo* Card);
 	CardBuff(TSharedPtr<class Y_CardInfo> Card);
 	virtual void AddToCharacter(class AY_Character* TargetCharacter,bool Execute)override;
 };

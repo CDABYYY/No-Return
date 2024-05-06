@@ -214,6 +214,7 @@ void ACameraPawn::MouseLeftRelease()
 									if (Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), BA, Y_Buff::BeginAction, Y::GetChoosingCard()->GetName().ToString(), true) == 0)
 									{
 
+										Y::GetGameInfo()->UseCard(Y::GetChoosingCard());
 										Y::Log(0, TEXT("Execute Successfully"));
 										Y::GetChoosingCard()->CurrentCost = BA.Buff[0]->BuffCount;
 										Y::GetChoosingCard()->Play(true);
@@ -222,6 +223,8 @@ void ACameraPawn::MouseLeftRelease()
 										Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), AA, Y_Buff::AfterAction, Y::GetChoosingCard()->GetName().ToString(), true);
 									}
 									else {
+
+										Y::GetGameInfo()->UseCard(Y::GetChoosingCard());
 										Y::GetChoosingCard()->CurrentCost = BA.Buff[0]->BuffCount;
 									}
 
@@ -229,7 +232,6 @@ void ACameraPawn::MouseLeftRelease()
 									Y::GetMainCharacter()->CharacterAttackTime += Y::GetChoosingCard()->CurrentCost;
 									Y::GetMainCharacter()->ChangeAttackTime(Y::GetMainCharacter()->CharacterAttackTime);
 									
-									Y::GetGameInfo()->UseCard(Y::GetChoosingCard());
 
 									ClickAble = false;
 								}

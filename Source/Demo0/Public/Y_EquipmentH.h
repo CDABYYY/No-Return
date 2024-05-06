@@ -35,6 +35,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Clear();
 
+	void RemoveEquipment(TSharedPtr<class Y_Equipment> Equipment);
+
 	void AddEquipment(TSharedPtr<class Y_Equipment> Equipment);
 
 	UFUNCTION(BlueprintImplementableEvent)

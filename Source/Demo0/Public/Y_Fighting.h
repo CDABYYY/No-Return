@@ -32,6 +32,9 @@ public:
 	void EndRoom();
 	void SpawnCharacter(class AY_Character* SpawnedCharacter);
 	void AddEquipment(TSharedPtr<class Y_Equipment> GetEquipment);
+	void RemoveEquipment(TSharedPtr<class Y_Equipment> GetEquipment);
+	void AddMoney(int32 Moneys);
+	int32& MoneyCount();
 
 	void DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpawn = false);
 	void DrawCard(int32 DrawCount = 1);
@@ -59,9 +62,15 @@ public:
 
 	TArray<TSharedPtr<class Y_EnemyInfo>> LivingEnemys;
 	TArray<TSharedPtr<class Y_EnemyInfo>> AppearedEnemys;
+
 	TArray<TSharedPtr<class Y_RoomInfo>> ReadyRooms;
+	TArray<TSharedPtr<class Y_Equipment>> ReadyEquipments;
+	TArray<TSharedPtr<class Y_CardInfo>> ReadyCards;
 
 	TSharedPtr<class Y_SettleInfo> SettleInfo;
 
 	TSharedPtr<class Y_CardInfo> MCSkill;
+
+	TSharedPtr<class Y_CardInfo> GetRandomCard();
+	TSharedPtr<class Y_Equipment> GetRandomEquipment();
 };

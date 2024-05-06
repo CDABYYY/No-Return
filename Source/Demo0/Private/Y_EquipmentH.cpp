@@ -3,6 +3,7 @@
 
 #include "Y_EquipmentH.h"
 #include "Y_EquipmentW.h"
+#include "Y_Equipment.h"
 
 void UY_EquipmentH::Init()
 {
@@ -22,12 +23,20 @@ void UY_EquipmentH::RemoveEquipment(UY_EquipmentW* ToRemoveEquipment)
 {
 	Equipments.Remove(ToRemoveEquipment);
 	ToRemoveEquipment->RemoveFromParent();
+	Update();
 }
 
 void UY_EquipmentH::Clear()
 {
 	for (auto& p : Equipments)p->RemoveFromParent();
 	Equipments.Empty();
+}
+
+void UY_EquipmentH::RemoveEquipment(TSharedPtr<class Y_Equipment> Equipment)
+{
+	Equipments.Remove(Equipment->Owner);
+	Equipment->Owner->RemoveFromParent();
+	Update();
 }
 
 void UY_EquipmentH::AddEquipment(TSharedPtr<class Y_Equipment> Equipment)

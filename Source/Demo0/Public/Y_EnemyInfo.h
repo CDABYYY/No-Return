@@ -78,6 +78,8 @@ public:
 	int32 ActionValue;
 	int32 ChoosedAction;
 
+	int32 AttackEnhance;
+
 	int32 EnemyID;
 
 	int32 GetRandomAction();

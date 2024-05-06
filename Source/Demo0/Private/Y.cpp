@@ -6,6 +6,7 @@
 #include "Y_StatusBar.h"
 #include "Y_Character.h"
 #include "CameraPawn.h"
+#include "Y_Equipment.h"
 #include "Y_CardH.h"
 #include "Y_CardW.h"
 #include "Y_EquipmentH.h"
@@ -27,6 +28,7 @@ TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_EnemyInfo>>> Y::CharacterClass;
 TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_Buff>>> Y::BuffClass;
 TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_RoomInfo>>> Y::RoomClass;
 TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_FloorInfo>>> Y::FloorClass;
+TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_Equipment>>> Y::EquipmentClass;
 
 UY_GameInstance*& Y::GetGameInstance()
 {
@@ -193,6 +195,11 @@ UWorld* Y::GetWorld()
 UTexture2D* Y::LoadPicture(const FString& FilePath)
 {
 	return GetGameInstance()->LoadPicture(FilePath);
+}
+
+int32& Y::GetCurrentLevel()
+{
+	return Y::GetGameInstance()->CurrentLevel;
 }
 
 

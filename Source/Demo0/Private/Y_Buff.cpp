@@ -151,12 +151,20 @@ int32 Y_BuffL::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y
 	return ToExecute.Execute(); 
 }
 
-CardBuff::CardBuff(TSharedPtr<class Y_CardInfo> Card)
+CardBuff::CardBuff(Y_CardInfo* Card)
 {
 	BuffID = 10000 + Card->CardID;
 	BuffCount = Card->OriginalCost;
 	BuffExtend = Card->CardTypes;
 	CardInfo = Card;
+}
+
+CardBuff::CardBuff(TSharedPtr<class Y_CardInfo> Card)
+{
+	BuffID = 10000 + Card->CardID;
+	BuffCount = Card->OriginalCost;
+	BuffExtend = Card->CardTypes;
+	CardInfo = Card.Get();
 }
 
 void CardBuff::AddToCharacter(AY_Character* TargetCharacter,bool Execute)

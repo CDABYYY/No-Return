@@ -52,9 +52,11 @@ Y_CardInfo::Y_CardInfo()
 	CurrentCost = OriginalCost = 10;
 	UsedType = 0;
 	CardID = 0;
-
+	
 	NeedTarget = true;
 	PressingStatus = 1;
+	CardWeight = 10;
+	CostMoney = 100;
 
 	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/Png/JayceStaticField.JayceStaticField'");
 	UsingPicture = Y::LoadPicture(Path);
@@ -83,6 +85,7 @@ void Y_CardInfo::CardUpdate()
 
 void Y_CardInfo::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
 {
+	ExecuteBuffs.AddBuff(MakeShared<CardBuff>(AsShared()));
 	Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, GetName().ToString(), TryExecute);
 }
 
@@ -146,7 +149,11 @@ void Y_CardInfo::Clicked()
 
 float Y_CardInfo::GetWeight()
 {
-	return 10;
+	return CardWeight;
+}
+
+void Y_CardInfo::BeginFighting()
+{
 }
 
 bool Y_CardInfo::AcceptFloor(AY_Floor* GetFloor)

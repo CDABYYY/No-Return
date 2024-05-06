@@ -34,6 +34,7 @@ MoveBuff::MoveBuff()
 	BuffOrder = 0;
 	BuffLevel = 0;
 	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("移动"));
 }
 
 int32 MoveBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
@@ -148,6 +149,7 @@ BurnBuff::BurnBuff()
 	BuffOrder = 0;
 	BuffLevel = -20;
 	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("灼烧"));
 }
 
 int32 BurnBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
@@ -461,4 +463,94 @@ void NormalSkill::Play(bool Execute)
 		Y::GetGameInfo()->UseCard(Y::GetGameInfo()->InHandCards[0]);
 	}
 	DrawCard(2,Execute);
+}
+
+NormalEquipment::NormalEquipment()
+{
+	ELevel = 1;
+}
+
+void NormalEquipment::Play(bool Execute)
+{
+	Y_StatusBar TS{ Y::YMakeShared<DemageBuff>(ELevel * 5) };
+	ExecuteAction(GetOwner(), Y::GetChoosedFloor()->StandCharacter, TS, Execute);
+}
+
+bool NormalEquipment::AcceptFloor(AY_Floor* GetFloor)
+{
+	int32 F = GetOwner()->StandFloor->SerialNumber;
+	int32 T = GetFloor->SerialNumber;
+	return(F + 2 <= T && F - 2 >= T && IsValid(GetFloor->StandCharacter) && GetFloor->StandCharacter != GetOwner());
+}
+
+TArray<TSharedPtr<class Y_Equipment>> NormalEquipment::Upgrade()
+{
+	auto TP = MakeShared<NormalEquipment>();
+	TP->FromEquipment = AsShared();
+	TP->ELevel = ELevel + 1;
+	TArray< TSharedPtr<class Y_Equipment>> TA;
+	TA.Add(TP);
+	return TA;
+}
+WeakBuff::WeakBuff() {
+	BuffAsType = BuffID = 6;
+	TriggerCondition = Ticking | BeginAttack;
+	BuffProperty = 3;
+	BuffOrder = 0;
+	BuffLevel = -5;
+	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("虚弱"));
+}
+
+
+int32 WeakBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
+{
+	if (ExecuteCondition == Ticking) {
+		BuffCount -= 1;
+		if (BuffCount <= 0)RemoveFromCharacter();
+	}
+	else if (ExecuteCondition == BeginAttack) {
+		auto PA = ToBuffs.FindBuffExtend(3);
+		for (auto& p : PA) {
+			p->BuffCount *= 0.75;
+		}
+	}
+	return 0;
+}
+
+ExposeBuff::ExposeBuff() {
+	BuffAsType = BuffID = 7;
+	TriggerCondition = Ticking | BeginInjured;
+	BuffProperty = 3;
+	BuffOrder = 0;
+	BuffLevel = -5;
+	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("易伤"));
+}
+
+
+int32 ExposeBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
+{
+	if (ExecuteCondition == Ticking) {
+		BuffCount -= 1;
+		if (BuffCount <= 0)RemoveFromCharacter();
+	}
+	else if (ExecuteCondition == BeginInjured) {
+		auto PA = ToBuffs.FindBuffExtend(3);
+		for (auto& p : PA) {
+			p->BuffCount *= 1.25;
+		}
+	}
+	return 0;
+}
+
+NormalFightRoom::NormalFightRoom()
+{
+	RoomID = 1;
+}
+
+TSharedPtr<Y_RoomInfo> NormalFightRoom::RoomClicked()
+{
+	
+	return nullptr;
 }

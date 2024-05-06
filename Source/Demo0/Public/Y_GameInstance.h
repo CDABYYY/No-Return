@@ -48,6 +48,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SceneScale = 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 CurrentLevel = 0;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AY_Character* MainCharacter;
 

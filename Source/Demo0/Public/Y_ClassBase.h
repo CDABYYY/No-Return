@@ -7,6 +7,7 @@
 #include "Y_EnemyInfo.h"
 #include "Y_CardInfo.h"
 #include "Y_RoomWidget.h"
+#include "Y_Equipment.h"
 #include "Y_Floor.h"
 
 
@@ -139,4 +140,36 @@ public:
 	NormalSkill();
 
 	virtual void Play(bool Execute)override;
+};
+
+class DEMO0_API NormalEquipment : public Y_Equipment
+{
+public:
+	int32 ELevel;
+
+	NormalEquipment();
+
+	virtual void Play(bool Execute);
+
+	virtual bool AcceptFloor(class AY_Floor* GetFloor);
+
+	virtual TArray<TSharedPtr<class Y_Equipment>> Upgrade();
+};
+
+class DEMO0_API WeakBuff :public Y_Buff {
+public:
+	WeakBuff();
+	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
+};
+
+class DEMO0_API ExposeBuff :public Y_Buff {
+public:
+	ExposeBuff();
+	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
+};
+
+class DEMO0_API NormalFightRoom : public Y_RoomInfo {
+public:
+	NormalFightRoom();
+	virtual TSharedPtr<Y_RoomInfo> RoomClicked()override;
 };

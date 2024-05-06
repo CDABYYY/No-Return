@@ -43,8 +43,12 @@ void Y_Fighting::BeginFight()
 	FightingBuffs.ExecuteBuffs(nullptr, nullptr, FightingBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	//ToExecuteBuffs.ExecuteBuffs(nullptr, nullptr, ToExecuteBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	SettleInfo = MakeShared<Y_SettleInfo>();
+	for (auto& p : Equipments) {
+		p->BeginFighting();
+	}
 
 	for (auto& p : UsingCards) {
+		p->BeginFighting();
 		ToDrawCards.Add(p);
 	}
 	Y::GetGameInstance()->RunTime = 0;
@@ -97,8 +101,28 @@ void Y_Fighting::SpawnCharacter(AY_Character* SpawnedCharacter)
 void Y_Fighting::AddEquipment(TSharedPtr<Y_Equipment> GetEquipment)
 {
 	Equipments.Add(GetEquipment);
+	if (GetEquipment->FromEquipment != nullptr) {
+		RemoveEquipment(GetEquipment->FromEquipment);
+	}
 	GetEquipment->Equiped();
 	Y::GetController()->PCHUD->EquipmentWidget->AddEquipment(GetEquipment);
+}
+
+void Y_Fighting::RemoveEquipment(TSharedPtr<class Y_Equipment> GetEquipment)
+{
+	GetEquipment->UnEquiped();
+	Equipments.Remove(GetEquipment);
+	Y::GetController()->PCHUD->EquipmentWidget->RemoveEquipment(GetEquipment);
+}
+
+void Y_Fighting::AddMoney(int32 Moneys)
+{
+	Y::GetGameInstance()->Money += Moneys;
+}
+
+int32& Y_Fighting::MoneyCount()
+{
+	return Y::GetGameInstance()->Money;
 }
 
 void Y_Fighting::DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpawn)
@@ -264,5 +288,25 @@ AY_Character* Y_Fighting::SpawnMC(AY_Floor* FromFloor, FName ActorClass)
 	Y::GetMainCharacter() = NewCharacter;
 	SpawnCharacter(NewCharacter);
 	return NewCharacter;
+}
+
+TSharedPtr<class Y_CardInfo> Y_Fighting::GetRandomCard()
+{
+	TMap<TSharedPtr<Y_CardInfo>, float> CardRates;
+	for (auto& p : ReadyCards) {
+		float RareRate = 1;
+		if (p->CardRare == 1)RareRate = 9;
+		if (p->CardRare == 2)RareRate = 3;
+		CardRates.Add(p, RareRate);
+	}
+	auto p = Y::getRandom(CardRates);
+	return p;
+}
+
+TSharedPtr<class Y_Equipment> Y_Fighting::GetRandomEquipment()
+{
+	auto p = Y::getRandom(ReadyEquipments);
+	ReadyEquipments.Remove(p);
+	return p;
 }
 

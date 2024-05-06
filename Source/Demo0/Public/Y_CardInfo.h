@@ -8,7 +8,7 @@
 /**
  * 
  */
-class DEMO0_API Y_CardInfo:public Y_CharacterAction
+class DEMO0_API Y_CardInfo:public Y_CharacterAction,public TSharedFromThis<Y_CardInfo>
 {
 public:
 
@@ -44,7 +44,12 @@ public:
 	//The Status when Pressing this Card
 	int32 PressingStatus;
 
-	int32 Weight = 0;
+	int32 CardWeight;
+
+	//Normal 1, Rare 2, Super Rare 3
+	int32 CardRare;
+
+	int32 CostMoney;
 
 	TSet<int32> CardTypes;
 
@@ -81,6 +86,8 @@ public:
 	virtual void Clicked();
 
 	virtual float GetWeight();
+
+	virtual void BeginFighting();
 
 	virtual bool AcceptFloor(class AY_Floor* GetFloor);
 };

@@ -8,6 +8,12 @@
 
 Y_Equipment::Y_Equipment()
 {
+    DrawWeight = 10;
+    CostMoney = 100;
+    FromEquipment = nullptr;
+    UseAble = true;
+    NowCD = 0;
+    SkillCD = 1;
 }
 
 Y_Equipment::~Y_Equipment()
@@ -19,14 +25,29 @@ int32 Y_Equipment::GetPrice()
     return 100;
 }
 
+void Y_Equipment::CanUsed()
+{
+    UseAble = true;
+}
+
 void Y_Equipment::Update()
 {
+}
+
+void Y_Equipment::BeginFighting()
+{
+    if (!UseAble)
+    {
+        NowCD -= 1;
+        if (NowCD == 0)CanUsed();
+    }
 }
 
 void Y_Equipment::Play(bool Execute)
 {
     Y_StatusBar TS{ Y::YMakeShared<ShieldBuff>(6) };
     ExecuteAction(GetOwner(), GetOwner(), TS, Execute);
+    NowCD = SkillCD;
 }
 
 void Y_Equipment::Equiped()
@@ -67,4 +88,14 @@ void Y_Equipment::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCha
 bool Y_Equipment::AcceptFloor(AY_Floor* GetFloor)
 {
     return GetFloor == GetOwner()->StandFloor;
+}
+
+float Y_Equipment::GetWeight()
+{
+    return DrawWeight;
+}
+
+TArray<TSharedPtr<class Y_Equipment>> Y_Equipment::Upgrade()
+{
+    return TArray<TSharedPtr<class Y_Equipment>>();
 }

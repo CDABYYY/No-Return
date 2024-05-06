@@ -56,6 +56,8 @@ public:
 
 	static UTexture2D* LoadPicture(const FString& FilePath);
 
+	static int32& GetCurrentLevel();
+
 	template<typename FType,typename ...Argv>
 	static void Log(int32 TestColor, const FType& Format, Argv... Params) {
 		FString s = FString::Printf(Format, Params...);
@@ -169,6 +171,12 @@ public:
 	template<class T>
 	static void LoadRoom(int32 ID) {
 		RoomClass.Add(ID, StoreClass<Y_RoomInfo, T>());
+	}
+
+	static TMap<int32, TSharedPtr<Y_SubClassIF<class Y_Equipment>>> EquipmentClass;
+	template<class T>
+	static void LoadEquipment(int32 ID) {
+		EquipmentClass.Add(ID, StoreClass<Y_Equipment, T>());
 	}
 
 	template<typename T>
