@@ -20,6 +20,11 @@ public:
 
 	int32 RoomID;
 
+	int32 EndEventType;
+
+	//1:Leave 2:Fight 3:EndRoom
+	void ChangeEndType(int32 ChangedValue);
+
 	UTexture2D* UsingTexture;
 
 	class UY_RoomWidget* Owner;
@@ -39,7 +44,13 @@ public:
 
 	virtual float GetWeight();
 
+	void EndEvent();
+
 	void DoToEndRoom();
+
+	static void GetNewCard();
+
+	static void DeleteCard();
 };
 
 

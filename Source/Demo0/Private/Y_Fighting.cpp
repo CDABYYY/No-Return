@@ -54,6 +54,8 @@ void Y_Fighting::BeginFight()
 	Y::GetGameInstance()->RunTime = 0;
 	Y::GetGameInstance()->TickTime = 20;
 	Y::GetPlayer()->ClickAble = false;
+
+	DrawCard(5);
 }
 
 void Y_Fighting::AfterFight()
@@ -87,8 +89,11 @@ void Y_Fighting::AfterFight()
 
 void Y_Fighting::EndRoom()
 {
-	Y::GetController()->ShowSettle(false);
-	Y::GetController()->SettleWidget->LoadInfo(SettleInfo);
+	if(SettleInfo->TrophyInfos.Num() > 0)
+	{
+		Y::GetController()->ShowSettle(false);
+		Y::GetController()->SettleWidget->LoadInfo(SettleInfo);
+	}
 }
 
 void Y_Fighting::SpawnCharacter(AY_Character* SpawnedCharacter)

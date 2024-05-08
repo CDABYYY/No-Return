@@ -52,7 +52,7 @@ FText MoveBuff::printBuff(bool PrintLog) const
 	return Y::PrintText(TEXT("Move %d"), BuffCount);
 }
 
-DemageBuff::DemageBuff()
+PureDemageBuff::PureDemageBuff()
 {
 	BuffAsType = BuffID = 3;
 	TriggerCondition = DetectDeath;
@@ -63,7 +63,7 @@ DemageBuff::DemageBuff()
 	BuffName = Y::PrintText(TEXT("伤害"));
 }
 
-int32 DemageBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
+int32 PureDemageBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
 {
 	if(ToCharacter->Health <= 0)
 	{
@@ -72,7 +72,7 @@ int32 DemageBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter
 	return 0;
 }
 
-void DemageBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
+void PureDemageBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 {
 	Y::Log(0, TEXT("Try AddToCharacter"));
 	Y_Buff::AddToCharacter(TargetCharacter,Execute);
@@ -80,9 +80,17 @@ void DemageBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 	TargetCharacter->Health -= BuffCount;
 }
 
-FText DemageBuff::printBuff(bool PrintLog) const
+DemageBuff::DemageBuff()
 {
-	return Y::PrintText(TEXT("Damage %d"), BuffCount);
+	BuffID = 31;
+	BuffExtend.Add(BuffID);
+}
+
+
+BurnDemageBuff::BurnDemageBuff()
+{
+	BuffID = 32;
+	BuffExtend.Add(BuffID);
 }
 
 ShieldBuff::ShieldBuff()
@@ -156,7 +164,7 @@ int32 BurnBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, 
 {
 	if(TryAttack){
 		Y_StatusBar TS;
-		TS.AddBuff(Y::YMakeShared<DemageBuff>(BuffCount));
+		TS.AddBuff(Y::YMakeShared<BurnDemageBuff>(BuffCount));
 		Y::ExecuteAction(OwnerCharacter, OwnerCharacter, TS, TEXT("Burn"), TryAttack);
 		BuffCount = 0.5 * BuffCount;
 		if (BuffCount == 0)
@@ -330,7 +338,7 @@ TSharedPtr<Y_RoomInfo> NormalRoom::RoomClicked()
 	TC->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
 	TC->Update();
 
-	Y::GetGameInfo()->DrawCard(5);
+	Y::GetGameInfo()->BeginFight();
 	return nullptr;
 }
 
@@ -358,7 +366,7 @@ TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 	Y::Log(0, TEXT("InEventRoom"));
 	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
 	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
-
+	ChangeEndType(2);
 	for (int32 i = 0; i < 10; i++) {
 		Y::GetGameInfo()->SpawnFloor(Y::FloorClass[1]->NewObject(), i);
 	}
@@ -368,8 +376,6 @@ TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 	auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[1]->NewObject(), Y::GetFloors()[7]);
 	TC->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
 	TC->Update();
-
-	Y::GetGameInfo()->DrawCard(5);
 	
 	auto EP = MakeShared<Y_EventInfo>();
 	EP->Description = Y::PrintText(TEXT("Event Room"));
@@ -384,10 +390,11 @@ TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 
 void EventRoom::LeaveRoom()
 {
+	ChangeEndType(3);
 	auto EP = MakeShared<Y_EventInfo>();
 	EP->Description = Y::PrintText(TEXT("Will End Room"));
-	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("EndRoom")), [this]() {this->DoToEndRoom(); }));
-	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Get New Card")), [this]() { Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() })); this->DoToEndRoom(); }));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("EndRoom")), []() {}));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Get New Card")), []() { Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() })); }));
 	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Reload")), []() {}, EP));
 	Y::GetController()->BeginEvent(EP);
 }
@@ -554,3 +561,4 @@ TSharedPtr<Y_RoomInfo> NormalFightRoom::RoomClicked()
 	
 	return nullptr;
 }
+

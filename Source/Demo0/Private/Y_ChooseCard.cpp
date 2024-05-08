@@ -6,6 +6,7 @@
 #include "Y_PlayerController.h"
 #include "Y_CardW.h"
 #include "Y.h"
+#include "Y_Fighting.h"
 
 void UY_ChooseCard::AfterChoose()
 {
@@ -64,4 +65,18 @@ void Y_ChooseCardInfo::CardClicked(TSharedPtr<class Y_CardInfo> ClickedInfo)
 void Y_ChooseCardInfo::AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedCards)
 {
 
+}
+
+void Y_ChooseCardIN::AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedCards)
+{
+	for (auto& p : ChoosedCards) {
+		Y::GetGameInfo()->UsingCards.Add(p);
+	}
+}
+
+void Y_ChooseCardOut::AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedCards)
+{
+	for (auto& p : ChoosedCards) {
+		Y::GetGameInfo()->UsingCards.Remove(p);
+	}
 }

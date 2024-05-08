@@ -15,6 +15,8 @@
 #include "Y_PlayerController.h"
 #include "Y_Fighting.h"
 #include "Y_MapWidget.h"
+#include "Y_CardInfo.h"
+#include "Y_ChooseCard.h"
 
 UY_RoomWidget* UY_RoomWidget::CurrentRoom = nullptr;
 
@@ -61,14 +63,16 @@ void UY_RoomWidget::RoomClicked()
 	Y::GetController()->MapWidget->CurrentRoom = this;
 	Y::GetController()->MapWidget->PullMap(true);
 
-	Y::GetGameInfo()->BeginFight();
+	//Y::GetGameInfo()->BeginFight();
 
 	if (!Info.IsValid())
 		Info = MakeShared<Y_RoomInfo>();
-	
+
+	Y::GetGameInfo()->CurrentRoom = Info;
 	auto TmpInfo = Info->RoomClicked();
 	while (TmpInfo != nullptr) {
 		LoadInfo(TmpInfo);
+		Y::GetGameInfo()->CurrentRoom = Info;
 		TmpInfo = Info->RoomClicked();
 	}
 }
@@ -134,6 +138,11 @@ void UY_RoomWidget::EventFight()
 	//AY_Card::DrawCard(TEXT("Card1"));
 }
 
+void Y_RoomInfo::ChangeEndType(int32 ChangedValue)
+{
+	EndEventType = ChangedValue;
+}
+
 FText Y_RoomInfo::GetDescribe()
 {
 	return FText::FromString(TEXT("Unknown"));
@@ -169,9 +178,40 @@ float Y_RoomInfo::GetWeight()
 	return 10;
 }
 
+void Y_RoomInfo::EndEvent()
+{
+
+	if (EndEventType == 1) {
+		LeaveRoom();
+	}
+	else if (EndEventType == 2) {
+		Y::GetGameInfo()->BeginFight();
+	}
+	else if (EndEventType == 3) {
+		DoToEndRoom();
+	}
+	EndEventType = 1;
+}
+
 void Y_RoomInfo::DoToEndRoom()
 {
 	//Need Fix(ForwardRoom Can't Use!)
 	//Y::GetController()->MapWidget->ForwardRoom(this);
 	Y::GetGameInfo()->EndRoom();
+}
+
+
+void Y_RoomInfo::GetNewCard()
+{
+	auto ChooseInfo = MakeShared<Y_ChooseCardIN>();
+	for (int32 i = 0; i < 3; i++)
+		ChooseInfo->Cards.Add(Y::GetGameInfo()->GetRandomCard());
+	Y::GetController()->BeginChoose(ChooseInfo);
+}
+
+void Y_RoomInfo::DeleteCard()
+{
+	auto ChooseInfo = MakeShared<Y_ChooseCardOut>();
+	ChooseInfo->Cards = Y::GetGameInfo()->UsingCards;
+	Y::GetController()->BeginChoose(ChooseInfo);
 }

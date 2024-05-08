@@ -71,6 +71,6 @@ public:
 
 	TArray<TSharedPtr<class Y_ChoiceInfo>> Choices;
 
-	//Abondoned
-	virtual void EndEvent();
+	//Desided By EnyType
+	static void EndEvent();
 };

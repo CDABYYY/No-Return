@@ -50,3 +50,13 @@ public:
 
 	virtual void AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedCards);
 };
+
+class DEMO0_API Y_ChooseCardIN:public Y_ChooseCardInfo {
+public:
+	virtual void AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedCards)override;
+};
+
+class DEMO0_API Y_ChooseCardOut :public Y_ChooseCardInfo {
+public:
+	virtual void AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedCards)override;
+};

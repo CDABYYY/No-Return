@@ -75,7 +75,7 @@ CardTrophy::CardTrophy(std::initializer_list<TSharedPtr<class Y_CardInfo>> ToLoa
 
 void CardTrophy::Clicked()
 {
-	auto ChooseInfo = MakeShared<Y_ChooseCardInfo>();
+	auto ChooseInfo = MakeShared<Y_ChooseCardIN>();
 	ChooseInfo->Cards = CardInfos;
 	Y::GetController()->BeginChoose(ChooseInfo);
 }

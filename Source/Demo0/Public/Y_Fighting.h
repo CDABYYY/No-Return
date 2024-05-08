@@ -23,6 +23,8 @@ public:
 	Y_StatusBar EventBuffs;
 	Y_StatusBar AlwaysBuffs;
 	Y_StatusBar FightingBuffs;
+
+	TSharedPtr<class Y_RoomInfo> CurrentRoom;
 	
 	//Using Execute Method
 	void ExecuteToAllCharacter(TSharedPtr<class Y_Buff> ToExecuteBuff);

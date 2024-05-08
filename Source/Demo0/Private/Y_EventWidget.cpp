@@ -3,6 +3,9 @@
 
 #include "Y_EventWidget.h"
 #include "Y_ChoiceWidget.h"
+#include "Y.h"
+#include "Y_Fighting.h"
+#include "Y_RoomWidget.h"
 
 void UY_EventWidget::EventInit()
 {

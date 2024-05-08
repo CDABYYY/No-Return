@@ -25,13 +25,25 @@ public:
 	virtual FText printBuff(bool PrintLog = false)const override;
 };
 
-class DEMO0_API DemageBuff :public Y_Buff
+class DEMO0_API PureDemageBuff :public Y_Buff {
+public:
+	PureDemageBuff();
+	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
+	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute)override;
+};
+
+//ID 31
+class DEMO0_API DemageBuff :public PureDemageBuff
 {
 public:
 	DemageBuff();
-	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
-	virtual void AddToCharacter(class AY_Character* TargetCharacter,bool Execute)override;
-	virtual FText printBuff(bool PrintLog = false)const override;
+};
+
+//ID 32
+class DEMO0_API BurnDemageBuff :public PureDemageBuff
+{
+public:
+	BurnDemageBuff();
 };
 
 class DEMO0_API ShieldBuff :public Y_Buff

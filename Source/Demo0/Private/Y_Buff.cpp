@@ -69,7 +69,7 @@ FText Y_Buff::printBuff(bool PrintLog) const
 	if(PrintLog)
 		return FText::FromString(TEXT("Description of Health"));
 
-	return FText::FromString(FString::Printf(TEXT("Health: %d"), BuffCount));
+	return FText::FromString(FString::Printf(TEXT("%s: %d"), *(BuffName.ToString()), BuffCount));
 }
 
 void Y_Buff::AddBuff(Y_Buff* OtherBuff)
