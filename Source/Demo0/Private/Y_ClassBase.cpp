@@ -558,7 +558,7 @@ NormalFightRoom::NormalFightRoom()
 
 TSharedPtr<Y_RoomInfo> NormalFightRoom::RoomClicked()
 {
-	
+	auto p = Y::GetGameInfo()->Equipments;
 	return nullptr;
 }
 
