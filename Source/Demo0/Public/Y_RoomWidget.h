@@ -51,6 +51,10 @@ public:
 	static void GetNewCard();
 
 	static void DeleteCard();
+
+	static TSharedPtr<class Y_EventInfo> DeleteRandomCard(int32 Count = 3);
+
+	static TSharedPtr<class Y_EventInfo> UpgradeEquipment(int32 Level,int32 Count = 3);
 };
 
 
@@ -63,6 +67,9 @@ class DEMO0_API UY_RoomWidget : public UUserWidget
 public:
 	static UY_RoomWidget* CurrentRoom;
 
+	//0: Can In, 1: Can't In, 2: Entered, 3: Passed
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int32 RoomStatus;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UTexture2D* UsingTexture;

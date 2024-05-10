@@ -120,6 +120,18 @@ void Y_Fighting::RemoveEquipment(TSharedPtr<class Y_Equipment> GetEquipment)
 	Y::GetController()->PCHUD->EquipmentWidget->RemoveEquipment(GetEquipment);
 }
 
+TArray<TSharedPtr<class Y_Equipment>> Y_Fighting::EquipmentUpgrades(int32 Level)
+{
+	TArray<TSharedPtr<Y_Equipment>> EA;
+	for (auto& p : Equipments) {
+		if(p->EquipLevel == Level)
+		{
+			EA.Append(p->Upgrade());
+		}
+	}
+	return EA;
+}
+
 void Y_Fighting::AddMoney(int32 Moneys)
 {
 	Y::GetGameInstance()->Money += Moneys;
@@ -292,6 +304,7 @@ AY_Character* Y_Fighting::SpawnMC(AY_Floor* FromFloor, FName ActorClass)
 	FromFloor->StandCharacter = NewCharacter;
 	Y::GetMainCharacter() = NewCharacter;
 	SpawnCharacter(NewCharacter);
+	NewCharacter->Buffs->AddBuffs(OnCharacterBuffs);
 	return NewCharacter;
 }
 

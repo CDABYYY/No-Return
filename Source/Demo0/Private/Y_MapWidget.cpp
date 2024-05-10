@@ -60,26 +60,34 @@ TArray<int32> UY_MapWidget::GetWay(int32 a0, int32 b0, int32 f0)
 
 void UY_MapWidget::ForwardRoom(UY_RoomWidget* Room)
 {
-    int32 p = plevel.Find(Room) ;
+    Room->RoomStatus = 2;
+    int32 p = plevel.Find(Room);
+    int32 np = p;
     int32 p0 = p;
+    int32 p1 = 0;
     int32 lt = 0;
     for (auto& l : levels) {
         if (p < l) {
-            p0 = p0 - p + l;
+            p0 = p0 - p;
+            p1 = p0 + l;
             break;
         }
         p -= l;
         lt++;
     }
     //Default. Need Next Try
-    //for (auto& w : pway) {
-    //    if ((w >> 10) == ((lt << 10) + p + 1)) {
-    //        plevel[p0 + w % (1 << 10)]->SetArrivable();
-
-    //    }
-    //}
-    for (int32 i = 0; i < p0; i++) {
-        plevel[i]->Passed();
+    for (auto& w : pway) {
+        if ((w >> 10) == ((lt << 10) + p + 1)) {
+            plevel[p1 + w % (1 << 10) - 1]->RoomStatus = 0;
+            plevel[p1 + w % (1 << 10) - 1]->SetArrivable();
+        }
+    }
+    for (int32 i = p0; i < p1; i++) {
+        if(i != np)
+        {
+            plevel[i]->RoomStatus = 3;
+            plevel[i]->Passed();
+        }
     }
 }
 
@@ -93,7 +101,9 @@ void UY_MapWidget::GetMap()
     slevel.Add(3, 10);
     slevel.Add(4, 20);
     slevel.Add(5, 10);
-    plevel.Add(DrawEvent(1.0f / (getf + 3), 0.5));
+    auto FirstRoom = DrawEvent(1.0f / (getf + 3), 0.5);
+    FirstRoom->RoomStatus = 0;
+    plevel.Add(FirstRoom);
     levels.Add(1);
     for (int32 i = 0; i < getf; i++)
     {

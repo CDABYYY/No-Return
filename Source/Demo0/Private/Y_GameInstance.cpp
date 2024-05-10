@@ -14,6 +14,8 @@
 #include "Y_CardInfo.h"
 #include "Y_EnemyInfo.h"
 #include "Y_Equipment.h"
+#include "Y_PlayerController.h"
+#include "Y_MapWidget.h"
 
 //#include "I_Level1.h"
 #include "Y_ClassBase.h"
@@ -215,4 +217,32 @@ UTexture2D* UY_GameInstance::LoadPicture(const FString& FilePath)
 	Pictures.Add(FilePath, texture2d);
 
 	return texture2d;
+}
+
+void UY_GameInstance::DebugSettings(int32 Type, int32 ID)
+{
+	if (Type == 1 && Y::CardClass.Contains(ID)) {
+		Y::GetGameInfo()->DrawCard(Y::CardClass[ID]->NewObject());
+	}
+	else if (Type == 2 && Y::RoomClass.Contains(ID)) {
+		auto& M = Y::GetController()->MapWidget;
+		int32 Pos = M->plevel.Find(CurrentRoom);
+		for (int32 i = Pos + 1; i < M->plevel.Num() && i < Pos + 5; i++) {
+			M->plevel[i]->LoadInfo(Y::RoomClass[ID]->NewObject());
+		}
+	}
+	else if (Type == 3 && Y::EquipmentClass.Contains(ID)) {
+		Y::GetGameInfo()->AddEquipment(Y::EquipmentClass[ID]->NewObject());
+	}
+	else if (Type == 4 && Y::CharacterClass.Contains(ID)) {
+		for (auto& f : Y::GetFloors()) {
+			if (IsValid(f) && !f->StandCharacter->CheckValid()) {
+				Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[ID]->NewObject(), f);
+			}
+		}
+	}
+	else if (Type == 5 && Y::BuffClass.Contains(ID)) {
+		auto P = Y::BuffClass[ID]->NewObject();
+		P->AddToCharacter(Y::GetMainCharacter(),true);
+	}
 }

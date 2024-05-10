@@ -58,6 +58,20 @@ public:
 
 	static int32& GetCurrentLevel();
 
+	static const TCHAR* toS(FText ReadyText);
+
+	template <typename T>
+	static TArray<T> GetRandomArray(TArray<T> TargetArray, int32 Counts = 3) {
+		TArray<T> Answer;
+		for (int32 i = 0; i < TargetArray.Num(); i++) {
+			if (Counts - Answer.Num() >= TargetArray.Num() - i || getRandom() < (float)Counts / TargetArray.Num()) {
+				Answer.Add(TargetArray[i]);
+				if (Answer.Num() >= Counts)break;
+			}
+		}
+		return Answer;
+	}
+
 	template<typename FType,typename ...Argv>
 	static void Log(int32 TestColor, const FType& Format, Argv... Params) {
 		FString s = FString::Printf(Format, Params...);

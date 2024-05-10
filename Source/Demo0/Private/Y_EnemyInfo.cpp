@@ -130,6 +130,12 @@ void Y_CharacterAction::Move(int32 Distance, bool Execute)
     }
 }
 
+void Y_CharacterAction::BindMessage(FString Name)
+{
+    UsingMontageName = FName(Name);
+
+}
+
 
 bool Y_CharacterAction::AttackFloor(AY_Floor* TargetFloor)
 {
@@ -157,6 +163,13 @@ void Y_CharacterAction::PlayMontage(FName MontageName, AY_Floor* ChoosedFloor, f
         }
         GetOwner()->MyPlayMontage(MontageName, ChoosedFloor, PlayRate, offset);
         
+    }
+}
+
+void Y_CharacterAction::PlayMontage(bool Execute, AY_Floor* ChoosedFloor, float PlayRate)
+{
+    if (Execute) {
+        PlayMontage(UsingMontageName, ChoosedFloor, PlayRate);
     }
 }
 

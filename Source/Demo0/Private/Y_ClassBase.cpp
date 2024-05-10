@@ -157,6 +157,8 @@ BurnBuff::BurnBuff()
 	BuffOrder = 0;
 	BuffLevel = -20;
 	BuffExtend.Add(BuffID);
+	BuffParams.Add(0.5);
+	BuffParams.Add(1);
 	BuffName = Y::PrintText(TEXT("灼烧"));
 }
 
@@ -164,9 +166,9 @@ int32 BurnBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, 
 {
 	if(TryAttack){
 		Y_StatusBar TS;
-		TS.AddBuff(Y::YMakeShared<BurnDemageBuff>(BuffCount));
+		TS.AddBuff(Y::YMakeShared<BurnDemageBuff>(BuffCount * BuffParams[1]));
 		Y::ExecuteAction(OwnerCharacter, OwnerCharacter, TS, TEXT("Burn"), TryAttack);
-		BuffCount = 0.5 * BuffCount;
+		BuffCount = BuffParams[0] * BuffCount;
 		if (BuffCount == 0)
 			RemoveFromCharacter();
 	}
@@ -562,3 +564,62 @@ TSharedPtr<Y_RoomInfo> NormalFightRoom::RoomClicked()
 	return nullptr;
 }
 
+OnBurnBuff::OnBurnBuff()
+{
+	BuffAsType = BuffID = 8;
+	TriggerCondition = Ticking | BeginBuffed;
+	BuffProperty = 3;
+	BuffOrder = 0;
+	BuffLevel = -5;
+	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("着火"));
+}
+
+int32 OnBurnBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
+{
+	if (ExecuteCondition == Ticking) {
+		BuffCount -= 1;
+		if (BuffCount <= 0)RemoveFromCharacter();
+	}
+	else if (ExecuteCondition == BeginBuffed) {
+		auto TA = ToBuffs.FindType(5);
+		for (auto& p : TA)p->BuffCount += 1;
+	}
+	return 0;
+}
+
+MoreBurnBuff::MoreBurnBuff()
+{
+	BuffAsType = BuffID = 9;
+	TriggerCondition = Ticking;
+	BuffProperty = 3;
+	BuffOrder = 0;
+	BuffLevel = -5;
+	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("猛燃"));
+}
+
+int32 MoreBurnBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
+{
+	BuffCount -= 1;
+	if (BuffCount <= 0)RemoveFromCharacter();
+	return 0;
+}
+
+//Need Fix
+void MoreBurnBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
+{
+	Y_Buff::AddToCharacter(TargetCharacter,Execute);
+	if(Execute)
+	{
+		auto TA = OwnerCharacter->Buffs->FindType(5);
+		for (auto& p : TA)p->BuffParams[1] = 2;
+	}
+}
+
+void MoreBurnBuff::RemoveFromCharacter()
+{
+	auto TA = OwnerCharacter->Buffs->FindType(5);
+	for (auto& p : TA)p->BuffParams[1] = 1;
+	Y_Buff::RemoveFromCharacter();
+}

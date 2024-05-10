@@ -61,6 +61,8 @@ public:
 
 	virtual class AY_Character* GetOwner();
 
+	virtual void BindMessage(FString Name);
+
 	virtual void CardUpdate();
 
 	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);

@@ -66,3 +66,24 @@ public:
 		return ToEvent;
 	}
 };
+
+
+class DEMO0_API Y_ChoiceInfoLR :public Y_ChoiceInfo {
+public:
+	TDelegate<TSharedPtr<Y_EventInfo>()> Action;
+
+	FText Describe;
+
+	template<typename T>
+	Y_ChoiceInfoLR(FText Description, T&& Lambda) {
+		Describe = Description;
+		Action.BindLambda(Lambda);
+	}
+	virtual FText GetDescribe()override {
+		return Describe;
+	}
+
+	virtual TSharedPtr<class Y_EventInfo> Execute()override {
+		return Action.Execute();
+	}
+};

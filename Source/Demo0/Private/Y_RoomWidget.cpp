@@ -17,6 +17,7 @@
 #include "Y_MapWidget.h"
 #include "Y_CardInfo.h"
 #include "Y_ChooseCard.h"
+#include "Y_EventWidget.h"
 
 UY_RoomWidget* UY_RoomWidget::CurrentRoom = nullptr;
 
@@ -50,17 +51,19 @@ void UY_RoomWidget::LoadInfo(TSharedPtr<class Y_RoomInfo> LoadingInfo)
 
 void UY_RoomWidget::RoomInit()
 {
-	Y::GetLocation() = FVector(0, 0, 300);
-	Y::GetRotation() = FRotator(0, 90, 0);
+	//Y::GetLocation() = FVector(0, 0, 300);
+	//Y::GetRotation() = FRotator(0, 90, 0);
 	Info = MakeShared<Y_RoomInfo>();
 	Info->Owner = this;
 	Cleared = false;
+	RoomStatus = 1;
 }
 
 void UY_RoomWidget::RoomClicked()
 {
 	CurrentRoom = this;
 	Y::GetController()->MapWidget->CurrentRoom = this;
+	Y::GetGameInstance()->CurrentRoom = this;
 	Y::GetController()->MapWidget->PullMap(true);
 
 	//Y::GetGameInfo()->BeginFight();
@@ -196,7 +199,7 @@ void Y_RoomInfo::EndEvent()
 void Y_RoomInfo::DoToEndRoom()
 {
 	//Need Fix(ForwardRoom Can't Use!)
-	//Y::GetController()->MapWidget->ForwardRoom(this);
+	Y::GetController()->MapWidget->ForwardRoom(Owner);
 	Y::GetGameInfo()->EndRoom();
 }
 
@@ -214,4 +217,16 @@ void Y_RoomInfo::DeleteCard()
 	auto ChooseInfo = MakeShared<Y_ChooseCardOut>();
 	ChooseInfo->Cards = Y::GetGameInfo()->UsingCards;
 	Y::GetController()->BeginChoose(ChooseInfo);
+}
+
+//Temp
+
+TSharedPtr<class Y_EventInfo> Y_RoomInfo::DeleteRandomCard(int32 Count)
+{
+	return nullptr;
+}
+
+TSharedPtr<class Y_EventInfo> Y_RoomInfo::UpgradeEquipment(int32 Level,int32 Count)
+{
+	return nullptr;
 }

@@ -54,6 +54,7 @@ public:
 	virtual FText printBuff(bool PrintLog = false)const override;
 };
 
+//ID 5, P[0]  £≤„∞Ÿ∑÷±»£¨ P[1] …À∫¶±∂ ˝
 class DEMO0_API BurnBuff :public Y_Buff
 {
 public:
@@ -184,4 +185,20 @@ class DEMO0_API NormalFightRoom : public Y_RoomInfo {
 public:
 	NormalFightRoom();
 	virtual TSharedPtr<Y_RoomInfo> RoomClicked()override;
+};
+
+//ID 8 ∂ÓÕ‚ ‹µΩ1≤„B
+class DEMO0_API OnBurnBuff :public Y_Buff {
+public:
+	OnBurnBuff();
+	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
+};
+
+//ID 9 ◊∆…’…À∫¶∑≠±∂
+class DEMO0_API MoreBurnBuff :public Y_Buff {
+public:
+	MoreBurnBuff();
+	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
+	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute);
+	virtual void RemoveFromCharacter()override;
 };

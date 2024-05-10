@@ -202,4 +202,9 @@ int32& Y::GetCurrentLevel()
 	return Y::GetGameInstance()->CurrentLevel;
 }
 
+const TCHAR* Y::toS(FText ReadyText)
+{
+	return *(ReadyText.ToString());
+}
+
 

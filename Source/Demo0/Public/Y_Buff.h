@@ -111,6 +111,8 @@ public:
 
 	int32 TriggerCondition;//When the Buff Execute.
 
+	TArray<float> BuffParams;
+
 	bool Addable;//For Normal Buffs
 
 	//Waring:: Avoid Remove Buff From Character. Just Make It UnLiving.

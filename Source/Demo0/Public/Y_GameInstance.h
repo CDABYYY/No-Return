@@ -51,11 +51,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 CurrentLevel = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UY_RoomWidget* CurrentRoom;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AY_Character* MainCharacter;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetColor(UMeshComponent* MeshComponent, FName MaterialName);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowNiagara(FName NiagaraName, FVector Position, FRotator Direction, float Duration, float Offset);
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TMap<FName, TSubclassOf<class AY_Character>> AllyClasses;
@@ -99,11 +105,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UTexture2D* LoadPicture(const FString& FilePath);
 
+	//Debug, 1: Card, 2:Room, 3:Equipment, 4:Enemy, 5:Buff
+	UFUNCTION(BlueprintCallable)
+	void DebugSettings(int32 Type, int32 ID);
+
 	TSharedPtr<class Y_Fighting> FightInfo;
 
 	void AddAtk(class AY_Character* owner);
 	void HelpTick(float DeltaTime);
 	void DeleteAtk(class AY_Character* owner);
-	//void UpdateOrder();
-	//Sort is Failed. I just can't understand.
 };

@@ -72,6 +72,11 @@ AY_Character* Y_CardInfo::GetOwner()
 	return Y::GetMainCharacter();
 }
 
+void Y_CardInfo::BindMessage(FString Name)
+{
+	UsingMontageName = FName(Name);
+}
+
 void Y_CardInfo::CardUpdate()
 {
 	CurrentCost = GetCost();

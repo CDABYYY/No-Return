@@ -24,6 +24,8 @@ public:
 	Y_StatusBar AlwaysBuffs;
 	Y_StatusBar FightingBuffs;
 
+	Y_StatusBar OnCharacterBuffs;
+
 	TSharedPtr<class Y_RoomInfo> CurrentRoom;
 	
 	//Using Execute Method
@@ -35,6 +37,7 @@ public:
 	void SpawnCharacter(class AY_Character* SpawnedCharacter);
 	void AddEquipment(TSharedPtr<class Y_Equipment> GetEquipment);
 	void RemoveEquipment(TSharedPtr<class Y_Equipment> GetEquipment);
+	TArray<TSharedPtr<class Y_Equipment>> EquipmentUpgrades(int32 Level);
 	void AddMoney(int32 Moneys);
 	int32& MoneyCount();
 

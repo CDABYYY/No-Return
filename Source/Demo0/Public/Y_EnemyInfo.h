@@ -36,6 +36,8 @@ public:
 
 	virtual void Move(int32 Distance, bool Execute);
 
+	virtual void BindMessage(FString Name);
+
 	virtual float GetRate();
 
 	virtual float GetWeight();
@@ -49,6 +51,8 @@ public:
 	virtual bool CanAttackFloor(class AY_Floor* TargetFloor);
 
 	virtual void PlayMontage(FName MontageName ,class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
+
+	virtual void PlayMontage(bool Execute, class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
 
 	virtual FText LogDescript();
 
@@ -67,6 +71,7 @@ public:
 	virtual ~Y_EnemyInfo();
 
 	virtual void Init(int32 Level);
+	FName BindBlueprint;
 	UTexture2D* EnemyProfile;
 	int32 MaxHealth;
 	int32 CurrentHealth;
