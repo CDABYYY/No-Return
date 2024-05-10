@@ -19,10 +19,10 @@ void LoadY_Base()
 	Y::LoadBuff<MoveBuff>(2);
 	Y::LoadBuff<BurnBuff>(5);
 	Y::LoadBuff<ShieldBuff>(4);
-	Y::LoadCard<NormalCard>(1);
-	Y::LoadCharacter<NormalEnemy>(1);
-	Y::LoadRoom<NormalRoom>(1);
-	Y::LoadRoom<EventRoom>(2);
+	Y::LoadCard<NormalCard>(-1);
+	Y::LoadCharacter<NormalEnemy>(-1);
+	Y::LoadRoom<NormalRoom>(-2);
+	Y::LoadRoom<EventRoom>(-1);
 	Y::LoadFloor<NormalFloor>(1);
 }
 
@@ -75,9 +75,12 @@ int32 PureDemageBuff::execute(AY_Character* FromCharacter, AY_Character* ToChara
 void PureDemageBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 {
 	Y::Log(0, TEXT("Try AddToCharacter"));
-	Y_Buff::AddToCharacter(TargetCharacter,Execute);
-	if(Execute)
-	TargetCharacter->Health -= BuffCount;
+	if(IsValid(TargetCharacter))
+	{
+		Y_Buff::AddToCharacter(TargetCharacter, Execute);
+		if (Execute)
+			TargetCharacter->Health -= BuffCount;
+	}
 }
 
 DemageBuff::DemageBuff()
@@ -184,7 +187,7 @@ FText BurnBuff::printBuff(bool PrintLog) const
 NormalCard::NormalCard()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 1;
+	CardID = -1;
 	CardName = Y::PrintText(TEXT("Charge"));
 	UsingMontageName = TEXT("Attack4");
 	CurrentCardDescribe  = Y::PrintText(TEXT("Move to Front of Enemy, Attack 5"));
@@ -261,7 +264,7 @@ NormalAction::NormalAction()
 {
 	OriginalCost = CurrentCost = 10;
 	UsingMontageName = TEXT("Move1");
-	ActionID = 1;
+	ActionID = -1;
 }
 
 float NormalAction::GetWeight()
@@ -307,7 +310,7 @@ NormalEnemy::NormalEnemy()
 	ActionValue = 0;
 	ChoosedAction = 0;
 
-	EnemyID = 1;
+	EnemyID = -1;
 }
 
 void NormalEnemy::EnemyDead()
@@ -316,7 +319,7 @@ void NormalEnemy::EnemyDead()
 
 NormalRoom::NormalRoom()
 {
-	RoomID = 1;
+	RoomID = -2;
 }
 
 FText NormalRoom::GetDescribe()
@@ -336,7 +339,7 @@ TSharedPtr<Y_RoomInfo> NormalRoom::RoomClicked()
 
 	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[2]);
 
-	auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[1]->NewObject(), Y::GetFloors()[7]);
+	auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[-1]->NewObject(), Y::GetFloors()[7]);
 	TC->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
 	TC->Update();
 
@@ -355,7 +358,7 @@ float NormalRoom::GetWeight()
 
 EventRoom::EventRoom()
 {
-	RoomID = 2;
+	RoomID = -1;
 }
 
 FText EventRoom::GetDescribe()
@@ -375,7 +378,7 @@ TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 
 	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[2]);
 
-	auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[1]->NewObject(), Y::GetFloors()[7]);
+	auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[-1]->NewObject(), Y::GetFloors()[7]);
 	TC->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
 	TC->Update();
 	
@@ -396,7 +399,7 @@ void EventRoom::LeaveRoom()
 	auto EP = MakeShared<Y_EventInfo>();
 	EP->Description = Y::PrintText(TEXT("Will End Room"));
 	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("EndRoom")), []() {}));
-	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Get New Card")), []() { Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() })); }));
+	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Get New Card")), []() { Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[-1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[-1]->NewObject(), Y::CardClass[-1]->NewObject() })); }));
 	EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("Reload")), []() {}, EP));
 	Y::GetController()->BeginEvent(EP);
 }
@@ -609,11 +612,13 @@ int32 MoreBurnBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharact
 //Need Fix
 void MoreBurnBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 {
-	Y_Buff::AddToCharacter(TargetCharacter,Execute);
-	if(Execute)
-	{
-		auto TA = OwnerCharacter->Buffs->FindType(5);
-		for (auto& p : TA)p->BuffParams[1] = 2;
+	if(IsValid(TargetCharacter)){
+		Y_Buff::AddToCharacter(TargetCharacter, Execute);
+		if (Execute)
+		{
+			auto TA = OwnerCharacter->Buffs->FindType(5);
+			for (auto& p : TA)p->BuffParams[1] = 2;
+		}
 	}
 }
 

@@ -94,7 +94,10 @@ void Y_Buff::ReplaceBuff(Y_Buff* OtherBuff)
 void Y_Buff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 {
 	OwnerCharacter = TargetCharacter;
-	TargetCharacter->AddBuff(AsShared(), Execute);
+	if(IsValid(TargetCharacter))
+	{
+		TargetCharacter->AddBuff(AsShared(), Execute);
+	}
 }
 
 void Y_Buff::RemoveFromCharacter()

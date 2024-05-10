@@ -19,7 +19,8 @@
 
 //#include "I_Level1.h"
 #include "Y_ClassBase.h"
-
+#include "I01.h"
+#include "Z01.h"
 
 #include "IImageWrapper.h"
 #include "IImageWrapperModule.h"
@@ -54,13 +55,15 @@ UY_GameInstance::UY_GameInstance()
 	Y::LoadRoom<Y_RoomInfo>(0);
 
 	LoadY_Base();
+	L_I01();
+	LZ01();
 
 	//TEMP
-	FightInfo->ReadyRooms.Add(Y::RoomClass[2]->NewObject());
+	FightInfo->ReadyRooms.Add(Y::RoomClass[-1]->NewObject());
 
 	//TEMP
 	for(int32 i = 0;i<=10;i++)
-	FightInfo->UsingCards.Add(Y::CardClass[1]->NewObject());
+	FightInfo->UsingCards.Add(Y::CardClass[-1]->NewObject());
 
 
 	FightInfo->MCSkill = MakeShared<NormalSkill>();

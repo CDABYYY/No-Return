@@ -69,6 +69,7 @@ void ACameraPawn::BeginPlay()
 		PlayerController->SetShowMouseCursor(true);
 		if (UY_GameInstance* GI = Cast<UY_GameInstance>(GetGameInstance())) {
 			GI->YC = this;
+			AY_PlayerController::ThisPlayerController = Cast<AY_PlayerController>(PlayerController);
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("GameInstance Connect Successfully!"));
 		}
 	}
@@ -216,7 +217,11 @@ void ACameraPawn::MouseLeftRelease()
 
 										Y::GetGameInfo()->UseCard(Y::GetChoosingCard());
 										Y::Log(0, TEXT("Execute Successfully"));
-										Y::GetChoosingCard()->CurrentCost = BA.Buff[0]->BuffCount;
+
+										int32 I = BA.Buff[0]->BuffCount;
+
+										Y::GetChoosingCard()->CurrentCost = I;
+
 										Y::GetChoosingCard()->Play(true);
 
 										Y_StatusBar AA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
@@ -231,7 +236,8 @@ void ACameraPawn::MouseLeftRelease()
 
 									Y::GetMainCharacter()->CharacterAttackTime += Y::GetChoosingCard()->CurrentCost;
 									Y::GetMainCharacter()->ChangeAttackTime(Y::GetMainCharacter()->CharacterAttackTime);
-									
+
+									Y::GetController()->CardWidget->RemoveCard(Y::GetChoosingCard()->OwnerWidget);
 
 									ClickAble = false;
 								}

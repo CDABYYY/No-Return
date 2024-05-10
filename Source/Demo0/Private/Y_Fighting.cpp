@@ -14,6 +14,7 @@
 #include "Y_TimeLine.h"
 #include "Y_PlayerController.h"
 #include "Y_EquipmentH.h"
+#include "Y_MapWidget.h"
 #include "Y_CardH.h"
 #include "Y_HUD.h"
 #include "Y.h"
@@ -93,6 +94,10 @@ void Y_Fighting::EndRoom()
 	{
 		Y::GetController()->ShowSettle(false);
 		Y::GetController()->SettleWidget->LoadInfo(SettleInfo);
+	}
+	else {
+		Y::GetGameInfo()->AfterFight();
+		Y::GetController()->MapWidget->PullMap(false);
 	}
 }
 
@@ -222,7 +227,7 @@ void Y_Fighting::UseCard(TSharedPtr<class Y_CardInfo> UsedCard, int32 DiscardRea
 	else if (UsedCard->UsedType == 3) {
 
 	}
-	Y::GetController()->CardWidget->RemoveCard(UsedCard->OwnerWidget);
+	//Y::GetController()->CardWidget->RemoveCard(UsedCard->OwnerWidget);
 }
 
 void Y_Fighting::PrepareDie(AY_Character* ToDieCharacter)
@@ -233,6 +238,8 @@ void Y_Fighting::PrepareDie(AY_Character* ToDieCharacter)
 
 void Y_Fighting::DestroyCharacter(AY_Character* ToDestroyCharacter)
 {
+	//Temp 
+	ToDestroyCharacter->Destroy();
 }
 
 AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int32 SerialNumber, FName ActorClass)

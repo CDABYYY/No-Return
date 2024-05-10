@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "I_Helper.h"
@@ -39,17 +39,60 @@ bool I::IsBlocked(AY_Floor* GetFloor)
 {
 	int32 maxnum = maxPlus(GetFloor->SerialNumber, Y::GetMainCharacter()->StandFloor->SerialNumber);
 	int32 minnum = minPlus(GetFloor->SerialNumber, Y::GetMainCharacter()->StandFloor->SerialNumber);
-	if (maxnum == GetFloor->SerialNumber)minnum++;
-	else maxnum--;
-	for (int i = minnum; i <= maxnum; i++)
+	for (int32 i = minnum + 1; i < maxnum; i++)
 	{
 		if (!IsValid(GetFloor) || IsValid(Y::GetFloors()[i]->StandCharacter)) return true;
 	}
 	return false;
 }
 
+bool I::IsEnemy(AY_Floor* GetFloor)
+{
+	if (IsValid(GetFloor->StandCharacter) && GetFloor != Y::GetMainCharacter()->StandFloor)return true;
+	return false;
+}
+
 void I::Border(int32 tempFloorNum, int32 n, int32& leftBorder, int32& rightBorder)
 {
 	leftBorder = tempFloorNum - n > 0 ? tempFloorNum - n : 0;
-	rightBorder = tempFloorNum + n < Y::GetFloors().Num() ? tempFloorNum + n : Y::GetFloors().Num();
+	rightBorder = tempFloorNum + n < Y::GetFloors().Num() ? tempFloorNum + n : Y::GetFloors().Num() - 1;
+}
+
+void I::Border(int32 tempFloorNum, int32 n, int32& leftBorder, int32& rightBorder, bool right)
+{
+	if (right)
+	{
+		leftBorder = tempFloorNum + 1;
+		rightBorder = tempFloorNum + n < Y::GetFloors().Num() ? tempFloorNum + n : Y::GetFloors().Num() - 1;
+	}
+	else
+	{
+		leftBorder = tempFloorNum - n > 0 ? tempFloorNum - n : 0;
+		rightBorder = tempFloorNum - 1;
+	}
+}
+
+int32 I::End(int32 tempFloorNum, int32 n, bool right)
+{
+	if (right)
+	{
+		for (int32 i = tempFloorNum + n; i >= tempFloorNum; i--)
+		{
+			if (!IsBlocked(Y::GetFloors()[i]) && !IsEnemy(Y::GetFloors()[i]))
+			{
+				return i;
+			}
+		}
+	}
+	else
+	{
+		for (int32 i = tempFloorNum - n; i <= tempFloorNum; i++)
+		{
+			if (!IsBlocked(Y::GetFloors()[i]) && !IsEnemy(Y::GetFloors()[i]))
+			{
+				return i;
+			}
+		}
+	}
+	return int32();
 }
