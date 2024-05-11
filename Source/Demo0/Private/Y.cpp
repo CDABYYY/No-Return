@@ -142,7 +142,7 @@ int32 Y::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y
 					ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterDeath, TriggerAction, TryAttack);
 					ToBuffs.ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterKill, TriggerAction, TryAttack);
 					FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterKill, TriggerAction, TryAttack);
-					GetGameInfo()->DestroyCharacter(ToCharacter);	
+					ToCharacter->PlayDead(TEXT("Dead"));
 				}
 				if(ToCharacter->CheckValid())	ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 1), TriggerAction, TryAttack);
 			}
@@ -163,6 +163,11 @@ AY_Character*& Y::GetMainCharacter()
 
 AY_PlayerController*& Y::GetController()
 {
+	auto P = Cast<AY_PlayerController>(GetPlayer()->Controller);
+	if (P != AY_PlayerController::ThisPlayerController) {
+		Y::Log(TEXT("Find It! Change Controller!"));
+		AY_PlayerController::ThisPlayerController = P;
+	}
 	return AY_PlayerController::ThisPlayerController;
 }
 

@@ -6,6 +6,7 @@
 #include "Y_EventWidget.h"
 #include "Y_ChooseCard.h"
 #include "Y_HUD.h"
+#include "Y.h"
 
 AY_PlayerController* AY_PlayerController::ThisPlayerController = nullptr;
 
@@ -52,4 +53,10 @@ void AY_PlayerController::BeginPlay()
 	//MyHUD->MarkPendingKill();
 	//MyHUD->RemoveFromViewport();
 	//MyHUD->RemoveFromParent();
+}
+
+AY_PlayerController::AY_PlayerController()
+{
+	Y::Log(TEXT("Controller Construct"));
+	ThisPlayerController = this;
 }

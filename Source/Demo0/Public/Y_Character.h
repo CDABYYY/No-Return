@@ -112,6 +112,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MyPlayMontage(FName PlayName, class AY_Floor* ToFloor, float PlayRate, bool Offset);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayDead(FName MontageName);
+
 	bool CheckValid();
 
 	TSharedPtr<class Y_EnemyInfo> Info;

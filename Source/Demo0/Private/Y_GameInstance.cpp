@@ -45,6 +45,8 @@ UY_GameInstance::UY_GameInstance()
 	HaveRandoms = 0;
 	Money = 0;
 
+	GameStatus = 0;
+
 	FightInfo = MakeShared<Y_Fighting>();
 
 
@@ -151,6 +153,18 @@ void UY_GameInstance::HelpTick(float DeltaTime)
 void UY_GameInstance::DeleteAtk(AY_Character* owner)
 {
 	AtkOrder.Remove(owner);
+}
+
+void UY_GameInstance::BeginGame()
+{
+	Y::GetController()->UpdateMap();
+	Y::GetController()->MapWidget->PullMap(false);
+	Y::GetController()->LoadHUD();
+	Y::GetController()->ShowCards(false);
+	Y::GetPlayer()->LookingTime = 0;
+	Y::GetPlayer()->LookingFloor = nullptr;
+
+	GameStatus = 1;
 }
 
 

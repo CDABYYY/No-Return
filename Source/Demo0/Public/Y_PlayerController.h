@@ -14,6 +14,8 @@ class DEMO0_API AY_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
+	AY_PlayerController();
+
 	static AY_PlayerController* ThisPlayerController;
 		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

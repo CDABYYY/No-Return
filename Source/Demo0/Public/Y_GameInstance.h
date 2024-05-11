@@ -114,4 +114,11 @@ public:
 	void AddAtk(class AY_Character* owner);
 	void HelpTick(float DeltaTime);
 	void DeleteAtk(class AY_Character* owner);
+
+	UFUNCTION(BlueprintCallable)
+	void BeginGame();
+
+	//0: Nothing, 1: Fighting, 2:Eventing, 3:Mapping Need Add
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int32 GameStatus;
 };
