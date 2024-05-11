@@ -32,14 +32,16 @@ public:
 
 	int32 UsedType;
 	int32 CardID;
-
-	int32 OriginalCost;
-	int32 CurrentCost;
-	FName UsingMontageName;
 	FText CardName;
-	UTexture2D* UsingPicture;
 	FText CurrentCardDescribe;
 	FText CurrentPointDescribe;
+
+	// Extend From Action
+
+	//int32 OriginalCost;
+	//int32 CurrentCost;
+	//FName UsingMontageName;
+	//UTexture2D* UsingPicture;
 
 	//The Status when Pressing this Card
 	int32 PressingStatus;
@@ -68,6 +70,8 @@ public:
 	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
 
 	virtual void Move(int32 Distance, bool Execute);
+
+	virtual void PlayNiagara(FName PlayName,bool Execute, int32 Position = 0, float Duration = -1, AY_Floor* BeginFloor = nullptr);
 
 	static void DrawCard(int32 DrawCount,bool Execute);
 	

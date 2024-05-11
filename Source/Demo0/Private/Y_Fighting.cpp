@@ -17,6 +17,7 @@
 #include "Y_MapWidget.h"
 #include "Y_CardH.h"
 #include "Y_HUD.h"
+#include "Y_TimeLine.h"
 #include "Y.h"
 
 Y_Fighting::Y_Fighting()
@@ -232,6 +233,7 @@ void Y_Fighting::UseCard(TSharedPtr<class Y_CardInfo> UsedCard, int32 DiscardRea
 
 void Y_Fighting::PrepareDie(AY_Character* ToDieCharacter)
 {
+	UY_TimeLine::YTimeLine->RemoveCharacter(ToDieCharacter);
 	LivingEnemys.Remove(ToDieCharacter->Info);
 	Y::GetEnemys().Remove(ToDieCharacter);
 }

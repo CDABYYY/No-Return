@@ -192,7 +192,7 @@ public:
 
 	//Return Without 0 will end Following Execute				
 	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs,int32 ExecuteCondition,FString TriggerAction, bool TryAttack = false);
-
+	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
 	virtual FText printBuff(bool PrintLog = false)const;
 	virtual void AddBuff(Y_Buff* OtherBuff);
 	virtual void ReplaceBuff(Y_Buff* OtherBuff);

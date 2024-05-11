@@ -46,6 +46,8 @@ public:
 
 	static FRotator& GetRotation();
 
+	static float& GetScale();
+
 	static int32 ExecutePureAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, FString TriggerAction, bool TryAttack = false);
 
 	static int32 ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, FString TriggerAction, bool TryAttack = false);
@@ -59,6 +61,8 @@ public:
 	static int32& GetCurrentLevel();
 
 	static const TCHAR* toS(FText ReadyText);
+
+	static void PlayNiagara(FName PlayName, AY_Floor* PlayFloor, float Duration, int32 Position);
 
 	template <typename T>
 	static TArray<T> GetRandomArray(TArray<T> TargetArray, int32 Counts = 3) {

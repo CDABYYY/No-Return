@@ -157,6 +157,12 @@ void UY_GameInstance::DeleteAtk(AY_Character* owner)
 
 void UY_GameInstance::BeginGame()
 {
+	Floors = TArray<AY_Floor*>();
+	Enemys = TArray<AY_Character*>();
+	CurrentRoom = nullptr;
+	MainCharacter = nullptr;
+
+
 	Y::GetController()->UpdateMap();
 	Y::GetController()->MapWidget->PullMap(false);
 	Y::GetController()->LoadHUD();

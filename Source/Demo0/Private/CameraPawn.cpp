@@ -188,6 +188,8 @@ void ACameraPawn::MouseLeftPress()
 
 void ACameraPawn::MouseLeftRelease()
 {
+	LookingFloor = nullptr;
+	LookingTime = 0;
 	if(Y::GetGameInstance()->GameStatus == 1)
 	{
 		if (Y::IsPressingCard() || Y::IsPressingEquipment()) {
