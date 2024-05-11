@@ -67,14 +67,33 @@ void Y_Fighting::AfterFight()
 	EventBuffs.ExecuteBuffs(nullptr, nullptr, EventBuffs, Y_Buff::AfterFight, TEXT("After Fight"));
 	FightingBuffs = Y_StatusBar();
 
-	if (IsValid(Y::GetMainCharacter()))Y::GetMainCharacter()->Destroy();
+	if (IsValid(Y::GetMainCharacter()))
+	{
+		Y::GetMainCharacter()->RemoveFromRoot();
+		Y::GetMainCharacter()->Destroy();
+	}
 	Y::GetMainCharacter() = nullptr;
-	for (auto& p : Y::GetEnemys())if (IsValid(p))p->Destroy();
+	for (auto& p : Y::GetEnemys())
+	{
+		if (p->CheckValid())
+		{
+			p->RemoveFromRoot();
+			p->Destroy();
+		}
+	}
 	Y::GetEnemys().Empty();
-	for (auto& p : Y::GetCards())if (IsValid(p))p->Destroy();
-	Y::GetCards().Empty();
-	for (auto& p : Y::GetFloors())if (IsValid(p))p->Destroy();
+
+	for (auto& p : Y::GetFloors()) {
+		if (IsValid(p))
+		{
+			p->RemoveFromRoot();
+			p->Destroy();
+		}
+	}
 	Y::GetFloors().Empty();
+
+	//for (auto& p : Y::GetCards())if (IsValid(p))p->Destroy();
+	//Y::GetCards().Empty();
 
 	UY_TimeLine::YTimeLine->EndRoom();
 	Y::GetController()->CardWidget->Clear();
@@ -260,6 +279,7 @@ AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int
 	Y::GetFloors()[SerialNumber] = NewFloor;
 	NewFloor->Info = ToSpawnFloor;
 	ToSpawnFloor->Owner = NewFloor;
+	NewFloor->AddToRoot();
 	return NewFloor;
 }
 
@@ -300,6 +320,7 @@ AY_Character* Y_Fighting::SpawnCharacter(TSharedPtr<Y_EnemyInfo> ToSpawnCharacte
 	LivingEnemys.Add(ToSpawnCharacter);
 	AppearedEnemys.Add(ToSpawnCharacter);
 	SpawnCharacter(NewCharacter);
+	NewCharacter->AddToRoot();
 	return NewCharacter;
 }
 

@@ -69,6 +69,36 @@ UY_GameInstance::UY_GameInstance()
 
 
 	FightInfo->MCSkill = MakeShared<NormalSkill>();
+
+}
+
+void UY_GameInstance::Shutdown()
+{
+	if (IsValid(Y::GetMainCharacter()))
+	{
+		Y::GetMainCharacter()->RemoveFromRoot();
+		Y::GetMainCharacter()->Destroy();
+	}
+	Y::GetMainCharacter() = nullptr;
+	for (auto& p : Y::GetEnemys())
+	{
+		if (p->CheckValid())
+		{
+			p->RemoveFromRoot();
+			p->Destroy();
+		}
+	}
+	Y::GetEnemys().Empty();
+
+	for (auto& p : Y::GetFloors()) {
+		if (IsValid(p))
+		{
+			p->RemoveFromRoot();
+			p->Destroy();
+		}
+	}
+	Y::GetFloors().Empty();
+	Super::Shutdown();
 }
 
 

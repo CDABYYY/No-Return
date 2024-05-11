@@ -71,7 +71,7 @@ public:
 
 	virtual void Move(int32 Distance, bool Execute);
 
-	virtual void PlayNiagara(FName PlayName,bool Execute, int32 Position = 0, float Duration = -1, AY_Floor* BeginFloor = nullptr);
+	virtual void PlayNiagara(FName PlayName,bool Execute, int32 ToPosition = 0, float Duration = -1, AY_Floor* BeginFloor = nullptr);
 
 	static void DrawCard(int32 DrawCount,bool Execute);
 	

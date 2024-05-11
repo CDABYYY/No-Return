@@ -148,6 +148,7 @@ int32 Y::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y
 					ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterDeath, TriggerAction, TryAttack);
 					ToBuffs.ExecuteBuffs(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterKill, TriggerAction, TryAttack);
 					FromCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, Y_Buff::AfterKill, TriggerAction, TryAttack);
+					ToCharacter->RemoveFromRoot();
 					ToCharacter->PlayDead(TEXT("Dead"));
 				}
 				if(ToCharacter->CheckValid())	ToCharacter->ExecuteAction(FromCharacter, ToCharacter, ToBuffs, (UsingCondition << 1), TriggerAction, TryAttack);
@@ -218,20 +219,20 @@ const TCHAR* Y::toS(FText ReadyText)
 	return *(ReadyText.ToString());
 }
 
-void Y::PlayNiagara(FName PlayName, AY_Floor* PlayFloor, float Duration, int32 Position)
+void Y::PlayNiagara(FName PlayName, AY_Floor* PlayFloor, float Duration, int32 Offset)
 {
 	FVector V = PlayFloor->GetTargetLocation();
 	V.Z += 100;
 	FRotator R = GetRotation();
-	if (Position < 0) {
-		R += FRotator(0, -90, 0);
-		Position *= -1;
+	if (Offset < 0) {
+		Offset *= -1;
+		R += FRotator(0, 180, 0);
 	}
 	else {
-		R += FRotator(0, 90, 0);
 	}
-	float Offset = (float)Position / Duration;
-	GetGameInstance()->ShowNiagara(PlayName, V, R, Duration, Offset);
+	float OffsetF = (float)Offset / Duration;
+	Y::Log(0 , TEXT("Niagara Position: %d / %f"), Offset, OffsetF);
+	GetGameInstance()->ShowNiagara(PlayName, V, R, Duration * 0.5, OffsetF);
 }
 
 

@@ -173,10 +173,10 @@ void Y_CharacterAction::PlayMontage(bool Execute, AY_Floor* ChoosedFloor, float 
     }
 }
 
-void Y_CharacterAction::PlayMontage(bool Execute, int32 Offset, float PlayRate)
+void Y_CharacterAction::PlayMontage(bool Execute, int32 ToPosition, float PlayRate)
 {
     if (Execute) {
-        PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + Offset], PlayRate);
+        PlayMontage(UsingMontageName, Y::GetFloors()[ToPosition], PlayRate);
     }
 }
 

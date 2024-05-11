@@ -62,7 +62,7 @@ public:
 
 	static const TCHAR* toS(FText ReadyText);
 
-	static void PlayNiagara(FName PlayName, AY_Floor* PlayFloor, float Duration, int32 Position);
+	static void PlayNiagara(FName PlayName, AY_Floor* PlayFloor, float Duration, int32 Offset);
 
 	template <typename T>
 	static TArray<T> GetRandomArray(TArray<T> TargetArray, int32 Counts = 3) {

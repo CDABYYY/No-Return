@@ -213,6 +213,7 @@ void NormalCard::Play( bool Execute)
 		if (ToPos < Pos)ToPos += 1;
 		else ToPos -= 1;
 	}
+	PlayNiagara(TEXT("FireBall02"), Execute, ToPos);
 	if(ToPos - Pos != 0)
 	{
 		Move(ToPos - Pos, Execute);
@@ -222,7 +223,6 @@ void NormalCard::Play( bool Execute)
 		ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S1, Execute);
 	}
 	DrawCard(1, Execute);
-	PlayNiagara(TEXT("FireBall02"), Execute, ToPos);
 	PlayMontage(Execute, ToPos);
 }
 

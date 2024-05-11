@@ -55,7 +55,7 @@ public:
 
 	virtual void PlayMontage(bool Execute, class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
 
-	virtual void PlayMontage(bool Execute, int32 Offset = 0, float PlayRate = 0);
+	virtual void PlayMontage(bool Execute, int32 ToPosition = 0, float PlayRate = 0);
 
 	virtual FText LogDescript();
 

@@ -15,9 +15,9 @@ class DEMO0_API UY_GameInstance : public UGameInstance
 	GENERATED_BODY()
 public:
 
-	
-
 	UY_GameInstance();
+
+	virtual void Shutdown()override;
 
 	static UY_GameInstance* YGI;
 
