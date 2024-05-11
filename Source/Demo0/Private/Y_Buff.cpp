@@ -64,6 +64,11 @@ int32 Y_Buff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_
 	return 0;
 }
 
+void Y_Buff::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
+{
+	Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, BuffName.ToString(), TryExecute);
+}
+
 FText Y_Buff::printBuff(bool PrintLog) const
 {
 	if(PrintLog)

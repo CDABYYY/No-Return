@@ -9,6 +9,7 @@
 #include "Y_Equipment.h"
 #include "Y_CardH.h"
 #include "Y_CardW.h"
+#include "Y_Floor.h"
 #include "Y_EquipmentH.h"
 #include "Y_EquipmentW.h"
 #include "Y_PlayerController.h"
@@ -93,6 +94,11 @@ FVector& Y::GetLocation()
 FRotator& Y::GetRotation()
 {
 	return UY_GameInstance::YGI->NowRotator;
+}
+
+float& Y::GetScale()
+{
+	return GetGameInstance()->SceneScale;
 }
 
 int32 Y::ExecutePureAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, FString TriggerAction, bool TryAttack)
@@ -210,6 +216,22 @@ int32& Y::GetCurrentLevel()
 const TCHAR* Y::toS(FText ReadyText)
 {
 	return *(ReadyText.ToString());
+}
+
+void Y::PlayNiagara(FName PlayName, AY_Floor* PlayFloor, float Duration, int32 Position)
+{
+	FVector V = PlayFloor->GetTargetLocation();
+	V.Z += 100;
+	FRotator R = GetRotation();
+	if (Position < 0) {
+		R += FRotator(0, -90, 0);
+		Position *= -1;
+	}
+	else {
+		R += FRotator(0, 90, 0);
+	}
+	float Offset = (float)Position / Duration;
+	GetGameInstance()->ShowNiagara(PlayName, V, R, Duration, Offset);
 }
 
 

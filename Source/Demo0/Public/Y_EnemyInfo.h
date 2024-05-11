@@ -14,13 +14,14 @@ class DEMO0_API Y_CharacterAction
 public:
 	Y_CharacterAction();
 	virtual ~Y_CharacterAction() {};
-	int32 OriginalCost;
-	int32 CurrentCost;
 	int32 ActionID;
-	FName UsingMontageName;
-	UTexture2D* UsingPicture;
 	FText ActionDescribe;
 	FText ActionName;
+
+	int32 OriginalCost;
+	int32 CurrentCost;
+	FName UsingMontageName;
+	UTexture2D* UsingPicture;
 	float Weight = 0;
 
 	class Y_EnemyInfo* OwnerEnemy;
@@ -53,6 +54,8 @@ public:
 	virtual void PlayMontage(FName MontageName ,class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
 
 	virtual void PlayMontage(bool Execute, class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
+
+	virtual void PlayMontage(bool Execute, int32 Offset = 0, float PlayRate = 0);
 
 	virtual FText LogDescript();
 

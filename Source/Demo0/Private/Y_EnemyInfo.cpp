@@ -173,6 +173,13 @@ void Y_CharacterAction::PlayMontage(bool Execute, AY_Floor* ChoosedFloor, float 
     }
 }
 
+void Y_CharacterAction::PlayMontage(bool Execute, int32 Offset, float PlayRate)
+{
+    if (Execute) {
+        PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + Offset], PlayRate);
+    }
+}
+
 FText Y_CharacterAction::GetDescribe()
 {
     return ActionDescribe;

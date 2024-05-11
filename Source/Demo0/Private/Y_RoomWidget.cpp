@@ -47,6 +47,8 @@ void UY_RoomWidget::LoadInfo(TSharedPtr<class Y_RoomInfo> LoadingInfo)
 {
 	Info = LoadingInfo;
 	Info->Owner = this;
+	RoomID = Info->RoomID;
+	RoomDescribe = Info->GetDescribe();
 }
 
 void UY_RoomWidget::RoomInit()

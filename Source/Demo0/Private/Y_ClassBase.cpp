@@ -11,6 +11,7 @@
 #include "Y_Settle.h"
 #include "Y_Trophy.h"
 #include "Y_Equipment.h"
+#include "Y_GameInstance.h"
 #include "Y.h"
 
 void LoadY_Base()
@@ -203,6 +204,7 @@ FText NormalCard::LogDescript()
 
 void NormalCard::Play( bool Execute)
 {
+
 	int32 Pos = Y::GetMainCharacter()->StandFloor->SerialNumber;
 	int32 ToPos = Y::GetChoosedFloor()->SerialNumber;
 	if (IsValid(Y::GetChoosedFloor()->StandCharacter)) {
@@ -218,10 +220,8 @@ void NormalCard::Play( bool Execute)
 		ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S1, Execute);
 	}
 	DrawCard(1, Execute);
-	if(Execute)
-	{
-		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos], GetRate());
-	}
+	PlayNiagara(TEXT("FireBall02"), Execute, ToPos);
+	PlayMontage(Execute, ToPos);
 }
 
 bool NormalCard::AcceptFloor(AY_Floor* GetFloor)

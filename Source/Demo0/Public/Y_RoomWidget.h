@@ -74,6 +74,12 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UTexture2D* UsingTexture;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 RoomID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText RoomDescribe;
+
 	TSharedPtr<Y_RoomInfo> Info;
 
 	virtual FText GetDescribe();

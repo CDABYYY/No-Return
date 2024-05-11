@@ -37,7 +37,11 @@ void UY_TimeMark::RemoveProfile(AY_Character* ProfileRemoved)
 void UY_TimeMark::ExecuteMark()
 {
 	if (Profiles.Num() != 0) {
-		(*(Profiles.begin()))->Attack();
+		auto& p = *(Profiles.begin());
+		if(p->CheckValid())
+			(*(Profiles.begin()))->Attack();
+		else 
+			Profiles.RemoveFirst(*(Profiles.begin()));
 		//auto tmpCharacter = *Profiles.begin();
 		//Profiles.RemoveFirst(*(Profiles.begin()));
 	}
