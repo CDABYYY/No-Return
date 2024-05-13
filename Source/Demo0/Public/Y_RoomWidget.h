@@ -22,6 +22,8 @@ public:
 
 	int32 EndEventType;
 
+	int32 BelongLevel;
+
 	//1:Leave 2:Fight 3:EndRoom
 	void ChangeEndType(int32 ChangedValue);
 

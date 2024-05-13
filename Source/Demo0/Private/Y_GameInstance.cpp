@@ -48,6 +48,11 @@ UY_GameInstance::UY_GameInstance()
 	GameStatus = 0;
 
 	FightInfo = MakeShared<Y_Fighting>();
+	for(int32 i = 0;i<4;i++)
+	{
+		Y::Levels.Add(MakeShared<Y_LevelInfo>());
+		Y::Levels[i]->LevelID = i;
+	}
 
 
 	Y::LoadBuff<Y_Buff>(0);
@@ -59,7 +64,8 @@ UY_GameInstance::UY_GameInstance()
 	LoadY_Base();
 	L_I01();
 	LZ01();
-
+	
+	Y::Levels[0]->Loaded();
 	//TEMP
 	FightInfo->ReadyRooms.Add(Y::RoomClass[-1]->NewObject());
 
@@ -191,6 +197,8 @@ void UY_GameInstance::BeginGame()
 	Enemys = TArray<AY_Character*>();
 	CurrentRoom = nullptr;
 	MainCharacter = nullptr;
+
+	Y::GetGameInfo()->ForwardLevel();
 
 
 	Y::GetController()->UpdateMap();

@@ -192,7 +192,7 @@ public:
 
 	//Return Without 0 will end Following Execute				
 	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs,int32 ExecuteCondition,FString TriggerAction, bool TryAttack = false);
-	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute);
+	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute = true);
 	virtual FText printBuff(bool PrintLog = false)const;
 	virtual void AddBuff(Y_Buff* OtherBuff);
 	virtual void ReplaceBuff(Y_Buff* OtherBuff);
@@ -247,4 +247,25 @@ public:
 	TSharedPtr<class Y_CharacterAction> ActionInfo;
 	ActionBuff(TSharedPtr<class Y_CharacterAction> Action);
 	virtual void AddToCharacter(class AY_Character* TargetCharacter,bool Execute)override;
+};
+
+class DEMO0_API MarkBuff :public Y_Buff {
+public:
+	TSharedPtr<class Y_Buff> ActionInfo;
+	MarkBuff(TSharedPtr<class Y_Buff> Action);
+	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute = true)override;
+};
+
+class DEMO0_API EquipmentBuff :public Y_Buff {
+public:
+	TSharedPtr<class Y_Equipment> ActionInfo;
+	EquipmentBuff(TSharedPtr<class Y_Equipment> Action);
+	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute)override;
+};
+
+class DEMO0_API CharacterBuff : public Y_Buff {
+public:
+	TSharedPtr<class Y_EnemyInfo> ActionInfo;
+	CharacterBuff(TSharedPtr<class Y_EnemyInfo> Action);
+	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute)override;
 };

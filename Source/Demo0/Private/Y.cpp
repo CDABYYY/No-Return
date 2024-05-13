@@ -10,6 +10,7 @@
 #include "Y_CardH.h"
 #include "Y_CardW.h"
 #include "Y_Floor.h"
+#include "Y_Fighting.h"
 #include "Y_EquipmentH.h"
 #include "Y_EquipmentW.h"
 #include "Y_PlayerController.h"
@@ -30,6 +31,7 @@ TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_Buff>>> Y::BuffClass;
 TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_RoomInfo>>> Y::RoomClass;
 TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_FloorInfo>>> Y::FloorClass;
 TMap<int32, TSharedPtr<Y::Y_SubClassIF<class Y_Equipment>>> Y::EquipmentClass;
+TArray<TSharedPtr<class Y_LevelInfo>> Y::Levels;
 
 UY_GameInstance*& Y::GetGameInstance()
 {

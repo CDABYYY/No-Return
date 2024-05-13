@@ -630,3 +630,23 @@ void MoreBurnBuff::RemoveFromCharacter()
 	for (auto& p : TA)p->BuffParams[1] = 1;
 	Y_Buff::RemoveFromCharacter();
 }
+
+HealthBuff::HealthBuff()
+{
+	BuffAsType = BuffID = 10;
+	TriggerCondition = 0;
+	BuffProperty = 3;
+	BuffOrder = 0;
+	BuffLevel = -5;
+	BuffExtend.Add(BuffID);
+	BuffName = Y::PrintText(TEXT("治疗"));
+}
+
+void HealthBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
+{
+	if (TargetCharacter->CheckValid())
+	{
+		if (Execute)
+			TargetCharacter->Health += BuffCount;
+	}
+}

@@ -18,11 +18,13 @@
 #include "Y_CardH.h"
 #include "Y_HUD.h"
 #include "Y_TimeLine.h"
+#include "Y_RoomWidget.h"
 #include "Y.h"
 
 Y_Fighting::Y_Fighting()
 {
-
+	CurrentLevelNum = 0;
+	CurrentFloor = 0;
 }
 
 Y_Fighting::~Y_Fighting()
@@ -309,13 +311,14 @@ AY_Character* Y_Fighting::SpawnCharacter(TSharedPtr<Y_EnemyInfo> ToSpawnCharacte
 	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->EnemyClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
 	NewCharacter->StandFloor = FromFloor;
 	FromFloor->StandCharacter = NewCharacter;
-	NewCharacter->Info = ToSpawnCharacter;
-	ToSpawnCharacter->Owner = NewCharacter;
 	if (FromFloor->SerialNumber > Y::GetMainCharacter()->StandFloor->SerialNumber)
 	{
 		NewCharacter->Facing = -1;
 		NewCharacter->Rotating = -90;
 	}
+	NewCharacter->Info = ToSpawnCharacter;
+	ToSpawnCharacter->Owner = NewCharacter;
+	ToSpawnCharacter->LoadCharacter(NewCharacter);
 	Y::GetEnemys().Add(NewCharacter);
 	LivingEnemys.Add(ToSpawnCharacter);
 	AppearedEnemys.Add(ToSpawnCharacter);
@@ -358,3 +361,70 @@ TSharedPtr<class Y_Equipment> Y_Fighting::GetRandomEquipment()
 	return p;
 }
 
+void Y_Fighting::LoadLevel(TSharedPtr<class Y_LevelInfo> ToLoadLevel)
+{
+	CurrentLevelNum++;
+	CurrentFloor = 0;
+	if (CurrentLevel.IsValid()) {
+		CurrentLevel->UnLoad();
+	}
+	CurrentLevel = ToLoadLevel;
+	CurrentLevel->Loaded();
+	Y::GetController()->UpdateMap();
+}
+
+void Y_Fighting::ForwardLevel()
+{
+	auto P = Y::getRandom(Y::Levels);
+	if (P.IsValid()) {
+		Y::Log(TEXT("Load Level:%d"), P->LevelID);
+		LoadLevel(P);
+	}
+}
+
+float Y_LevelInfo::EnemyClass::GetWeight()
+{
+	return Weight;
+}
+
+Y_LevelInfo::Y_LevelInfo()
+{
+}
+
+Y_LevelInfo::~Y_LevelInfo()
+{
+}
+
+float Y_LevelInfo::GetWeight()
+{
+	if ((1 << Y::GetGameInfo()->CurrentLevelNum) & CanInLevel) {
+		return Weight;
+	}
+	return 0;
+}
+
+void Y_LevelInfo::Loaded()
+{
+	Y::GetGameInfo()->CanSpawnCards.Append(ThisLevelCards);
+	for (auto& i : ThisLevelRooms) {
+		Y::GetGameInfo()->ReadyRooms.Add(Y::RoomClass[i]->NewObject());
+	}
+	for (auto& i : ThisLevelEquipments) {
+		Y::GetGameInfo()->ReadyEquipments.Add(Y::EquipmentClass[i]->NewObject());
+	}
+}
+
+void Y_LevelInfo::UnLoad()
+{
+	Y::GetGameInfo()->ReadyRooms.RemoveAll([this](TSharedPtr<Y_RoomInfo> P) {return P->BelongLevel == LevelID; });
+}
+
+float Y_LevelInfo::EnemyPopulation::GetWeight()
+{
+	return Weight;
+}
+
+Y_LevelInfo::EnemyPopulation::EnemyPopulation()
+{
+
+}

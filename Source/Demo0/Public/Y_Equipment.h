@@ -12,7 +12,6 @@ class DEMO0_API Y_Equipment:public TSharedFromThis<class Y_Equipment>
 public:
 	Y_Equipment();
 	virtual ~Y_Equipment();
-	TSharedPtr<Y_Buff> EquipmentBuff;
 	int32 EquipmentID;
 	int32 SkillCD;
 	int32 NowCD;
@@ -28,6 +27,9 @@ public:
 	int32 CostMoney;
 	int32 EquipLevel;
 	class UY_EquipmentW* Owner;
+
+	TSharedPtr<class Y_Buff> AddedBuff;
+
 	virtual void CanUsed();
 
 	virtual void Update();

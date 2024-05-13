@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "YOArray.h"
 #include "Y_StatusBar.h"
+#include "Y.h"
 
 /**
  * 
@@ -71,6 +72,7 @@ public:
 	TArray<TSharedPtr<class Y_RoomInfo>> ReadyRooms;
 	TArray<TSharedPtr<class Y_Equipment>> ReadyEquipments;
 	TArray<TSharedPtr<class Y_CardInfo>> ReadyCards;
+	TArray<int32> CanSpawnCards;
 
 	TSharedPtr<class Y_SettleInfo> SettleInfo;
 
@@ -78,4 +80,76 @@ public:
 
 	TSharedPtr<class Y_CardInfo> GetRandomCard();
 	TSharedPtr<class Y_Equipment> GetRandomEquipment();
+
+	int32 CurrentLevelNum;
+	int32 CurrentFloor;
+	TSharedPtr<class Y_LevelInfo> CurrentLevel;
+	void LoadLevel(TSharedPtr<class Y_LevelInfo> ToLoadLevel);
+	void ForwardLevel();
 };
+
+
+class DEMO0_API Y_LevelInfo {
+public:
+	class EnemyClass {
+	public:
+		virtual ~EnemyClass() {};
+		TSharedPtr<Y::Y_SubClassIF<Y_EnemyInfo>> ThisClass;
+		int32 Population;
+		int32 Type;
+		float CostLevel;
+		float Weight;
+		virtual float GetWeight();
+		template<typename T>
+		EnemyClass(int32 ThisPopulation, int32 ThisType, float ThisCostLevel, float ThisWeight);
+	};
+	class EnemyPopulation {
+	public:
+		virtual ~EnemyPopulation() {};
+		TArray <TSharedPtr< EnemyClass >> Classes;
+		float MinFloor;
+		float Weight;
+		int32 TypeID;
+		virtual float GetWeight();
+		EnemyPopulation();
+		template<typename T1,typename T2,typename T3>
+		EnemyPopulation(int32 ID);
+	};
+	Y_LevelInfo();
+	virtual ~Y_LevelInfo();
+	int32 LevelID;
+	TArray<TSharedPtr<EnemyPopulation>> ThisLevelPopulations;
+	TArray<int32> ThisLevelRooms;
+	TArray<int32> ThisLevelCards;
+	TArray<int32> ThisLevelEquipments;
+	TArray<int32> ThisLevelFloors;
+
+	float GetWeight();
+	//Use Bit To Mark If Can Use;
+	int32 CanInLevel;
+	float Weight;
+	virtual void Loaded();
+
+	virtual void UnLoad();
+};
+
+template<typename T>
+inline Y_LevelInfo::EnemyClass::EnemyClass(int32 ThisPopulation, int32 ThisType, float ThisCostLevel, float ThisWeight)
+{
+	ThisClass = Y::StoreClass<Y_EnemyInfo, T>();
+	Population = ThisPopulation;
+	Type = ThisType;
+	Weight = ThisWeight;
+	CostLevel = ThisCostLevel;
+}
+
+template<typename T1, typename T2, typename T3>
+inline Y_LevelInfo::EnemyPopulation::EnemyPopulation(int32 ID)
+{
+	TypeID = ID;
+	//Classes.Add(TSharedPtr<EnemyClass>(new EnemyClass<T1>(TypeID, 1, 2, 5));
+	//Classes.Add(TSharedPtr<EnemyClass>(new EnemyClass<T2>(TypeID, 2, 3, 3));
+	//Classes.Add(TSharedPtr<EnemyClass>(new EnemyClass<T3>(TypeID, 3, 8, 2));
+	Weight = 10;
+	MinFloor = (ID - 1) * 5;
+}

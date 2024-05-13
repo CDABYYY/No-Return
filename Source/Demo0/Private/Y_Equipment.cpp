@@ -5,6 +5,7 @@
 #include "Y_ClassBase.h"
 #include "Y_Fighting.h"
 #include "Y_Character.h"
+#include "Y_Buff.h"
 
 Y_Equipment::Y_Equipment()
 {
@@ -52,10 +53,16 @@ void Y_Equipment::Play(bool Execute)
 
 void Y_Equipment::Equiped()
 {
+    if (AddedBuff.IsValid()) {
+        Y::GetGameInfo()->OnCharacterBuffs.AddBuff(AddedBuff);
+    }
 }
 
 void Y_Equipment::UnEquiped()
 {
+    if (AddedBuff.IsValid()) {
+        Y::GetGameInfo()->OnCharacterBuffs.RemoveBuff(AddedBuff);
+    }
 }
 
 AY_Character* Y_Equipment::GetOwner()
@@ -82,6 +89,7 @@ void Y_Equipment::Clicked()
 
 void Y_Equipment::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
 {
+    ExecuteBuffs.AddBuff(MakeShared<EquipmentBuff>(AsShared()));
     Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, EquipmentName.ToString(), TryExecute);
 }
 

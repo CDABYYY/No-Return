@@ -8,7 +8,7 @@
 /**
  * 
  */
-class DEMO0_API Y_CardInfo:public Y_CharacterAction,public TSharedFromThis<Y_CardInfo>
+class DEMO0_API Y_CardInfo:public Y_CharacterAction//,public TSharedFromThis<Y_CardInfo>
 {
 public:
 

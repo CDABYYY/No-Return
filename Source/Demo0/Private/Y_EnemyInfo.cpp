@@ -70,6 +70,16 @@ void Y_EnemyInfo::EnemyDead()
     GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Dead")); 
 }
 
+void Y_EnemyInfo::LoadCharacter(AY_Character* NewOwner)
+{
+}
+
+void Y_EnemyInfo::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
+{
+    ExecuteBuffs.AddBuff(MakeShared<CharacterBuff>(AsShared()));
+    Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, EnemyName.ToString(), TryExecute);
+}
+
 Y_CharacterAction::Y_CharacterAction()
 {
     OriginalCost = CurrentCost = 10;
@@ -113,6 +123,7 @@ void Y_CharacterAction::ActionExecute(bool Execute)
 
 void Y_CharacterAction::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
 {
+    ExecuteBuffs.AddBuff(MakeShared<ActionBuff>(AsShared()));
     Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, GetName().ToString(), TryExecute);
 }
 

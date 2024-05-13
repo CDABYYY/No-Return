@@ -202,3 +202,9 @@ public:
 	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute);
 	virtual void RemoveFromCharacter()override;
 };
+
+class DEMO0_API HealthBuff :public Y_Buff {
+public:
+	HealthBuff();
+	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute);
+};

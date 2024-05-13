@@ -9,6 +9,7 @@
 #include "Y_BuffIcon.h"
 #include "Y_CardInfo.h"
 #include "Y_EnemyInfo.h"
+#include "Y_Equipment.h"
 
 Y_Buff::Y_Buff()
 {
@@ -66,6 +67,7 @@ int32 Y_Buff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_
 
 void Y_Buff::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
 {
+	ExecuteBuffs.AddBuff(MakeShared<MarkBuff>(AsShared()));
 	Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, BuffName.ToString(), TryExecute);
 }
 
@@ -169,6 +171,7 @@ CardBuff::CardBuff(Y_CardInfo* Card)
 
 CardBuff::CardBuff(TSharedPtr<class Y_CardInfo> Card)
 {
+	BuffOrder = -10000;
 	BuffID = 10000 + Card->CardID;
 	BuffCount = Card->OriginalCost;
 	BuffExtend = Card->CardTypes;
@@ -182,6 +185,7 @@ void CardBuff::AddToCharacter(AY_Character* TargetCharacter,bool Execute)
 
 ActionBuff::ActionBuff(TSharedPtr<class Y_CharacterAction> Action)
 {
+	BuffOrder = -10000;
 	BuffID = 20000 + Action->ActionID;
 	BuffCount = Action->OriginalCost;
 	ActionInfo = Action;
@@ -190,4 +194,38 @@ ActionBuff::ActionBuff(TSharedPtr<class Y_CharacterAction> Action)
 void ActionBuff::AddToCharacter(AY_Character* TargetCharacter,bool Execute)
 {
 
+}
+
+MarkBuff::MarkBuff(TSharedPtr<class Y_Buff> Action)
+{
+	BuffOrder = -10000;
+	BuffID = 30000 + Action->BuffID;
+	BuffCount = Action->BuffCount;
+	ActionInfo = Action;
+}
+
+void MarkBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
+{
+}
+
+EquipmentBuff::EquipmentBuff(TSharedPtr<class Y_Equipment> Action)
+{
+	BuffOrder = -10000;
+	BuffID = 40000 + Action->EquipmentID;
+	ActionInfo = Action;
+}
+
+void EquipmentBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
+{
+}
+
+CharacterBuff::CharacterBuff(TSharedPtr<class Y_EnemyInfo> Action)
+{
+	BuffOrder = -10000;
+	BuffID = 50000 + Action->EnemyID;
+	ActionInfo = Action;
+}
+
+void CharacterBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
+{
 }

@@ -9,7 +9,7 @@
  * 
  */
 
-class DEMO0_API Y_CharacterAction
+class DEMO0_API Y_CharacterAction: public TSharedFromThis<Y_CharacterAction>
 {
 public:
 	Y_CharacterAction();
@@ -67,7 +67,7 @@ public:
 };
 
 
-class DEMO0_API Y_EnemyInfo
+class DEMO0_API Y_EnemyInfo:public TSharedFromThis<class Y_EnemyInfo>
 {
 public:
 	Y_EnemyInfo();
@@ -75,6 +75,7 @@ public:
 
 	virtual void Init(int32 Level);
 	FName BindBlueprint;
+	FText EnemyName;
 	UTexture2D* EnemyProfile;
 	int32 MaxHealth;
 	int32 CurrentHealth;
@@ -95,4 +96,8 @@ public:
 	virtual void EnemyAttack();
 
 	virtual void EnemyDead();
+
+	virtual void LoadCharacter(AY_Character* Owner);
+
+	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute = true);
 };

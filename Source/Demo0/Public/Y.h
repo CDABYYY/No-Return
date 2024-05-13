@@ -197,6 +197,9 @@ public:
 		EquipmentClass.Add(ID, StoreClass<Y_Equipment, T>());
 	}
 
+	static TArray<TSharedPtr<class Y_LevelInfo>> Levels;
+
+	//Use This Function needs GetWeight();
 	template<typename T>
 	static TSharedPtr<T> getRandom(TArray<TSharedPtr<T>>& randomArray) {
 		float tot = 0;

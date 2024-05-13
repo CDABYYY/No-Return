@@ -90,7 +90,7 @@ void Y_CardInfo::CardUpdate()
 
 void Y_CardInfo::ExecuteAction(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ExecuteBuffs, bool TryExecute)
 {
-	ExecuteBuffs.AddBuff(MakeShared<CardBuff>(AsShared()));
+	ExecuteBuffs.AddBuff(MakeShared<CardBuff>(SharedThis(this)));
 	Y::ExecuteAction(FromCharacter, ToCharacter, ExecuteBuffs, GetName().ToString(), TryExecute);
 }
 

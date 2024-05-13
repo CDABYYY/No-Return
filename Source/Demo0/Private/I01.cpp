@@ -916,10 +916,10 @@ void C20::Play(bool Execute)
 			return 0;
 		}
 	};
-	auto TP = MakeShared<TB>(AsShared(),this);
+	auto TP = MakeShared<TB>(SharedThis(this),this);
 	Y_StatusBar S{ Y::YMakeShared<DemageBuff>(5 + extra),TP };
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
-	Y::GetGameInfo()->InHandCards.Add(AsShared());
+	Y::GetGameInfo()->InHandCards.Add(SharedThis(this));
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
@@ -1125,7 +1125,7 @@ void C24::Play(bool Execute)
 		PlayMontage(GetMontageName());
 	}
 
-	Y::GetGameInfo()->UseCard(AsShared(), 1);
+	Y::GetGameInfo()->UseCard(SharedThis(this), 1);
 }
 
 bool C24::AcceptFloor(AY_Floor* GetFloor)
@@ -1894,7 +1894,7 @@ void C44::Play(bool Execute)
 		}
 	};
 	for (auto& ep : Y::GetGameInfo()->LivingEnemys) {
-		Y_StatusBar TS{ Y::YMakeShared<BurstBurn>(1),MakeShared<TB>(AsShared()) };
+		Y_StatusBar TS{ Y::YMakeShared<BurstBurn>(1),MakeShared<TB>(SharedThis(this)) };
 		ExecuteAction(GetOwner(), ep->Owner, TS, Execute);
 	}
 	if (Execute)
@@ -2013,7 +2013,7 @@ void C2003::Play(bool Execute)
 {
 	Y_StatusBar S{ Y::YMakeShared<DemageBuff>(3) };
 	ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), S, Execute);
-	Y::GetGameInfo()->InHandCards.Add(AsShared());
+	Y::GetGameInfo()->InHandCards.Add(SharedThis(this));
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
