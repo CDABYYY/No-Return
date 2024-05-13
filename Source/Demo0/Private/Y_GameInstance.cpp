@@ -20,6 +20,7 @@
 //#include "I_Level1.h"
 #include "Y_ClassBase.h"
 #include "I01.h"
+#include "I02.h"
 #include "Z01.h"
 #include "S02.h"
 #include "S03.h"
@@ -66,9 +67,13 @@ UY_GameInstance::UY_GameInstance()
 
 	LoadY_Base();
 	L_I01();
+	L_I02();
 	LZ01();
 	LS02();
 	LS03();
+
+	//Temp
+	Y::LoadCharacter<NormalEnemy>(1);
 	
 	Y::Levels[0]->Loaded();
 	//TEMP
@@ -174,6 +179,11 @@ void UY_GameInstance::HelpTick(float DeltaTime)
 				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::Ticking, TEXT("Tick"));
 				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::AfterTick, TEXT("Tick"));
 			}
+		}
+		if (Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::BeginTick, TEXT("Tick")))
+		{
+			Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::Ticking, TEXT("Tick"));
+			Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::AfterTick, TEXT("Tick"));
 		}
 		Y::GetGameInfo()->EventBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->EventBuffs, Y_Buff::Ticking, TEXT("Tick"));
 		Y::GetGameInfo()->AlwaysBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->AlwaysBuffs, Y_Buff::Ticking, TEXT("Tick"));
@@ -308,6 +318,7 @@ void UY_GameInstance::DebugSettings(int32 Type, int32 ID)
 		for (auto& f : Y::GetFloors()) {
 			if (IsValid(f) && !f->StandCharacter->CheckValid()) {
 				Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[ID]->NewObject(), f);
+				break;
 			}
 		}
 	}

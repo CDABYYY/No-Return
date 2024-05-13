@@ -38,3 +38,22 @@ void UY_HUD::ExecuteSkill()
 		Y::GetPlayer()->ClickAble = false;
 	}
 }
+
+int32 UY_HUD::GetHealth()
+{
+	if (IsValid(Y::GetMainCharacter()))return Y::GetMainCharacter()->Health;
+	else return Y::GetGameInfo()->Health;
+	return 0;
+}
+
+int32 UY_HUD::GetMaxHealth()
+{
+	if (IsValid(Y::GetMainCharacter()))return Y::GetMainCharacter()->MaxHealth;
+	else return Y::GetGameInfo()->MaxHealth;
+	return 0;
+}
+
+int32 UY_HUD::GetMoney()
+{
+	return Y::GetGameInfo()->Money;
+}

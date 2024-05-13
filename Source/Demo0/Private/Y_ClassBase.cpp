@@ -25,8 +25,7 @@ void LoadY_Base()
 	Y::LoadRoom<NormalRoom>(-2);
 	Y::LoadRoom<EventRoom>(-1);
 	Y::LoadFloor<NormalFloor>(1);
-	//Temp
-	Y::LoadCharacter<NormalEnemy>(1);
+
 	Y::LoadRoom<NormalFightRoom>(-10);
 	Y::LoadEquipment<NormalEquipment>(-1);
 
@@ -197,7 +196,7 @@ NormalCard::NormalCard()
 	CurrentCost = OriginalCost = 5;
 	CardID = -1;
 	CardName = Y::PrintText(TEXT("Charge"));
-	UsingMontageName = TEXT("Attack4");
+	UsingMontageName = TEXT("2");
 	CurrentCardDescribe  = Y::PrintText(TEXT("Move to Front of Enemy, Attack 5"));
 	CurrentPointDescribe = Y::PrintText(TEXT("Move to Front, Attack 5"));
 	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/Png/JayceStaticField.JayceStaticField'");
@@ -312,6 +311,7 @@ NormalEnemy::NormalEnemy()
 	EnemyLevel = 10;
 	Actions.Add(Y::YMakeShared<NormalAction>(this));
 	Actions.Add(Y::YMakeShared<AttackAction>(this));
+	BindBlueprint = TEXT("Default");
 
 	ActionType = 0;
 	ActionValue = 0;

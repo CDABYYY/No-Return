@@ -1,5 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+//#include "S02.h"
 #include "S02.h"
 #include "Y.h"
 #include "Y_GameInstance.h"
@@ -75,7 +76,7 @@ C45::C45()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2045;
 	CardName = Y::PrintText(TEXT("过热思考"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("45"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Draw Card 5, Burn self 2"));
 }
 
@@ -100,7 +101,7 @@ C46::C46()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2046;
 	CardName = Y::PrintText(TEXT("火焰观测"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("46"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Draw Card burn_num/2"));
 }
 
@@ -124,7 +125,7 @@ C47::C47()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2047;
 	CardName = Y::PrintText(TEXT("灼烧伤口"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("47"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self 8, Burn self 2"));
 }
 
@@ -150,7 +151,7 @@ C48::C48()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2048;
 	CardName = Y::PrintText(TEXT("刺激躯体"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("48"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn self 3, Clear self weakness and vulnerability"));
 }
 
@@ -184,7 +185,7 @@ C49::C49()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2049;
 	CardName = Y::PrintText(TEXT("浴火冲锋"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("49"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn all 3, Move 3"));
 }
 
@@ -221,7 +222,7 @@ C50::C50()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2050;
 	CardName = Y::PrintText(TEXT("火焰护盾"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("50"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack self burn_num/2, Shield self burn_num"));
 }
 
@@ -248,7 +249,7 @@ C51::C51()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2051;
 	CardName = Y::PrintText(TEXT("浴火"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("51"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
 }
 
@@ -272,7 +273,7 @@ C52::C52()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2052;
 	CardName = Y::PrintText(TEXT("避火"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("52"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self burn_num"));
 }
 
@@ -297,7 +298,7 @@ C53::C53()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2053;
 	CardName = Y::PrintText(TEXT("火焰爆发"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("53"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy burn_num of self between self 2"));
 }
 
@@ -331,7 +332,7 @@ C54::C54()
 	CurrentCost = OriginalCost = 3;
 	CardID = 2054;
 	CardName = Y::PrintText(TEXT("反思"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("54"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Discard the hand and draw an equal number of cards"));
 }
 
@@ -361,7 +362,7 @@ C55::C55()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2055;
 	CardName = Y::PrintText(TEXT("踏火急行"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("55"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 1+burn_num/3, Burn enemy 1+burn_num/3"));
 }
 
@@ -397,7 +398,7 @@ C56::C56()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2056;
 	CardName = Y::PrintText(TEXT("屏障"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("56"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self 15"));
 }
 
@@ -421,7 +422,7 @@ C57::C57()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2057;
 	CardName = Y::PrintText(TEXT("反击"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("57"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
 }
 
@@ -477,7 +478,7 @@ C58::C58()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2058;
 	CardName = Y::PrintText(TEXT("不惜代价"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("58"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, Burn self and enemy 5"));
 }
 
@@ -510,7 +511,7 @@ C59::C59()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2059;
 	CardName = Y::PrintText(TEXT("止火"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("59"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Settle and Move self burn_num"));
 }
 
@@ -537,7 +538,7 @@ C60::C60()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2060;
 	CardName = Y::PrintText(TEXT("烈火予身"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("60"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn enemy burn_num/2"));
 }
 
@@ -596,7 +597,7 @@ C61::C61()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2061;
 	CardName = Y::PrintText(TEXT("火焰研习"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("61"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Draw card 1 when attack self 3 through burn"));
 }
 
@@ -632,7 +633,7 @@ C62::C62()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2062;
 	CardName = Y::PrintText(TEXT("火焰熟练"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("62"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn self burn/5 when burn others"));
 }
 
@@ -669,7 +670,7 @@ C63::C63()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2063;
 	CardName = Y::PrintText(TEXT("火焰精通"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("63"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self burn_num/2"));
 }
 
@@ -709,7 +710,7 @@ C64::C64()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2064;
 	CardName = Y::PrintText(TEXT("火焰掌控"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("64"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack with 1 Burn when your burn_num greater than 8"));
 }
 
@@ -752,7 +753,7 @@ C65::C65()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2065;
 	CardName = Y::PrintText(TEXT("火势蔓延"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("65"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
 }
 
@@ -807,7 +808,7 @@ C66::C66()
 	CurrentCost = OriginalCost = 10;
 	CardID = 2066;
 	CardName = Y::PrintText(TEXT("火势扩张"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("66"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn all 1 after you attack when the number of your burn greater than 10"));
 }
 
@@ -856,7 +857,7 @@ C67::C67()
 	CurrentCost = OriginalCost = 5;
 	CardID = 2067;
 	CardName = Y::PrintText(TEXT("搜索预案"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("67"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Draw card to 6"));
 }
 

@@ -9,7 +9,7 @@
 #include "Y_Floor.h"
 #include "CameraPawn.h"
 #include "Y_StatusBar.h"
-#include  "Y_ClassBase.h"
+#include "Y_ClassBase.h"
 #include "S_Helper.h"
 #include "Y_Fighting.h"
 #include "S03.h"
@@ -162,7 +162,7 @@ int32 OverBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, 
 S01::S01()
 {
 	OriginalCost = CurrentCost = 5;
-	UsingMontageName = TEXT("移动");
+	UsingMontageName = TEXT("1");
 	ActionID = 1;
 }
 
@@ -199,7 +199,7 @@ S02::S02()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 4;
-	UsingMontageName = TEXT("顺斩");
+	UsingMontageName = TEXT("2");
 	ActionID = 2;
 }
 
@@ -236,7 +236,7 @@ S03::S03()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 6;
-	UsingMontageName = TEXT("劈砍");
+	UsingMontageName = TEXT("3");
 	ActionID = 3;
 }
 
@@ -273,7 +273,7 @@ S04::S04()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 4;
-	UsingMontageName = TEXT("破防");
+	UsingMontageName = TEXT("2");
 	ActionID = 4;
 }
 
@@ -312,7 +312,7 @@ S05::S05()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 4;
-	UsingMontageName = TEXT("挑筋");
+	UsingMontageName = TEXT("3");
 	ActionID = 5;
 }
 
@@ -351,7 +351,7 @@ S06::S06()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 8;
-	UsingMontageName = TEXT("攻击");
+	UsingMontageName = TEXT("2");
 	ActionID = 6;
 }
 
@@ -387,7 +387,7 @@ void S06::ActionExecute(bool Execute)
 S07::S07()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("请求支援");
+	UsingMontageName = TEXT("3");
 	ActionID = 7;
 }
 
@@ -436,7 +436,7 @@ S08::S08()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 4;
-	UsingMontageName = TEXT("冲锋");
+	UsingMontageName = TEXT("2");
 	ActionID = 8;
 }
 
@@ -476,7 +476,7 @@ S09::S09()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 5;
-	UsingMontageName = TEXT("刺击");
+	UsingMontageName = TEXT("3");
 	ActionID = 9;
 }
 
@@ -512,7 +512,7 @@ void S09::ActionExecute(bool Execute)
 S10::S10()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("守护");
+	UsingMontageName = TEXT("2");
 	ActionID = 10;
 }
 
@@ -552,7 +552,7 @@ S11::S11()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 5;
-	UsingMontageName = TEXT("盾击");
+	UsingMontageName = TEXT("3");
 	ActionID = 11;
 }
 
@@ -590,7 +590,7 @@ void S11::ActionExecute(bool Execute)
 S12::S12()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("蓄力");
+	UsingMontageName = TEXT("2");
 	ActionID = 12;
 }
 
@@ -623,7 +623,7 @@ S13::S13()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 4;
-	UsingMontageName = TEXT("冲锋");
+	UsingMontageName = TEXT("3");
 	ActionID = 13;
 }
 
@@ -663,7 +663,7 @@ S14::S14()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 5;
-	UsingMontageName = TEXT("致残");
+	UsingMontageName = TEXT("4");
 	ActionID = 14;
 }
 
@@ -702,7 +702,7 @@ S15::S15()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 2;
-	UsingMontageName = TEXT("连击");
+	UsingMontageName = TEXT("2");
 	ActionID = 15;
 }
 
@@ -740,7 +740,7 @@ void S15::ActionExecute(bool Execute)
 S16::S16()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("架势");
+	UsingMontageName = TEXT("3");
 	ActionID = 16;
 }
 
@@ -773,7 +773,7 @@ S17::S17()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 2;
-	UsingMontageName = TEXT("连击");
+	UsingMontageName = TEXT("2");
 	ActionID = 17;
 }
 
@@ -813,7 +813,7 @@ void S17::ActionExecute(bool Execute)
 S18::S18()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("架势");
+	UsingMontageName = TEXT("3");
 	ActionID = 18;
 }
 
@@ -848,7 +848,7 @@ S19::S19()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 5;
-	UsingMontageName = TEXT("痛击");
+	UsingMontageName = TEXT("4");
 	ActionID = 19;
 }
 
@@ -886,7 +886,7 @@ void S19::ActionExecute(bool Execute)
 S20::S20()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("点拨");
+	UsingMontageName = TEXT("2");
 	ActionID = 20;
 }
 
@@ -940,7 +940,7 @@ void S20::ActionExecute(bool Execute)
 S21::S21()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("寻找弱点");
+	UsingMontageName = TEXT("3");
 	ActionID = 21;
 }
 
@@ -994,7 +994,7 @@ void S21::ActionExecute(bool Execute)
 S22::S22()
 {
 	OriginalCost = CurrentCost = 30;
-	UsingMontageName = TEXT("教学");
+	UsingMontageName = TEXT("4");
 	ActionID = 22;
 }
 
@@ -1043,7 +1043,7 @@ S23::S23()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 5;
-	UsingMontageName = TEXT("冲锋");
+	UsingMontageName = TEXT("2");
 	ActionID = 23;
 }
 
@@ -1083,7 +1083,7 @@ S24::S24()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 5;
-	UsingMontageName = TEXT("指点");
+	UsingMontageName = TEXT("3");
 	ActionID = 24;
 }
 
@@ -1121,7 +1121,7 @@ void S24::ActionExecute(bool Execute)
 S25::S25()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("调整节奏");
+	UsingMontageName = TEXT("4");
 	ActionID = 25;
 }
 
@@ -1157,7 +1157,7 @@ S26::S26()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 5;
-	UsingMontageName = TEXT("连击");
+	UsingMontageName = TEXT("5");
 	ActionID = 26;
 }
 
@@ -1196,7 +1196,7 @@ S27::S27()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 8;
-	UsingMontageName = TEXT("致残");
+	UsingMontageName = TEXT("6");
 	ActionID = 27;
 }
 
@@ -1234,7 +1234,7 @@ void S27::ActionExecute(bool Execute)
 S28::S28()
 {
 	OriginalCost = CurrentCost = 25;
-	UsingMontageName = TEXT("终结");
+	UsingMontageName = TEXT("7");
 	ActionID = 28;
 }
 
@@ -1270,7 +1270,7 @@ void S28::ActionExecute(bool Execute)
 S29::S29()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("扩大伤口");
+	UsingMontageName = TEXT("2");
 	ActionID = 29;
 }
 
@@ -1309,7 +1309,7 @@ S30::S30()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("划伤");
+	UsingMontageName = TEXT("3");
 	ActionID = 30;
 }
 
@@ -1365,7 +1365,7 @@ void S30::ActionExecute(bool Execute)
 S31::S31()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("挑断手筋");
+	UsingMontageName = TEXT("2");
 	ActionID = 31;
 }
 
@@ -1403,7 +1403,7 @@ void S31::ActionExecute(bool Execute)
 S32::S32()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("威慑");
+	UsingMontageName = TEXT("3");
 	ActionID = 32;
 }
 
@@ -1439,7 +1439,7 @@ S33::S33()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 20;
-	UsingMontageName = TEXT("痛击");
+	UsingMontageName = TEXT("2");
 	ActionID = 33;
 }
 
@@ -1475,7 +1475,7 @@ void S33::ActionExecute(bool Execute)
 S34::S34()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("增幅");
+	UsingMontageName = TEXT("3");
 	ActionID = 34;
 }
 
@@ -1525,7 +1525,7 @@ void S34::ActionExecute(bool Execute)
 S35::S35()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("激励");
+	UsingMontageName = TEXT("4");
 	ActionID = 35;
 }
 
@@ -1567,7 +1567,7 @@ S36::S36()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 10;
-	UsingMontageName = TEXT("突刺");
+	UsingMontageName = TEXT("2");
 	ActionID = 36;
 }
 
@@ -1606,7 +1606,7 @@ void S36::ActionExecute(bool Execute)
 S37::S37()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("守护");
+	UsingMontageName = TEXT("3");
 	ActionID = 37;
 }
 
@@ -1653,7 +1653,7 @@ void S37::ActionExecute(bool Execute)
 S38::S38()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("祝福");
+	UsingMontageName = TEXT("2");
 	ActionID = 38;
 }
 
@@ -1706,7 +1706,7 @@ S39::S39()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 8;
-	UsingMontageName = TEXT("攻击");
+	UsingMontageName = TEXT("3");
 	ActionID = 39;
 }
 
@@ -1743,7 +1743,7 @@ S40::S40()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 15;
-	UsingMontageName = TEXT("连挡带打");
+	UsingMontageName = TEXT("2");
 	ActionID = 40;
 }
 
@@ -1782,7 +1782,7 @@ S41::S41()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 15;
-	UsingMontageName = TEXT("突刺");
+	UsingMontageName = TEXT("3");
 	ActionID = 41;
 }
 
@@ -1823,7 +1823,7 @@ void S41::ActionExecute(bool Execute)
 S42::S42()
 {
 	OriginalCost = CurrentCost = 30;
-	UsingMontageName = TEXT("请求援助");
+	UsingMontageName = TEXT("4");
 	ActionID = 42;
 }
 
@@ -1865,7 +1865,7 @@ S43::S43()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 15;
-	UsingMontageName = TEXT("突刺");
+	UsingMontageName = TEXT("2");
 	ActionID = 43;
 }
 
@@ -1904,7 +1904,7 @@ void S43::ActionExecute(bool Execute)
 S44::S44()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("欢呼");
+	UsingMontageName = TEXT("3");
 	ActionID = 44;
 }
 
@@ -1947,7 +1947,7 @@ S45::S45()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 15;
-	UsingMontageName = TEXT("攻击");
+	UsingMontageName = TEXT("2");
 	ActionID = 45;
 }
 
@@ -1984,7 +1984,7 @@ S46::S46()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("脱离");
+	UsingMontageName = TEXT("3");
 	ActionID = 46;
 }
 
@@ -2010,24 +2010,19 @@ void S46::ActionExecute(bool Execute)
 	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
 	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
 	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	if (0 < GetOwner()->StandFloor->SerialNumber && GetOwner()->StandFloor->SerialNumber < Y::GetFloors().Num() && IsValid(Y::GetFloors()[GetOwner()->StandFloor->SerialNumber]))
-	{
-		Move(GetOwner()->Facing * -1, Execute);
-	}
-	else {
-		Move(0, Execute);
-	}
+	DisMT = MaxDist(GetOwner()->StandFloor, 1, GetOwner()->Facing * -1);
+	Move(DisMT, Execute);
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName);
+		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
 	}
 }
 
 S47::S47()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("欢呼");
+	UsingMontageName = TEXT("4");
 	ActionID = 47;
 }
 
@@ -2070,7 +2065,7 @@ S48::S48()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 10;
-	UsingMontageName = TEXT("攻击");
+	UsingMontageName = TEXT("2");
 	ActionID = 48;
 }
 
@@ -2110,7 +2105,7 @@ S49::S49()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 10;
-	UsingMontageName = TEXT("攻击");
+	UsingMontageName = TEXT("3");
 	ActionID = 49;
 }
 
@@ -2150,7 +2145,7 @@ S50::S50()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("突刺");
+	UsingMontageName = TEXT("4");
 	ActionID = 50;
 }
 
@@ -2189,7 +2184,7 @@ void S50::ActionExecute(bool Execute)
 S51::S51()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("欢呼");
+	UsingMontageName = TEXT("5");
 	ActionID = 51;
 }
 
@@ -2231,7 +2226,7 @@ void S51::ActionExecute(bool Execute)
 S52::S52()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("休息");
+	UsingMontageName = TEXT("2");
 	ActionID = 52;
 }
 
@@ -2265,7 +2260,7 @@ void S52::ActionExecute(bool Execute)
 S53::S53()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("爆发");
+	UsingMontageName = TEXT("3");
 	ActionID = 53;
 }
 
@@ -2306,7 +2301,7 @@ S54::S54()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("征服");
+	UsingMontageName = TEXT("4");
 	ActionID = 54;
 }
 
@@ -2363,7 +2358,7 @@ S55::S55()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 15;
-	UsingMontageName = TEXT("致残");
+	UsingMontageName = TEXT("5");
 	ActionID = 55;
 }
 
@@ -2402,7 +2397,7 @@ S56::S56()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 15;
-	UsingMontageName = TEXT("突刺");
+	UsingMontageName = TEXT("2");
 	ActionID = 56;
 }
 
@@ -2442,7 +2437,7 @@ S57::S57()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("扫荡");
+	UsingMontageName = TEXT("3");
 	ActionID = 57;
 }
 
@@ -2482,7 +2477,7 @@ S58::S58()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("攻击");
+	UsingMontageName = TEXT("2");
 	ActionID = 58;
 }
 
@@ -2518,7 +2513,7 @@ void S58::ActionExecute(bool Execute)
 S59::S59()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("恢复");
+	UsingMontageName = TEXT("3");
 	ActionID = 59;
 }
 
@@ -2569,7 +2564,7 @@ void S59::ActionExecute(bool Execute)
 S60::S60()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("庇护");
+	UsingMontageName = TEXT("4");
 	ActionID = 60;
 }
 
@@ -2612,7 +2607,7 @@ void S60::ActionExecute(bool Execute)
 S61::S61()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("提振士气");
+	UsingMontageName = TEXT("2");
 	ActionID = 61;
 }
 
@@ -2645,7 +2640,7 @@ void S61::ActionExecute(bool Execute)
 S62::S62()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("耀武");
+	UsingMontageName = TEXT("3");
 	ActionID = 62;
 }
 
@@ -2685,7 +2680,7 @@ S63::S63()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 10;
-	UsingMontageName = TEXT("重击");
+	UsingMontageName = TEXT("4");
 	ActionID = 63;
 }
 
@@ -2724,7 +2719,7 @@ S64::S64()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 15;
-	UsingMontageName = TEXT("突刺");
+	UsingMontageName = TEXT("2");
 	ActionID = 64;
 }
 
@@ -2766,7 +2761,7 @@ S65::S65()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 15;
-	UsingMontageName = TEXT("挑开伤口");
+	UsingMontageName = TEXT("3");
 	ActionID = 65;
 }
 
@@ -2805,7 +2800,7 @@ S66::S66()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("连击");
+	UsingMontageName = TEXT("4");
 	ActionID = 66;
 }
 
@@ -2846,7 +2841,7 @@ S67::S67()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 5;
-	UsingMontageName = TEXT("易伤");
+	UsingMontageName = TEXT("2");
 	ActionID = 67;
 }
 
@@ -2885,7 +2880,7 @@ S68::S68()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 5;
-	UsingMontageName = TEXT("虚弱");
+	UsingMontageName = TEXT("3");
 	ActionID = 68;
 }
 
@@ -2924,7 +2919,7 @@ S69::S69()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 5;
-	UsingMontageName = TEXT("攻击");
+	UsingMontageName = TEXT("4");
 	ActionID = 69;
 }
 
@@ -2964,7 +2959,7 @@ void S69::ActionExecute(bool Execute)
 S70::S70()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("鼓舞");
+	UsingMontageName = TEXT("2");
 	ActionID = 70;
 }
 
@@ -3005,7 +3000,7 @@ S71::S71()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("重伤");
+	UsingMontageName = TEXT("3");
 	ActionID = 71;
 }
 
@@ -3044,7 +3039,7 @@ S72::S72()
 {
 	OriginalCost = CurrentCost = 20;
 	Hurt = 10;
-	UsingMontageName = TEXT("远离");
+	UsingMontageName = TEXT("4");
 	ActionID = 72;
 }
 
@@ -3085,7 +3080,7 @@ S73::S73()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 15;
-	UsingMontageName = TEXT("冲锋");
+	UsingMontageName = TEXT("2");
 	ActionID = 73;
 }
 
@@ -3126,7 +3121,7 @@ S74::S74()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 15;
-	UsingMontageName = TEXT("过载攻击");
+	UsingMontageName = TEXT("3");
 	ActionID = 74;
 }
 
@@ -3167,7 +3162,7 @@ S75::S75()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 10;
-	UsingMontageName = TEXT("突袭");
+	UsingMontageName = TEXT("2");
 	ActionID = 75;
 }
 
@@ -3209,7 +3204,7 @@ S76::S76()
 {
 	OriginalCost = CurrentCost = 15;
 	Hurt = 10;
-	UsingMontageName = TEXT("过载攻击");
+	UsingMontageName = TEXT("3");
 	ActionID = 76;
 }
 
@@ -3250,7 +3245,7 @@ void S76::ActionExecute(bool Execute)
 S77::S77()
 {
 	OriginalCost = CurrentCost = 15;
-	UsingMontageName = TEXT("脱离");
+	UsingMontageName = TEXT("4");
 	ActionID = 77;
 }
 
@@ -3288,7 +3283,7 @@ void S77::ActionExecute(bool Execute)
 S78::S78()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("死战不退");
+	UsingMontageName = TEXT("2");
 	ActionID = 78;
 }
 
@@ -3326,7 +3321,7 @@ void S78::ActionExecute(bool Execute)
 S79::S79()
 {
 	OriginalCost = CurrentCost = 30;
-	UsingMontageName = TEXT("请求支援");
+	UsingMontageName = TEXT("3");
 	ActionID = 79;
 }
 
@@ -3374,7 +3369,7 @@ void S79::ActionExecute(bool Execute)
 S80::S80()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("加固防御");
+	UsingMontageName = TEXT("4");
 	ActionID = 80;
 }
 
@@ -3415,7 +3410,7 @@ void S80::ActionExecute(bool Execute)
 S81::S81()
 {
 	OriginalCost = CurrentCost = 20;
-	UsingMontageName = TEXT("猛烈攻击");
+	UsingMontageName = TEXT("5");
 	ActionID = 81;
 }
 

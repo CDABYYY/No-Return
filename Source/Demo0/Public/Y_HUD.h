@@ -40,4 +40,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ExecuteSkill();
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetHealth();
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetMaxHealth();
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetMoney();
 };

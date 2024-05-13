@@ -2,8 +2,6 @@
 
 
 #include "I01.h"
-
-#include "I01.h"
 #include "Y.h"
 #include "Y_GameInstance.h"
 #include "Y_Buff.h"
@@ -80,7 +78,7 @@ C01::C01()
 	CardTypes.Add(1);
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：掌"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("1"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5 damage"));
 }
 
@@ -113,7 +111,7 @@ C02::C02()
 	CardID = 2;
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山步"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("2"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 2"));
 }
 
@@ -147,7 +145,7 @@ C03::C03()
 	CardTypes.Add(1);
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：拳"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("3"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5 damage,if weak +5 damage"));
 }
 
@@ -183,7 +181,7 @@ C04::C04()
 	CardID = 4;
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("冲锋"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("4"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Charge 2, Attack enemy 5 damage"));
 }
 
@@ -227,7 +225,7 @@ C05::C05()
 	CardTypes.Add(1);
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：扫荡"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("5"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack 1 nearby enemies 4 damage"));
 }
 
@@ -270,7 +268,7 @@ C06::C06()
 	CardTypes.Add(1);
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：扫荡"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("6"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 4 damage, Draw 1 card for every 2 damage"));
 }
 
@@ -307,7 +305,7 @@ C07::C07()
 	CardTypes.Add(1);
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：撼地"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("7"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Give 4 damage and 1 expose to enemies 2 ahead"));
 }
 
@@ -352,7 +350,7 @@ C08::C08()
 	CardID = 8;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("最终手段"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("8"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 10 damage, Draw card 3"));
 }
 
@@ -391,7 +389,7 @@ C09::C09()
 	CardID = 9;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("调整脚步"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("9"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 1"));
 }
 
@@ -423,7 +421,7 @@ C10::C10()
 	CardID = 10;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("一击脱离"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("10"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 4 damage, Go back 2"));
 }
 
@@ -461,7 +459,7 @@ C11::C11()
 	CardTypes.Add(1);
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：冲拳"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("11"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Charge 2, Attack enemy 5 damage, every Use TimeCost -1"));
 }
 
@@ -511,7 +509,7 @@ C12::C12()
 	CardTypes.Add(1);
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：绵掌"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("12"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 4 damage, put 1 self in ExhaustCard"));
 }
 
@@ -546,7 +544,7 @@ C13::C13()
 	CardTypes.Add(1);
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：迅击"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("13"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 2 damage 3 times, every Use damage +1"));
 	num = 0;
 }
@@ -590,7 +588,7 @@ C14::C14()
 	UsedType = 3;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("迅捷架势"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("14"));
 	CurrentCardDescribe = Y::PrintText(TEXT("all CardType 1 TimeCost -1"));
 }
 
@@ -641,7 +639,7 @@ C15::C15()
 	UsedType = 3;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("重击架势"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("15"));
 	CurrentCardDescribe = Y::PrintText(TEXT("all CardType 1 damage +1"));
 }
 
@@ -688,7 +686,7 @@ C16::C16()
 	UsedType = 3;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("连绵架势"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("16"));
 	CurrentCardDescribe = Y::PrintText(TEXT("every 2 Use CardType 1 Draw card 1"));
 	num = 0;
 }
@@ -748,7 +746,7 @@ C17::C17()
 	CardTypes.Add(1);
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：研习"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("17"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5, every Kill damage +2"));
 	Kill = 0;
 }
@@ -795,7 +793,7 @@ C18::C18()
 	CardID = 18;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("奋力一搏"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("18"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Charge 3, Attack enemy 5 damage, put 1 stun in DrawCard"));
 }
 
@@ -840,7 +838,7 @@ C19::C19()
 	CardTypes.Add(1);
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：透劲"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("19"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5 damage 2 ahead"));
 }
 
@@ -885,7 +883,7 @@ C20::C20()
 	UsedType = 1;
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("奋力一搏"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("20"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5 damage, Get 1 self damage +1, drop if don't Use next"));
 	extra = 0;
 }
@@ -901,7 +899,7 @@ void C20::Play(bool Execute)
 	public:
 		TSharedPtr<Y_CardInfo> Card;
 		C20* GetThis;
-		TB(TSharedPtr<Y_CardInfo> PC,C20* Get) {
+		TB(TSharedPtr<Y_CardInfo> PC, C20* Get) {
 			GetThis = Get;
 			Card = PC;
 			TriggerCondition = BeginAction;
@@ -916,7 +914,7 @@ void C20::Play(bool Execute)
 			return 0;
 		}
 	};
-	auto TP = MakeShared<TB>(SharedThis(this),this);
+	auto TP = MakeShared<TB>(SharedThis(this), this);
 	Y_StatusBar S{ Y::YMakeShared<DemageBuff>(5 + extra),TP };
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	Y::GetGameInfo()->InHandCards.Add(SharedThis(this));
@@ -941,7 +939,7 @@ C21::C21()
 	CardTypes.Add(1);
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：断骨"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("21"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Give 4 damage and 2 expose to enemy"));
 }
 
@@ -977,7 +975,7 @@ C22::C22()
 	CardTypes.Add(1);
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：摧筋"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("22"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Give 4 damage and 2 weak to enemy"));
 }
 
@@ -1013,7 +1011,7 @@ C23::C23()
 	CardTypes.Add(1);
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("延山式：诸武精通"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("23"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 10 damage 3 ahead, every CardType 1 damage +2"));
 }
 
@@ -1074,7 +1072,7 @@ C24::C24()
 	UsedType = 1;
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("延山式：爆发"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("24"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Use all TypeCard 1 Cards in one direction"));
 }
 
@@ -1142,7 +1140,7 @@ C25::C25()
 	CardID = 25;
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("防御"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("25"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Sheild self 6"));
 }
 
@@ -1175,7 +1173,7 @@ C26::C26()
 	CardID = 26;
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("过载思考"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("26"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn self 2, Draw card 4"));
 }
 
@@ -1209,7 +1207,7 @@ C27::C27()
 	CardID = 27;
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("点火"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("27"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn enemy 3"));
 }
 
@@ -1242,7 +1240,7 @@ C28::C28()
 	CardID = 28;
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("烈焰击"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("28"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 3+burn_num/3 damage"));
 }
 
@@ -1276,7 +1274,7 @@ C29::C29()
 	CardID = 29;
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("火焰释放"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("29"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, Burn 6(last 3)"));
 }
 
@@ -1320,7 +1318,7 @@ C30::C30()
 	UsedType = 3;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("掌握火势"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("30"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn 1 extra 【Burn】 1"));
 }
 
@@ -1364,7 +1362,7 @@ C31::C31()
 	UsedType = 1;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("渐热"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("31"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn 2, 【Burn】+1 for each time"));
 	num = 0;
 }
@@ -1404,7 +1402,7 @@ C32::C32()
 	CardID = 32;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("煽风点火"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("32"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 2, Burn 2*3"));
 }
 
@@ -1440,7 +1438,7 @@ C33::C33()
 	CardID = 33;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("助长火势"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("33"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 2, Burn 4, Draw card 4 when burn_num 10"));
 }
 
@@ -1476,7 +1474,7 @@ C34::C34()
 	CardID = 34;
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("趁火打劫"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("34"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 4, Attack enemy 4 when burn_num >=1"));
 }
 
@@ -1515,7 +1513,7 @@ C35::C35()
 	CardID = 35;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("引火"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("35"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, 【fire】 2, 【Burn】+1 for each time when 【fire】"));
 }
 
@@ -1548,7 +1546,7 @@ C36::C36()
 	CardID = 36;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("燃烧"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("36"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, 【Fire】 2, Damage*2 when 【Fire】"));
 }
 
@@ -1581,7 +1579,7 @@ C37::C37()
 	CardID = 37;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("火焰连打"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("37"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Damage 2*4, Burn 1*4"));
 }
 
@@ -1619,7 +1617,7 @@ C38::C38()
 	CardID = 38;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("助燃"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("38"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, Burn 1 when there are 2 burn_num"));
 }
 
@@ -1656,7 +1654,7 @@ C39::C39()
 	CardID = 39;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("嗜火"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("39"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 1, Move 1 when there are 3 burn_num"));
 }
 
@@ -1720,7 +1718,7 @@ C40::C40()
 	CardID = 40;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("以火作衣"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("40"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self burn_num"));
 }
 
@@ -1756,7 +1754,7 @@ C41::C41()
 	CurrentCost = OriginalCost = 8;
 	CardID = 41;
 	CardName = Y::PrintText(TEXT("引燃"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("41"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn 6 all"));
 }
 
@@ -1799,7 +1797,7 @@ C42::C42()
 	UsedType = 3;
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("不息烈火"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("42"));
 	CurrentCardDescribe = Y::PrintText(TEXT("keep all burn_num up"));
 }
 
@@ -1840,7 +1838,7 @@ C43::C43()
 	CardID = 43;
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("引燃"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("43"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn right now"));
 }
 
@@ -1873,7 +1871,7 @@ C44::C44()
 	CardID = 44;
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("死亡莲华"));
-	UsingMontageName = TEXT("Attack4");
+	BindMessage(TEXT("44"));
 	CurrentCardDescribe = Y::PrintText(TEXT("light, light again when enemy dies"));
 }
 
@@ -1917,7 +1915,6 @@ C2001::C2001()
 	CardID = 2001;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("疑虑"));
-	UsingMontageName = TEXT("Attack4");
 	CurrentCardDescribe = Y::PrintText(TEXT("Cost 3"));
 }
 
@@ -1940,7 +1937,6 @@ C2002::C2002()
 	CardID = 2002;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("痛苦"));
-	UsingMontageName = TEXT("Attack4");
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack self 3 damege,All Cards damage -1 when this in hand"));
 }
 
@@ -1999,7 +1995,6 @@ C2003::C2003()
 	CardID = 2003;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("愤怒"));
-	UsingMontageName = TEXT("Attack4");
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 3 damage, Get self again"));
 }
 
@@ -2034,7 +2029,6 @@ C2004::C2004()
 	CardID = 2004;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("晕眩"));
-	UsingMontageName = TEXT("Attack4");
 	CurrentCardDescribe = Y::PrintText(TEXT("Can't Use"));
 }
 
@@ -2058,7 +2052,6 @@ C2005::C2005()
 	CardID = 2005;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("羞耻"));
-	UsingMontageName = TEXT("Attack4");
 	CurrentCardDescribe = Y::PrintText(TEXT("all Cards TimeCost +1 when this in hand"));
 }
 

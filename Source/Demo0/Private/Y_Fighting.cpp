@@ -322,12 +322,14 @@ AY_Card* Y_Fighting::SpawnCard(TSharedPtr<class Y_CardInfo> ToSpawnCard, FName A
 
 AY_Character* Y_Fighting::SpawnCharacter(TSharedPtr<Y_EnemyInfo> ToSpawnCharacter, AY_Floor* FromFloor, FName ActorClass)
 {
+	if (ActorClass == TEXT("Default"))ActorClass = ToSpawnCharacter->BindBlueprint;
 	FRotator ToRotator(Y::GetRotation());
 	if (FromFloor->SerialNumber < Y::GetMainCharacter()->StandFloor->SerialNumber)
 		ToRotator += FRotator(0, 90, 0);
 	else 
 		ToRotator += FRotator(0, -90, 0);
 	FVector SpawnVector = FromFloor->TargetLocation();
+	Y::Log(TEXT("Spawn Class: %s"), *(ActorClass.ToString()));
 	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetGameInstance()->GISpawnActor(1, ActorClass, SpawnVector, ToRotator));
 	//AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->EnemyClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
 	NewCharacter->StandFloor = FromFloor;
@@ -337,6 +339,8 @@ AY_Character* Y_Fighting::SpawnCharacter(TSharedPtr<Y_EnemyInfo> ToSpawnCharacte
 		NewCharacter->Facing = -1;
 		NewCharacter->Rotating = -90;
 	}
+	NewCharacter->Health = ToSpawnCharacter->CurrentHealth;
+	NewCharacter->MaxHealth = ToSpawnCharacter->MaxHealth;
 	NewCharacter->Info = ToSpawnCharacter;
 	ToSpawnCharacter->Owner = NewCharacter;
 	ToSpawnCharacter->LoadCharacter(NewCharacter);
@@ -441,10 +445,10 @@ void Y_LevelInfo::Loaded()
 {
 	Y::GetGameInfo()->CanSpawnCards.Append(ThisLevelCards);
 	for (auto& i : ThisLevelRooms) {
-		Y::Log(TEXT("Load Room: %d"), i);
 		if (!Y::RoomClass.Find(i))
 			Y::Log(TEXT("UnFind this Room: %d"), i);
-		Y::GetGameInfo()->ReadyRooms.Add(Y::RoomClass[i]->NewObject());
+		//Temp
+		//Y::GetGameInfo()->ReadyRooms.Add(Y::RoomClass[i]->NewObject());
 	}
 	for (auto& i : ThisLevelEquipments) {
 		Y::GetGameInfo()->ReadyEquipments.Add(Y::EquipmentClass[i]->NewObject());
