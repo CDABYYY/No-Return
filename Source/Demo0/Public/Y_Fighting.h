@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "YOArray.h"
 #include "Y_StatusBar.h"
-#include "Y.h"
+//#include "Y.h"
 
 /**
  * 
@@ -32,11 +32,13 @@ public:
 	//Using Execute Method
 	void ExecuteToAllCharacter(TSharedPtr<class Y_Buff> ToExecuteBuff);
 
+	void BeginRoom();
 	void BeginFight();
 	void AfterFight();
 	void EndRoom();
 	void SpawnCharacter(class AY_Character* SpawnedCharacter);
 	void AddEquipment(TSharedPtr<class Y_Equipment> GetEquipment);
+	void AddCard(TSharedPtr<class Y_CardInfo> GetCard);
 	void RemoveEquipment(TSharedPtr<class Y_Equipment> GetEquipment);
 	TArray<TSharedPtr<class Y_Equipment>> EquipmentUpgrades(int32 Level);
 	void AddMoney(int32 Moneys);
@@ -86,6 +88,10 @@ public:
 	TSharedPtr<class Y_LevelInfo> CurrentLevel;
 	void LoadLevel(TSharedPtr<class Y_LevelInfo> ToLoadLevel);
 	void ForwardLevel();
+
+	int32 Money;
+	int32 Health;
+	int32 MaxHealth;
 };
 
 
@@ -94,14 +100,13 @@ public:
 	class EnemyClass {
 	public:
 		virtual ~EnemyClass() {};
-		TSharedPtr<Y::Y_SubClassIF<Y_EnemyInfo>> ThisClass;
+		int32 EnemyID;
 		int32 Population;
 		int32 Type;
 		float CostLevel;
 		float Weight;
 		virtual float GetWeight();
-		template<typename T>
-		EnemyClass(int32 ThisPopulation, int32 ThisType, float ThisCostLevel, float ThisWeight);
+		EnemyClass(int32 ThisEnemyID, int32 ThisPopulation, int32 ThisType, float ThisCostLevel, float ThisWeight);
 	};
 	class EnemyPopulation {
 	public:
@@ -112,13 +117,13 @@ public:
 		int32 TypeID;
 		virtual float GetWeight();
 		EnemyPopulation();
-		template<typename T1,typename T2,typename T3>
-		EnemyPopulation(int32 ID);
+		EnemyPopulation(int32 ID,int32 Type1,int32 Type2,int32 Type3);
 	};
 	Y_LevelInfo();
 	virtual ~Y_LevelInfo();
 	int32 LevelID;
-	TArray<TSharedPtr<EnemyPopulation>> ThisLevelPopulations;
+	FString LevelName;
+	TArray <TSharedPtr< EnemyPopulation >> ThisLevelPopulations;
 	TArray<int32> ThisLevelRooms;
 	TArray<int32> ThisLevelCards;
 	TArray<int32> ThisLevelEquipments;
@@ -132,24 +137,3 @@ public:
 
 	virtual void UnLoad();
 };
-
-template<typename T>
-inline Y_LevelInfo::EnemyClass::EnemyClass(int32 ThisPopulation, int32 ThisType, float ThisCostLevel, float ThisWeight)
-{
-	ThisClass = Y::StoreClass<Y_EnemyInfo, T>();
-	Population = ThisPopulation;
-	Type = ThisType;
-	Weight = ThisWeight;
-	CostLevel = ThisCostLevel;
-}
-
-template<typename T1, typename T2, typename T3>
-inline Y_LevelInfo::EnemyPopulation::EnemyPopulation(int32 ID)
-{
-	TypeID = ID;
-	//Classes.Add(TSharedPtr<EnemyClass>(new EnemyClass<T1>(TypeID, 1, 2, 5));
-	//Classes.Add(TSharedPtr<EnemyClass>(new EnemyClass<T2>(TypeID, 2, 3, 3));
-	//Classes.Add(TSharedPtr<EnemyClass>(new EnemyClass<T3>(TypeID, 3, 8, 2));
-	Weight = 10;
-	MinFloor = (ID - 1) * 5;
-}

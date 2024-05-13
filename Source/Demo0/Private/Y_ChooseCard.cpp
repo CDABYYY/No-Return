@@ -31,7 +31,7 @@ void UY_ChooseCard::LoadInfo(TSharedPtr<Y_ChooseCardInfo> ToLoadInfo)
 	Info = ToLoadInfo;
 	Info->Owner = this;
 	for (int32 i = 0; i < Info->Cards.Num();i++) {
-		auto NewCard = CreateShowCard((float)i/Info->Cards.Num() * 1000);
+		auto NewCard = CreateShowCard(i);
 		NewCard->CardInfo = Info->Cards[i];
 		NewCard->Init();
 		CardWidgets.Add(NewCard);

@@ -4,6 +4,8 @@
 #include "Y_MapWidget.h"
 #include "Y.h"
 #include "Y_RoomWidget.h"
+#include "Y_Fighting.h"
+
 
 TArray<int32> UY_MapWidget::GetWay(int32 a0, int32 b0, int32 f0)
 {
@@ -75,6 +77,7 @@ void UY_MapWidget::ForwardRoom(UY_RoomWidget* Room)
         p -= l;
         lt++;
     }
+    Y::GetGameInfo()->CurrentFloor = lt;
     //Default. Need Next Try
     for (auto& w : pway) {
         if ((w >> 10) == ((lt << 10) + p + 1)) {
