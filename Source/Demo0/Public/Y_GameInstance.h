@@ -121,4 +121,7 @@ public:
 	//0: Nothing, 1: Fighting, 2:Eventing, 3:Mapping Need Add
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	int32 GameStatus;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	AActor* GISpawnActor(int32 SpawnType, FName SpawnClass, FVector SpawnVector, FRotator SpawnRotator);
 };

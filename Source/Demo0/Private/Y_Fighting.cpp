@@ -273,7 +273,8 @@ AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int
 	FVector RelativeVector(130, SerialNumber * 130, 64);
 	//RelativeVector = RelativeVector * ToRotator.Vector();
 	FVector SpawnVector = Y::GetLocation() + RelativeVector;
-	AY_Floor* NewFloor = Cast<AY_Floor>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->FloorClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
+	AY_Floor* NewFloor = Cast<AY_Floor>(Y::GetGameInstance()->GISpawnActor(2, ActorClass, SpawnVector, ToRotator));
+	//AY_Floor* NewFloor = Cast<AY_Floor>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->FloorClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
 	NewFloor->SerialNumber = SerialNumber;
 	for (int32 i = Y::GetFloors().Num(); i <= SerialNumber; i++) {
 		Y::GetFloors().Add(nullptr);
@@ -289,6 +290,7 @@ AY_Card* Y_Fighting::SpawnCard(TSharedPtr<class Y_CardInfo> ToSpawnCard, FName A
 {
 	FVector AF = Y::GetPlayer()->MyCamera->GetComponentLocation();
 	AF += FVector(270, -208 + 52 * 15, -90);//Base Location
+	//AY_Card* NewCharacter = Cast<AY_Card>(Y::GetGameInstance()->GISpawnActor(3, ActorClass, SpawnVector, ToRotator));
 	AY_Card* NewCard = Cast<AY_Card>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->CardClasses.Find(ActorClass)->Get(), &AF));
 	NewCard->ToPosition = Y::GetCards().Num() * 52;
 	NewCard->NowPosition = -4 * 52 + 15 * 52;
@@ -308,7 +310,8 @@ AY_Character* Y_Fighting::SpawnCharacter(TSharedPtr<Y_EnemyInfo> ToSpawnCharacte
 	else 
 		ToRotator += FRotator(0, -90, 0);
 	FVector SpawnVector = FromFloor->TargetLocation();
-	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->EnemyClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
+	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetGameInstance()->GISpawnActor(1, ActorClass, SpawnVector, ToRotator));
+	//AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->EnemyClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
 	NewCharacter->StandFloor = FromFloor;
 	FromFloor->StandCharacter = NewCharacter;
 	if (FromFloor->SerialNumber > Y::GetMainCharacter()->StandFloor->SerialNumber)
@@ -331,8 +334,9 @@ AY_Character* Y_Fighting::SpawnMC(AY_Floor* FromFloor, FName ActorClass)
 {
 	FRotator ToRotator(Y::GetRotation());
 	ToRotator += FRotator(0, 90, 0);
-	FVector SpawnVector = FromFloor->TargetLocation();
-	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->AllyClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
+	FVector SpawnVector = FromFloor->TargetLocation(); 
+	AY_Character* NewCharacter = Cast<AY_Character>(Y::GetGameInstance()->GISpawnActor(0, ActorClass, SpawnVector, ToRotator));
+	//AY_Character* NewCharacter = Cast<AY_Character>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->AllyClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
 	NewCharacter->StandFloor = FromFloor;
 	FromFloor->StandCharacter = NewCharacter;
 	Y::GetMainCharacter() = NewCharacter;
