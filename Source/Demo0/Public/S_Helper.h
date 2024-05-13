@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -7,26 +7,26 @@
 #include "Y_Floor.h"
 
 namespace S {
-	bool CardRange(AY_Floor* GetFloor, int32 n);//²é¿´µØ°åÊÇ·ñÔÚÑ¡Ôñ·¶Î§ÄÚ
+	bool CardRange(AY_Floor* GetFloor, int32 n);//æŸ¥çœ‹åœ°æ¿æ˜¯å¦åœ¨é€‰æ‹©èŒƒå›´å†…
 
-	int32 absPlus(int32 n);//¾ø¶ÔÖµ
+	int32 absPlus(int32 n);//ç»å¯¹å€¼
 
-	int32 maxPlus(int32 a, int32 b);//×î´óÖµ
+	int32 maxPlus(int32 a, int32 b);//æœ€å¤§å€¼
 
-	int32 minPlus(int32 a, int32 b);//×îĞ¡Öµ
+	int32 minPlus(int32 a, int32 b);//æœ€å°å€¼
 
-	bool IsBlocked(AY_Floor* GetFloor);//Â·¾¶ÊÇ·ñ±»×èµ²
+	bool IsBlocked(AY_Floor* GetFloor);//è·¯å¾„æ˜¯å¦è¢«é˜»æŒ¡
 
-	bool IsEnemy(AY_Floor* GetFloor);//µØ°åÊÇ·ñÓĞµĞÈË
+	bool IsEnemy(AY_Floor* GetFloor);//åœ°æ¿æ˜¯å¦æœ‰æ•Œäºº
 
-	bool IsMain(AY_Floor* GetFloor);//µØ°åÊÇ·ñÊÇÖ÷½Ç
+	bool IsMain(AY_Floor* GetFloor);//åœ°æ¿æ˜¯å¦æ˜¯ä¸»è§’
 
-	int32 MaxDist(AY_Floor* GetFloor, int32 n, int32 right);//ÓÉ¸ÃµØ°åÏòÄ³¸ö·½ÏòÒÆ¶¯µÄ×î´ó¾àÀë
+	int32 MaxDist(AY_Floor* GetFloor, int32 n, int32 right);//ç”±è¯¥åœ°æ¿å‘æŸä¸ªæ–¹å‘ç§»åŠ¨çš„æœ€å¤§è·ç¦»
 
-	void Border(int32 tempFloorNum, int32 n, int32& leftBorder, int32& rightBorder);//AOE±ß½ç·¶Î§
+	void Border(int32 tempFloorNum, int32 n, int32& leftBorder, int32& rightBorder);//AOEè¾¹ç•ŒèŒƒå›´
 
-	void Border(int32 tempFloorNum, int32 n, int32& leftBorder, int32& rightBorder, bool right);//µ¥²à±ß½ç·¶Î§
+	void Border(int32 tempFloorNum, int32 n, int32& leftBorder, int32& rightBorder, bool right);//å•ä¾§è¾¹ç•ŒèŒƒå›´
 
-	int32 End(int32 tempFloorNum, int32 n, bool right);//Ç¿ÖÆÎ»ÒÆÖÕµã
+	int32 End(int32 tempFloorNum, int32 n, bool right);//å¼ºåˆ¶ä½ç§»ç»ˆç‚¹
 };
 

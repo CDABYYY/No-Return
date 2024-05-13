@@ -2,6 +2,7 @@
 
 
 #include "S01.h"
+#include "S_Helper.h"
 #include "Y.h"
 #include "Y_GameInstance.h"
 #include "Y_Buff.h"
@@ -10,7 +11,6 @@
 #include "CameraPawn.h"
 #include "Y_StatusBar.h"
 #include "Y_ClassBase.h"
-#include "S_Helper.h"
 #include "Y_Fighting.h"
 #include "S03.h"
 #include "I01.h"
