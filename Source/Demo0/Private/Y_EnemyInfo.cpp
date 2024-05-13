@@ -14,6 +14,7 @@ Y_EnemyInfo::Y_EnemyInfo()
     Actions.Add(MakeShared<Y_CharacterAction>());
     ChoosedAction = 0;
     AttackEnhance = 0;
+    ActionCount = 0;
 }
 
 Y_EnemyInfo::~Y_EnemyInfo()

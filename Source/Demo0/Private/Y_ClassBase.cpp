@@ -27,6 +27,11 @@ void LoadY_Base()
 	Y::LoadFloor<NormalFloor>(1);
 	//Temp
 	Y::LoadCharacter<NormalEnemy>(1);
+	Y::LoadRoom<NormalFightRoom>(-10);
+	Y::LoadEquipment<NormalEquipment>(-1);
+
+	Y::Levels[1]->CanInLevel = 1 << 1;
+	Y::Levels[1]->ThisLevelPopulations.Add(MakeShared<Y_LevelInfo::EnemyPopulation>(1, 1, 1, 1));
 }
 
 MoveBuff::MoveBuff()
@@ -361,6 +366,7 @@ float NormalRoom::GetWeight()
 EventRoom::EventRoom()
 {
 	RoomID = -1;
+	BelongLevel = 1;
 }
 
 FText EventRoom::GetDescribe()
@@ -560,12 +566,34 @@ int32 ExposeBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter
 
 NormalFightRoom::NormalFightRoom()
 {
-	RoomID = 1;
+	RoomID = -10;
 }
 
 TSharedPtr<Y_RoomInfo> NormalFightRoom::RoomClicked()
 {
-	auto p = Y::GetGameInfo()->Equipments;
+	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
+	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
+	int32 SpawnFloors = 8 + 6 * Y::getRandom();
+	TArray<int32> CanSpawnFloors;
+	for (int32 i = 0; i < SpawnFloors; i++) {
+		Y::GetGameInfo()->SpawnFloor(Y::FloorClass[1]->NewObject(), i);
+		CanSpawnFloors.Add(i);
+	}
+	int32 SpawnedMain = 4 + 3 * Y::getRandom();
+	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[SpawnedMain]);
+
+	int32 GetP = Y::GetGameInfo()->CurrentFloor + 3; 
+	auto P = Y::getRandom(Y::GetGameInfo()->CurrentLevel->ThisLevelPopulations);
+	while (GetP > 0) {
+		auto EnemyType = Y::getRandom(P->Classes);
+		GetP -= EnemyType->CostLevel;
+		int32 EnemyPos = CanSpawnFloors[Y::getRandom() * CanSpawnFloors.Num()];
+
+		auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[EnemyType->EnemyID]->NewObject(), Y::GetFloors()[EnemyPos]);
+		TC->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
+		TC->Update();
+	}
+	Y::GetGameInfo()->BeginFight();
 	return nullptr;
 }
 

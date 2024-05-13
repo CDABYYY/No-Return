@@ -21,6 +21,8 @@
 #include "Y_ClassBase.h"
 #include "I01.h"
 #include "Z01.h"
+#include "S02.h"
+#include "S03.h"
 
 #include "IImageWrapper.h"
 #include "IImageWrapperModule.h"
@@ -41,7 +43,8 @@ UY_GameInstance::UY_GameInstance()
 	NowVector = FVector(0,0,300);
 	NowRotator = FRotator(0,0,0);
 
-	//RandomStream = FRandomStream(0);
+	RandomStream.GenerateNewSeed();
+
 	HaveRandoms = 0;
 	Money = 0;
 
@@ -64,10 +67,16 @@ UY_GameInstance::UY_GameInstance()
 	LoadY_Base();
 	L_I01();
 	LZ01();
+	LS02();
+	LS03();
 	
 	Y::Levels[0]->Loaded();
 	//TEMP
 	FightInfo->ReadyRooms.Add(Y::RoomClass[-1]->NewObject());
+	for(int32 i = 0;i<10;i++)
+	FightInfo->ReadyEquipments.Add(Y::EquipmentClass[-1]->NewObject());
+	for (int32 i = 0; i < 10; i++)
+		FightInfo->ReadyCards.Add(Y::CardClass[-1]->NewObject());
 
 	//TEMP
 	for(int32 i = 0;i<=10;i++)

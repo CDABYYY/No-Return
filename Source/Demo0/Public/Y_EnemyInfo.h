@@ -86,6 +86,7 @@ public:
 	int32 ActionType;
 	int32 ActionValue;
 	int32 ChoosedAction;
+	int32 ActionCount;
 
 	int32 AttackEnhance;
 
@@ -97,7 +98,7 @@ public:
 
 	virtual void EnemyDead();
 
-	virtual void LoadCharacter(AY_Character* Owner);
+	virtual void LoadCharacter(AY_Character* NewOwner);
 
 	virtual void ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ExecuteBuffs, bool TryExecute = true);
 };

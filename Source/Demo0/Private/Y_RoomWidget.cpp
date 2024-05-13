@@ -68,7 +68,7 @@ void UY_RoomWidget::RoomClicked()
 	Y::GetGameInstance()->CurrentRoom = this;
 	Y::GetController()->MapWidget->PullMap(true);
 
-	//Y::GetGameInfo()->BeginFight();
+	Y::GetGameInfo()->BeginRoom();
 
 	if (!Info.IsValid())
 		Info = MakeShared<Y_RoomInfo>();

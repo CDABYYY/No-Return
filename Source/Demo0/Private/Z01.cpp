@@ -21,12 +21,94 @@
 
 void LZ01()
 {
-	Y::LoadRoom<E01>(1);
+	Y::LoadRoom<E01>(101);
+	Y::Levels[1]->ThisLevelRooms.Add(101);
+	Y::LoadRoom<E02>(102);
+	Y::Levels[1]->ThisLevelRooms.Add(102);
+	Y::LoadRoom<E03>(103);
+	Y::Levels[1]->ThisLevelRooms.Add(103);
+	Y::LoadRoom<E04>(104 + 1000);
+	Y::LoadRoom<E05>(105);
+	Y::Levels[1]->ThisLevelRooms.Add(105);
+	Y::LoadRoom<E06>(106);
+	Y::Levels[1]->ThisLevelRooms.Add(106);
+	Y::LoadRoom<E07>(107);
+	Y::Levels[1]->ThisLevelRooms.Add(107);
+	Y::LoadRoom<E08>(108);
+	Y::Levels[1]->ThisLevelRooms.Add(108);
+	Y::LoadRoom<E09>(109 + 1000);
+	Y::LoadRoom<E10>(110);
+	Y::Levels[1]->ThisLevelRooms.Add(110);
+	Y::LoadRoom<E11>(111);
+	Y::Levels[1]->ThisLevelRooms.Add(111);
+	Y::LoadRoom<E12>(112);
+	Y::Levels[1]->ThisLevelRooms.Add(112);
+	Y::LoadRoom<E13>(113);
+	Y::Levels[1]->ThisLevelRooms.Add(113);
+	Y::LoadRoom<E14>(114);
+	Y::Levels[1]->ThisLevelRooms.Add(114);
+	Y::LoadRoom<E15>(201);
+	Y::Levels[2]->ThisLevelRooms.Add(201);
+	Y::LoadRoom<E16>(202);
+	Y::Levels[2]->ThisLevelRooms.Add(202);
+	Y::LoadRoom<E17>(203);
+	Y::Levels[2]->ThisLevelRooms.Add(203);
+	Y::LoadRoom<E18>(204);
+	Y::Levels[2]->ThisLevelRooms.Add(204);
+	Y::LoadRoom<E19>(205 + 1000);
+	Y::LoadRoom<E20>(206);
+	Y::Levels[2]->ThisLevelRooms.Add(206);
+	Y::LoadRoom<E21>(207);
+	Y::Levels[2]->ThisLevelRooms.Add(207);
+	Y::LoadRoom<E22>(208);
+	Y::Levels[2]->ThisLevelRooms.Add(208);
+	Y::LoadRoom<E23>(209 + 1000);
+	Y::LoadRoom<E24>(210 + 1000);
+	Y::LoadRoom<E25>(211);
+	Y::Levels[2]->ThisLevelRooms.Add(211);
+	Y::LoadRoom<E26>(212 + 1000);
+	Y::LoadRoom<E27>(301);
+	Y::Levels[3]->ThisLevelRooms.Add(301);
+	Y::LoadRoom<E28>(302);
+	Y::Levels[3]->ThisLevelRooms.Add(302);
+	Y::LoadRoom<E29>(303 + 1000);
+	Y::LoadRoom<E30>(304);
+	Y::Levels[3]->ThisLevelRooms.Add(304);
+	Y::LoadRoom<E31>(305);
+	Y::Levels[3]->ThisLevelRooms.Add(305);
+	Y::LoadRoom<E32>(306);
+	Y::Levels[3]->ThisLevelRooms.Add(306);
+	Y::LoadRoom<E33>(307);
+	Y::Levels[3]->ThisLevelRooms.Add(307);
+	Y::LoadRoom<E34>(308);
+	Y::Levels[3]->ThisLevelRooms.Add(308);
+	Y::LoadRoom<E35>(11);
+	Y::Levels[0]->ThisLevelRooms.Add(11);
+	Y::LoadRoom<E36>(12);
+	Y::Levels[0]->ThisLevelRooms.Add(12);
+	Y::LoadRoom<E37>(13);
+	Y::Levels[0]->ThisLevelRooms.Add(13);
+	Y::LoadRoom<E38>(14);
+	Y::Levels[0]->ThisLevelRooms.Add(14);
+	Y::LoadRoom<E39>(15);
+	Y::Levels[0]->ThisLevelRooms.Add(15);
+	Y::LoadRoom<E40>(16);
+	Y::Levels[0]->ThisLevelRooms.Add(16);
+	Y::LoadRoom<E41>(17);
+	Y::Levels[0]->ThisLevelRooms.Add(17);
+	Y::LoadRoom<E42>(18);
+	Y::Levels[0]->ThisLevelRooms.Add(18);
+	Y::LoadRoom<E43>(19);
+	Y::Levels[0]->ThisLevelRooms.Add(19);
+	Y::LoadRoom<E44>(20);
+	Y::Levels[0]->ThisLevelRooms.Add(20);
 }
+
 
 E01::E01()
 {
 	RoomID = 101;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E01::RoomClicked()
 {
@@ -61,6 +143,7 @@ TSharedPtr<Y_RoomInfo> E01::RoomClicked()
 E02::E02()
 {
 	RoomID = 102;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E02::RoomClicked()
 {
@@ -112,6 +195,7 @@ TSharedPtr<Y_RoomInfo> E02::RoomClicked()
 E03::E03()
 {
 	RoomID = 103;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E03::RoomClicked()
 {
@@ -119,6 +203,7 @@ TSharedPtr<Y_RoomInfo> E03::RoomClicked()
 	{
 		Y::GetGameInfo()->SpawnFloor(Y::FloorClass[1]->NewObject(), i);
 	}
+	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[2]);
 	auto EP = MakeShared<Y_EventInfo>();
 	auto EP1 = MakeShared<Y_EventInfo>();
 	auto EP2 = MakeShared<Y_EventInfo>();
@@ -203,6 +288,7 @@ TSharedPtr<Y_RoomInfo> E03::RoomClicked()
 E04::E04()
 {
 	RoomID = 104 + 1000;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E04::RoomClicked()
 {
@@ -230,6 +316,7 @@ TSharedPtr<Y_RoomInfo> E04::RoomClicked()
 E05::E05()
 {
 	RoomID = 105;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E05::RoomClicked()
 {
@@ -258,6 +345,7 @@ TSharedPtr<Y_RoomInfo> E05::RoomClicked()
 E06::E06()
 {
 	RoomID = 106;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E06::RoomClicked()
 {
@@ -296,6 +384,7 @@ TSharedPtr<Y_RoomInfo> E06::RoomClicked()
 E07::E07()
 {
 	RoomID = 107;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E07::RoomClicked()
 {
@@ -328,6 +417,7 @@ TSharedPtr<Y_RoomInfo> E07::RoomClicked()
 E08::E08()
 {
 	RoomID = 108;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E08::RoomClicked()
 {
@@ -352,6 +442,7 @@ TSharedPtr<Y_RoomInfo> E08::RoomClicked()
 E09::E09()
 {
 	RoomID = 109 + 1000;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E09::RoomClicked()
 {
@@ -383,6 +474,7 @@ TSharedPtr<Y_RoomInfo> E09::RoomClicked()
 E10::E10()
 {
 	RoomID = 110;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E10::RoomClicked()
 {
@@ -414,6 +506,7 @@ TSharedPtr<Y_RoomInfo> E10::RoomClicked()
 E11::E11()
 {
 	RoomID = 111;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E11::RoomClicked()
 {
@@ -450,6 +543,7 @@ TSharedPtr<Y_RoomInfo> E11::RoomClicked()
 E12::E12()
 {
 	RoomID = 112;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E12::RoomClicked()
 {
@@ -481,6 +575,7 @@ TSharedPtr<Y_RoomInfo> E12::RoomClicked()
 E13::E13()
 {
 	RoomID = 113;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E13::RoomClicked()
 {
@@ -506,6 +601,7 @@ TSharedPtr<Y_RoomInfo> E13::RoomClicked()
 E14::E14()
 {
 	RoomID = 114;
+	BelongLevel = 1;
 }
 TSharedPtr<Y_RoomInfo> E14::RoomClicked()
 {
@@ -530,6 +626,7 @@ TSharedPtr<Y_RoomInfo> E14::RoomClicked()
 E15::E15()
 {
 	RoomID = 201;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E15::RoomClicked()
 {
@@ -557,6 +654,7 @@ TSharedPtr<Y_RoomInfo> E15::RoomClicked()
 E16::E16()
 {
 	RoomID = 202;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E16::RoomClicked()
 {
@@ -600,6 +698,7 @@ TSharedPtr<Y_RoomInfo> E16::RoomClicked()
 E17::E17()
 {
 	RoomID = 203;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E17::RoomClicked()
 {
@@ -632,6 +731,7 @@ TSharedPtr<Y_RoomInfo> E17::RoomClicked()
 E18::E18()
 {
 	RoomID = 204;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E18::RoomClicked()
 {
@@ -660,6 +760,7 @@ TSharedPtr<Y_RoomInfo> E18::RoomClicked()
 E19::E19()
 {
 	RoomID = 205 + 1000;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E19::RoomClicked()
 {
@@ -692,6 +793,7 @@ TSharedPtr<Y_RoomInfo> E19::RoomClicked()
 E20::E20()
 {
 	RoomID = 206;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E20::RoomClicked()
 {
@@ -718,6 +820,7 @@ TSharedPtr<Y_RoomInfo> E20::RoomClicked()
 E21::E21()
 {
 	RoomID = 207;
+	BelongLevel = 2;
 }//Need Fix
 TSharedPtr<Y_RoomInfo> E21::RoomClicked()
 {
@@ -748,6 +851,7 @@ E22::E22()
 {
 	RoomID = 208;
 	Choosed = false;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E22::RoomClicked()
 {
@@ -799,6 +903,7 @@ E23::E23()
 {
 	RoomID = 209 + 1000;
 	Choosed = false;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E23::RoomClicked()
 {
@@ -844,6 +949,7 @@ E24::E24()
 {
 	RoomID = 210 + 1000;
 	Choosed = false;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E24::RoomClicked()
 {
@@ -886,6 +992,7 @@ void E24::LeaveRoom()
 E25::E25()
 {
 	RoomID = 211;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E25::RoomClicked()
 {
@@ -916,6 +1023,7 @@ E26::E26()
 {
 	RoomID = 212 + 1000;
 	Choosed = false;
+	BelongLevel = 2;
 }
 TSharedPtr<Y_RoomInfo> E26::RoomClicked()
 {
@@ -973,6 +1081,7 @@ void E26::LeaveRoom()
 E27::E27()
 {
 	RoomID = 301;
+	BelongLevel = 3;
 }
 TSharedPtr<Y_RoomInfo> E27::RoomClicked()
 {
@@ -1007,6 +1116,7 @@ TSharedPtr<Y_RoomInfo> E27::RoomClicked()
 E28::E28()
 {
 	RoomID = 302;
+	BelongLevel = 3;
 }
 TSharedPtr<Y_RoomInfo> E28::RoomClicked()
 {
@@ -1035,6 +1145,7 @@ TSharedPtr<Y_RoomInfo> E28::RoomClicked()
 E29::E29()
 {
 	RoomID = 303 + 1000;
+	BelongLevel = 3;
 }
 TSharedPtr<Y_RoomInfo> E29::RoomClicked()
 {
@@ -1073,6 +1184,7 @@ TSharedPtr<Y_RoomInfo> E29::RoomClicked()
 E30::E30()
 {
 	RoomID = 304;
+	BelongLevel = 3;
 }
 TSharedPtr<Y_RoomInfo> E30::RoomClicked()
 {
@@ -1106,6 +1218,7 @@ TSharedPtr<Y_RoomInfo> E30::RoomClicked()
 E31::E31()
 {
 	RoomID = 305;
+	BelongLevel = 3;
 }
 TSharedPtr<Y_RoomInfo> E31::RoomClicked()
 {
@@ -1146,6 +1259,7 @@ TSharedPtr<Y_RoomInfo> E31::RoomClicked()
 E32::E32()
 {
 	RoomID = 306;
+	BelongLevel = 3;
 }
 TSharedPtr<Y_RoomInfo> E32::RoomClicked()
 {
@@ -1198,6 +1312,7 @@ TSharedPtr<Y_RoomInfo> E32::RoomClicked()
 
 E33::E33()
 {
+	BelongLevel = 3;
 	RoomID = 307;
 }//Need Fix
 TSharedPtr<Y_RoomInfo> E33::RoomClicked()
@@ -1227,6 +1342,7 @@ TSharedPtr<Y_RoomInfo> E33::RoomClicked()
 E34::E34()
 {
 	RoomID = 308;
+	BelongLevel = 3;
 }
 TSharedPtr<Y_RoomInfo> E34::RoomClicked()
 {
@@ -1255,6 +1371,7 @@ TSharedPtr<Y_RoomInfo> E34::RoomClicked()
 E35::E35()
 {
 	RoomID = 11;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E35::RoomClicked()
 {
@@ -1283,6 +1400,7 @@ TSharedPtr<Y_RoomInfo> E35::RoomClicked()
 E36::E36()
 {
 	RoomID = 12;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E36::RoomClicked()
 {
@@ -1319,6 +1437,7 @@ TSharedPtr<Y_RoomInfo> E36::RoomClicked()
 E37::E37()
 {
 	RoomID = 13;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E37::RoomClicked()
 {
@@ -1358,6 +1477,7 @@ TSharedPtr<Y_RoomInfo> E37::RoomClicked()
 E38::E38()
 {
 	RoomID = 14;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E38::RoomClicked()
 {
@@ -1389,6 +1509,7 @@ TSharedPtr<Y_RoomInfo> E38::RoomClicked()
 E39::E39()
 {
 	RoomID = 15;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E39::RoomClicked()
 {
@@ -1434,6 +1555,7 @@ TSharedPtr<Y_RoomInfo> E39::RoomClicked()
 E40::E40()
 {
 	RoomID = 16;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E40::RoomClicked()
 {
@@ -1469,6 +1591,7 @@ TSharedPtr<Y_RoomInfo> E40::RoomClicked()
 E41::E41()
 {
 	RoomID = 17;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E41::RoomClicked()
 {
@@ -1506,6 +1629,7 @@ TSharedPtr<Y_RoomInfo> E41::RoomClicked()
 E42::E42()
 {
 	RoomID = 18;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E42::RoomClicked()
 {
@@ -1539,6 +1663,7 @@ TSharedPtr<Y_RoomInfo> E42::RoomClicked()
 E43::E43()
 {
 	RoomID = 19;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E43::RoomClicked()
 {
@@ -1575,6 +1700,7 @@ TSharedPtr<Y_RoomInfo> E43::RoomClicked()
 E44::E44()
 {
 	RoomID = 20;
+	BelongLevel = 0;
 }
 TSharedPtr<Y_RoomInfo> E44::RoomClicked()
 {

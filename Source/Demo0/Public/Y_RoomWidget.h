@@ -20,7 +20,7 @@ public:
 
 	int32 RoomID;
 
-	int32 EndEventType;
+	int32 EndEventType = 1;
 
 	int32 BelongLevel;
 

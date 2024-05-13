@@ -25,6 +25,8 @@ Y_Fighting::Y_Fighting()
 {
 	CurrentLevelNum = 0;
 	CurrentFloor = 0;
+	Money = 0;
+	Health = MaxHealth = 30;
 }
 
 Y_Fighting::~Y_Fighting()
@@ -40,13 +42,17 @@ void Y_Fighting::ExecuteToAllCharacter(TSharedPtr<class Y_Buff> ToExecuteBuff)
 	FightingBuffs.AddBuff(ToExecuteBuff);
 }
 
+void Y_Fighting::BeginRoom()
+{
+	SettleInfo = MakeShared<Y_SettleInfo>();
+}
+
 void Y_Fighting::BeginFight()
 {
 	EventBuffs.ExecuteBuffs(nullptr, nullptr, EventBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	AlwaysBuffs.ExecuteBuffs(nullptr, nullptr, AlwaysBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	FightingBuffs.ExecuteBuffs(nullptr, nullptr, FightingBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
 	//ToExecuteBuffs.ExecuteBuffs(nullptr, nullptr, ToExecuteBuffs, Y_Buff::BeginFight, TEXT("Begin Fight"));
-	SettleInfo = MakeShared<Y_SettleInfo>();
 	for (auto& p : Equipments) {
 		p->BeginFighting();
 	}
@@ -112,6 +118,8 @@ void Y_Fighting::AfterFight()
 
 void Y_Fighting::EndRoom()
 {
+	Health = Y::GetMainCharacter()->Health;
+	MaxHealth = Y::GetMainCharacter()->MaxHealth;
 	if(SettleInfo->TrophyInfos.Num() > 0)
 	{
 		Y::GetController()->ShowSettle(false);
@@ -136,8 +144,16 @@ void Y_Fighting::AddEquipment(TSharedPtr<Y_Equipment> GetEquipment)
 	if (GetEquipment->FromEquipment != nullptr) {
 		RemoveEquipment(GetEquipment->FromEquipment);
 	}
+	else {
+		ReadyEquipments.Remove(GetEquipment);
+	}
 	GetEquipment->Equiped();
 	Y::GetController()->PCHUD->EquipmentWidget->AddEquipment(GetEquipment);
+}
+
+void Y_Fighting::AddCard(TSharedPtr<class Y_CardInfo> GetCard)
+{
+	UsingCards.Add(GetCard);
 }
 
 void Y_Fighting::RemoveEquipment(TSharedPtr<class Y_Equipment> GetEquipment)
@@ -161,12 +177,14 @@ TArray<TSharedPtr<class Y_Equipment>> Y_Fighting::EquipmentUpgrades(int32 Level)
 
 void Y_Fighting::AddMoney(int32 Moneys)
 {
-	Y::GetGameInstance()->Money += Moneys;
+	//Y::GetGameInstance()->Money += Moneys;
+	Money += Moneys;
 }
 
 int32& Y_Fighting::MoneyCount()
 {
-	return Y::GetGameInstance()->Money;
+	//return Y::GetGameInstance()->Money;
+	return Money;
 }
 
 void Y_Fighting::DrawCard(TSharedPtr<class Y_CardInfo> ToDrawCard, bool VoidSpawn)
@@ -341,6 +359,8 @@ AY_Character* Y_Fighting::SpawnMC(AY_Floor* FromFloor, FName ActorClass)
 	FromFloor->StandCharacter = NewCharacter;
 	Y::GetMainCharacter() = NewCharacter;
 	SpawnCharacter(NewCharacter);
+	NewCharacter->Health = Health;
+	NewCharacter->MaxHealth = MaxHealth;
 	NewCharacter->Buffs->AddBuffs(OnCharacterBuffs);
 	return NewCharacter;
 }
@@ -361,14 +381,11 @@ TSharedPtr<class Y_CardInfo> Y_Fighting::GetRandomCard()
 TSharedPtr<class Y_Equipment> Y_Fighting::GetRandomEquipment()
 {
 	auto p = Y::getRandom(ReadyEquipments);
-	ReadyEquipments.Remove(p);
 	return p;
 }
 
 void Y_Fighting::LoadLevel(TSharedPtr<class Y_LevelInfo> ToLoadLevel)
 {
-	CurrentLevelNum++;
-	CurrentFloor = 0;
 	if (CurrentLevel.IsValid()) {
 		CurrentLevel->UnLoad();
 	}
@@ -379,6 +396,8 @@ void Y_Fighting::LoadLevel(TSharedPtr<class Y_LevelInfo> ToLoadLevel)
 
 void Y_Fighting::ForwardLevel()
 {
+	CurrentLevelNum++;
+	CurrentFloor = 0;
 	auto P = Y::getRandom(Y::Levels);
 	if (P.IsValid()) {
 		Y::Log(TEXT("Load Level:%d"), P->LevelID);
@@ -391,8 +410,19 @@ float Y_LevelInfo::EnemyClass::GetWeight()
 	return Weight;
 }
 
+Y_LevelInfo::EnemyClass::EnemyClass(int32 ThisEnemyID, int32 ThisPopulation, int32 ThisType, float ThisCostLevel, float ThisWeight)
+{
+	EnemyID = ThisEnemyID;
+	Population = ThisPopulation;
+	Type = ThisType;
+	Weight = ThisWeight;
+	CostLevel = ThisCostLevel;
+}
+
 Y_LevelInfo::Y_LevelInfo()
 {
+	Weight = 10;
+	CanInLevel = 0;
 }
 
 Y_LevelInfo::~Y_LevelInfo()
@@ -411,6 +441,9 @@ void Y_LevelInfo::Loaded()
 {
 	Y::GetGameInfo()->CanSpawnCards.Append(ThisLevelCards);
 	for (auto& i : ThisLevelRooms) {
+		Y::Log(TEXT("Load Room: %d"), i);
+		if (!Y::RoomClass.Find(i))
+			Y::Log(TEXT("UnFind this Room: %d"), i);
 		Y::GetGameInfo()->ReadyRooms.Add(Y::RoomClass[i]->NewObject());
 	}
 	for (auto& i : ThisLevelEquipments) {
@@ -431,4 +464,13 @@ float Y_LevelInfo::EnemyPopulation::GetWeight()
 Y_LevelInfo::EnemyPopulation::EnemyPopulation()
 {
 
+}
+
+Y_LevelInfo::EnemyPopulation::EnemyPopulation(int32 ID, int32 Type1, int32 Type2, int32 Type3)
+{
+	TypeID = ID;
+	MinFloor = (ID - 1) * 5;
+	Classes.Add(MakeShared<EnemyClass>(Type1, ID, 1, 2, 10));
+	Classes.Add(MakeShared<EnemyClass>(Type2, ID, 2, 3, 8));
+	Classes.Add(MakeShared<EnemyClass>(Type3, ID, 3, 5, 5));
 }
