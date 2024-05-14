@@ -185,12 +185,13 @@ void S01::ActionChoosed()
 
 void S01::ActionExecute(bool Execute)
 {
-	DisMT = MaxDist(GetOwner()->StandFloor, 1, (bool)GetOwner()->Facing);
+	DisMT = MaxDist(GetOwner()->StandFloor, 1, GetOwner()->Facing);
 	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
 	Move(GetOwner()->Facing * DisMT, Execute);
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
+		if(DisMT != 0)
 		PlayMontage(UsingMontageName, Y::GetFloors()[ToPos]);
 	}
 }

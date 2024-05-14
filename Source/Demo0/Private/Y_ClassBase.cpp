@@ -29,8 +29,17 @@ void LoadY_Base()
 	Y::LoadRoom<NormalFightRoom>(-10);
 	Y::LoadEquipment<NormalEquipment>(-1);
 
-	Y::Levels[1]->CanInLevel = 1 << 1;
-	Y::Levels[1]->ThisLevelPopulations.Add(MakeShared<Y_LevelInfo::EnemyPopulation>(1, 1, 1, 1));
+	//Temp
+	for (int32 i = 1; i <= 3; i++) {
+		Y::Levels[i]->CanInLevel = 1 << i;
+		for (int32 j = 1; j <= 3; j++) {
+			Y::Levels[i]->ThisLevelPopulations.Add(MakeShared<Y_LevelInfo::EnemyPopulation>(j, j * 3 - 2, j * 3 - 1, j * 3));
+		}
+	}
+	for (int32 i = 1; i <= 67; i++)Y::Levels[0]->ThisLevelCards.Add(i);
+	for (int32 i = 1; i <= 5; i++) {
+		Y::Levels[0]->ThisLevelEquipments.Add(i * 4 - 3);
+	}
 }
 
 MoveBuff::MoveBuff()
@@ -377,8 +386,9 @@ FText EventRoom::GetDescribe()
 TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 {
 	Y::Log(0, TEXT("InEventRoom"));
-	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
-	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
+	//Temp
+	//Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
+	//Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
 	ChangeEndType(2);
 	for (int32 i = 0; i < 10; i++) {
 		Y::GetGameInfo()->SpawnFloor(Y::FloorClass[1]->NewObject(), i);
@@ -480,7 +490,7 @@ void NormalSkill::Play(bool Execute)
 {
 	if(Execute)
 	while (Y::GetGameInfo()->InHandCards.Num() > 5) {
-		Y::GetGameInfo()->UseCard(Y::GetGameInfo()->InHandCards[0]);
+		Y::GetGameInfo()->UseCard(Y::GetGameInfo()->InHandCards[0],1);
 	}
 	DrawCard(2,Execute);
 }
@@ -582,17 +592,24 @@ TSharedPtr<Y_RoomInfo> NormalFightRoom::RoomClicked()
 	int32 SpawnedMain = 4 + 3 * Y::getRandom();
 	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[SpawnedMain]);
 
-	int32 GetP = Y::GetGameInfo()->CurrentFloor + 3; 
+	int32 GetP = Y::GetGameInfo()->CurrentFloor + 2; 
+	int32 OP = GetP;
 	auto P = Y::getRandom(Y::GetGameInfo()->CurrentLevel->ThisLevelPopulations);
 	while (GetP > 0) {
 		auto EnemyType = Y::getRandom(P->Classes);
+		if (GetP < EnemyType->CostLevel * 0.5) break;
 		GetP -= EnemyType->CostLevel;
 		int32 EnemyPos = CanSpawnFloors[Y::getRandom() * CanSpawnFloors.Num()];
+		CanSpawnFloors.Remove(EnemyPos);
 
 		auto TC = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[EnemyType->EnemyID]->NewObject(), Y::GetFloors()[EnemyPos]);
 		TC->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
 		TC->Update();
 	}
+	Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share());
+	Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(MoneyTrophy::Share(OP *(0.8 + Y::getRandom() * 0.4) * 3 + Y::GetGameInfo()->CurrentLevelNum * 10));
+	if (GetP < 0 && Y::getRandom() < (float) - GetP * 2 / OP)
+		Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(EquipmentTrophy::Share());
 	Y::GetGameInfo()->BeginFight();
 	return nullptr;
 }
@@ -677,4 +694,31 @@ void HealthBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
 		if (Execute)
 			TargetCharacter->Health += BuffCount;
 	}
+}
+
+NormalBossRoom::NormalBossRoom(int32 FinalBoosType)
+{
+	RoomID = 999;
+	BossType = FinalBoosType;
+}
+
+TSharedPtr<Y_RoomInfo> NormalBossRoom::RoomClicked()
+{
+	Y::Log(0, TEXT("Begin Boss Fight"));
+	for (int32 i = 0; i < 10; i++) {
+		Y::GetGameInfo()->SpawnFloor(Y::FloorClass[1]->NewObject(), i);
+	}
+	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[2]);
+	auto Boss = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[BossType]->NewObject(), Y::GetFloors()[7]);
+	Boss->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
+	Boss->Update();
+
+	Y::GetGameInfo()->BeginFight();
+	return nullptr;
+}
+
+void NormalBossRoom::LeaveRoom()
+{
+	DoToEndRoom();
+	Y::GetGameInfo()->ForwardLevel();
 }

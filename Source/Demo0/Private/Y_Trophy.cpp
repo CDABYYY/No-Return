@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Y_Trophy.h"
@@ -6,6 +6,7 @@
 #include "Y_ChooseCard.h"
 #include "Y_PlayerController.h"
 #include "Y_Fighting.h"
+#include "Y_Equipment.h"
 
 Y_TrophyInfo::~Y_TrophyInfo()
 {
@@ -80,6 +81,11 @@ void CardTrophy::Clicked()
 	Y::GetController()->BeginChoose(ChooseInfo);
 }
 
+FText CardTrophy::Describe()
+{
+	return Y::PrintText(TEXT("选择一张卡牌"));
+}
+
 TSharedPtr<EquipmentTrophy> EquipmentTrophy::Share(TSharedPtr<class Y_Equipment> ToLoadInfo)
 {
 	auto p = new EquipmentTrophy(ToLoadInfo);
@@ -97,11 +103,17 @@ TSharedPtr<EquipmentTrophy> EquipmentTrophy::Share()
 EquipmentTrophy::EquipmentTrophy(TSharedPtr<class Y_Equipment> ToLoadInfo)
 {
 	EquipmentInfo = ToLoadInfo;
+	UsingPicture = EquipmentInfo->UsingPicture;
 }
 
 void EquipmentTrophy::Clicked()
 {
 	Y::GetGameInfo()->AddEquipment(EquipmentInfo);
+}
+
+FText EquipmentTrophy::Describe()
+{
+	return Y::PrintText(TEXT("获得装备： %s"), *(EquipmentInfo->EquipmentName.ToString()));
 }
 
 TSharedPtr<MoneyTrophy> MoneyTrophy::Share(int32 MoneyCount)
@@ -119,4 +131,9 @@ MoneyTrophy::MoneyTrophy(int32 MoneyCount)
 void MoneyTrophy::Clicked()
 {
 	Y::GetGameInfo()->AddMoney(Money);
+}
+
+FText MoneyTrophy::Describe()
+{
+	return Y::PrintText(TEXT("获得金币： %d"), Money);
 }

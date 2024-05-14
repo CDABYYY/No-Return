@@ -128,6 +128,8 @@ public:
 	TArray<int32> ThisLevelCards;
 	TArray<int32> ThisLevelEquipments;
 	TArray<int32> ThisLevelFloors;
+	TSharedPtr<class Y_RoomInfo> FinalRoom;
+	UTexture2D* MapTexture;
 
 	float GetWeight();
 	//Use Bit To Mark If Can Use;

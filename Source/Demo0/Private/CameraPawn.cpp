@@ -87,7 +87,7 @@ void ACameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if(Y::GetGameInstance()->GameStatus == 1){
-		SetActorLocation(GetActorLocation() + CurrentVelocity * DeltaTime);
+		SetActorLocation(GetActorLocation() + Y::GetRotation().RotateVector(CurrentVelocity * DeltaTime));
 		if (!ClickAble) {
 			Y::GetGameInstance()->HelpTick(DeltaTime);
 		}
@@ -207,6 +207,7 @@ void ACameraPawn::MouseLeftRelease()
 							if (!IsValid(HitFloor)) {
 								AY_Character* HitCharacter = Cast<AY_Character>(HitActor);
 								if (IsValid(HitCharacter))HitFloor = HitCharacter->StandFloor;
+								Y::Log(0, TEXT("Choose Floor"));
 							}
 							if (IsValid(HitFloor)) {
 								Y::GetMainCharacter()->ChangeFacing(HitFloor->SerialNumber - Y::GetMainCharacter()->StandFloor->SerialNumber);
@@ -246,10 +247,6 @@ void ACameraPawn::MouseLeftRelease()
 
 										ClickAble = false;
 									}
-									Y::GetController()->CardWidget->ChoosedCard = nullptr;
-									Y::IsPressingCard() = false;
-									Y::GetController()->CardWidget->Update();
-									Y::GetController()->ShowCards(false);
 								}
 								else if (Y::IsPressingEquipment() && Y::GetChoosingEquipment().IsValid()) {
 									Y::GetChoosingEquipment()->Play(true);
@@ -259,6 +256,13 @@ void ACameraPawn::MouseLeftRelease()
 					}
 				}
 			}
+			if (Y::IsPressingCard()) {
+				Y::GetController()->CardWidget->ChoosedCard = nullptr;
+				Y::IsPressingCard() = false;
+				Y::GetController()->CardWidget->Update();
+				Y::GetController()->ShowCards(false);
+			}
+
 			for (auto& p : Y::GetFloors())if (IsValid(p))p->SetColor(TEXT("None"));
 
 			for (auto& p : Y::GetEnemys())p->ShowToExecute(false);

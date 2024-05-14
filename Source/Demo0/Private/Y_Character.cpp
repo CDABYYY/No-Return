@@ -96,7 +96,7 @@ void AY_Character::Tick(float DeltaTime)
 			else Rotating += DeltaRotate;
 		}
 		auto R = GetActorRotation();
-		R.Yaw  = Rotating;
+		R.Yaw  = Y::GetRotation().Yaw + Rotating;
 		SetActorRotation(R);
 		//SetActorRelativeRotation(R);
 		//AddActorLocalRotation(FRotator(0, DeltaRotate, 0));

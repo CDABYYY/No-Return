@@ -208,3 +208,13 @@ public:
 	HealthBuff();
 	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute);
 };
+
+class DEMO0_API NormalBossRoom :public Y_RoomInfo {
+public:
+	int32 BossType = 0;
+	NormalBossRoom(int32 FinalBossType);
+
+	virtual TSharedPtr<Y_RoomInfo> RoomClicked()override;
+
+	virtual void LeaveRoom()override;
+};

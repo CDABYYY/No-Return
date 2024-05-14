@@ -74,7 +74,7 @@ int32 BornOFBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter
 C45::C45()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2045;
+	CardID = 45;
 	CardName = Y::PrintText(TEXT("过热思考"));
 	BindMessage(TEXT("45"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Draw Card 5, Burn self 2"));
@@ -99,7 +99,7 @@ bool C45::AcceptFloor(AY_Floor* GetFloor)
 C46::C46()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2046;
+	CardID = 46;
 	CardName = Y::PrintText(TEXT("火焰观测"));
 	BindMessage(TEXT("46"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Draw Card burn_num/2"));
@@ -123,7 +123,7 @@ bool C46::AcceptFloor(AY_Floor* GetFloor)
 C47::C47()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2047;
+	CardID = 47;
 	CardName = Y::PrintText(TEXT("灼烧伤口"));
 	BindMessage(TEXT("47"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self 8, Burn self 2"));
@@ -149,7 +149,7 @@ bool C47::AcceptFloor(AY_Floor* GetFloor)
 C48::C48()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2048;
+	CardID = 48;
 	CardName = Y::PrintText(TEXT("刺激躯体"));
 	BindMessage(TEXT("48"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn self 3, Clear self weakness and vulnerability"));
@@ -183,7 +183,7 @@ bool C48::AcceptFloor(AY_Floor* GetFloor)
 C49::C49()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2049;
+	CardID = 49;
 	CardName = Y::PrintText(TEXT("浴火冲锋"));
 	BindMessage(TEXT("49"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn all 3, Move 3"));
@@ -220,7 +220,7 @@ bool C49::AcceptFloor(AY_Floor* GetFloor)
 C50::C50()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2050;
+	CardID = 50;
 	CardName = Y::PrintText(TEXT("火焰护盾"));
 	BindMessage(TEXT("50"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack self burn_num/2, Shield self burn_num"));
@@ -247,7 +247,7 @@ bool C50::AcceptFloor(AY_Floor* GetFloor)
 C51::C51()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2051;
+	CardID = 51;
 	CardName = Y::PrintText(TEXT("浴火"));
 	BindMessage(TEXT("51"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
@@ -271,7 +271,7 @@ bool C51::AcceptFloor(AY_Floor* GetFloor)
 C52::C52()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2052;
+	CardID = 52;
 	CardName = Y::PrintText(TEXT("避火"));
 	BindMessage(TEXT("52"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self burn_num"));
@@ -296,7 +296,7 @@ bool C52::AcceptFloor(AY_Floor* GetFloor)
 C53::C53()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2053;
+	CardID = 53;
 	CardName = Y::PrintText(TEXT("火焰爆发"));
 	BindMessage(TEXT("53"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy burn_num of self between self 2"));
@@ -330,7 +330,7 @@ bool C53::AcceptFloor(AY_Floor* GetFloor)
 C54::C54()
 {
 	CurrentCost = OriginalCost = 3;
-	CardID = 2054;
+	CardID = 54;
 	CardName = Y::PrintText(TEXT("反思"));
 	BindMessage(TEXT("54"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Discard the hand and draw an equal number of cards"));
@@ -360,7 +360,7 @@ bool C54::AcceptFloor(AY_Floor* GetFloor)
 C55::C55()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2055;
+	CardID = 55;
 	CardName = Y::PrintText(TEXT("踏火急行"));
 	BindMessage(TEXT("55"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 1+burn_num/3, Burn enemy 1+burn_num/3"));
@@ -396,7 +396,7 @@ bool C55::AcceptFloor(AY_Floor* GetFloor)
 C56::C56()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2056;
+	CardID = 56;
 	CardName = Y::PrintText(TEXT("屏障"));
 	BindMessage(TEXT("56"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self 15"));
@@ -420,7 +420,7 @@ bool C56::AcceptFloor(AY_Floor* GetFloor)
 C57::C57()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2057;
+	CardID = 57;
 	CardName = Y::PrintText(TEXT("反击"));
 	BindMessage(TEXT("57"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
@@ -476,7 +476,7 @@ bool C57::AcceptFloor(AY_Floor* GetFloor)
 C58::C58()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2058;
+	CardID = 58;
 	CardName = Y::PrintText(TEXT("不惜代价"));
 	BindMessage(TEXT("58"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, Burn self and enemy 5"));
@@ -509,7 +509,7 @@ bool C58::AcceptFloor(AY_Floor* GetFloor)
 C59::C59()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2059;
+	CardID = 59;
 	CardName = Y::PrintText(TEXT("止火"));
 	BindMessage(TEXT("59"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Settle and Move self burn_num"));
@@ -536,7 +536,7 @@ bool C59::AcceptFloor(AY_Floor* GetFloor)
 C60::C60()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2060;
+	CardID = 60;
 	CardName = Y::PrintText(TEXT("烈火予身"));
 	BindMessage(TEXT("60"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn enemy burn_num/2"));
@@ -595,7 +595,7 @@ bool C60::AcceptFloor(AY_Floor* GetFloor)
 C61::C61()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2061;
+	CardID = 61;
 	CardName = Y::PrintText(TEXT("火焰研习"));
 	BindMessage(TEXT("61"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Draw card 1 when attack self 3 through burn"));
@@ -631,7 +631,7 @@ bool C61::AcceptFloor(AY_Floor* GetFloor)
 C62::C62()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2062;
+	CardID = 62;
 	CardName = Y::PrintText(TEXT("火焰熟练"));
 	BindMessage(TEXT("62"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn self burn/5 when burn others"));
@@ -668,7 +668,7 @@ bool C62::AcceptFloor(AY_Floor* GetFloor)
 C63::C63()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2063;
+	CardID = 63;
 	CardName = Y::PrintText(TEXT("火焰精通"));
 	BindMessage(TEXT("63"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Shield self burn_num/2"));
@@ -708,7 +708,7 @@ bool C63::AcceptFloor(AY_Floor* GetFloor)
 C64::C64()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2064;
+	CardID = 64;
 	CardName = Y::PrintText(TEXT("火焰掌控"));
 	BindMessage(TEXT("64"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack with 1 Burn when your burn_num greater than 8"));
@@ -751,7 +751,7 @@ bool C64::AcceptFloor(AY_Floor* GetFloor)
 C65::C65()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2065;
+	CardID = 65;
 	CardName = Y::PrintText(TEXT("火势蔓延"));
 	BindMessage(TEXT("65"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
@@ -806,7 +806,7 @@ bool C65::AcceptFloor(AY_Floor* GetFloor)
 C66::C66()
 {
 	CurrentCost = OriginalCost = 10;
-	CardID = 2066;
+	CardID = 66;
 	CardName = Y::PrintText(TEXT("火势扩张"));
 	BindMessage(TEXT("66"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Burn all 1 after you attack when the number of your burn greater than 10"));
@@ -855,7 +855,7 @@ bool C66::AcceptFloor(AY_Floor* GetFloor)
 C67::C67()
 {
 	CurrentCost = OriginalCost = 5;
-	CardID = 2067;
+	CardID = 67;
 	CardName = Y::PrintText(TEXT("搜索预案"));
 	BindMessage(TEXT("67"));
 	CurrentCardDescribe = Y::PrintText(TEXT("Draw card to 6"));

@@ -60,9 +60,8 @@ bool S::IsMain(AY_Floor* GetFloor)
 
 int32 S::MaxDist(AY_Floor* GetFloor, int32 n, int32 Idirec)
 {
-	bool direc = (bool)Idirec;
 	int32 step, count = 0;
-	if (direc == true)step = 1;
+	if (Idirec > 0)step = 1;
 	else step = -1;
 	for (int32 i = GetFloor->SerialNumber + step; 0 <= i && i < Y::GetFloors().Num() && count < n; i += step)
 	{

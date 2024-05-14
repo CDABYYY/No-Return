@@ -170,7 +170,7 @@ void UY_GameInstance::HelpTick(float DeltaTime)
 {
 	RunTime += DeltaTime; 
 	UY_TimeLine::YTimeLine->UpdateTimeMark();
-	if (RunTime > TickTime) {
+	if (RunTime > (float)TickTime / 10) {
 		TickTime += 20;
 		for (auto& p : Enemys)
 		{
@@ -219,6 +219,11 @@ void UY_GameInstance::BeginGame()
 
 	Y::GetGameInfo()->ForwardLevel();
 
+	//Temp
+	Y::GetLocation() = FVector(-19480, -244490, -30040);
+	Y::GetRotation() = FRotator(0, -100, 0);
+	//Y::GetLocation() = FVector(0, 0, 160);
+	//Y::GetRotation() = FRotator(0, 90, 0);
 
 	Y::GetController()->UpdateMap();
 	Y::GetController()->MapWidget->PullMap(false);

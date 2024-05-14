@@ -54,6 +54,7 @@ public:
 	TArray<TSharedPtr<class Y_CardInfo>> CardInfos;
 	CardTrophy(std::initializer_list <TSharedPtr< class Y_CardInfo >> ToLoadInfos);
 	virtual void Clicked() override;
+	virtual FText Describe();
 };
 
 class DEMO0_API EquipmentTrophy :public Y_TrophyInfo {
@@ -63,6 +64,7 @@ public:
 	static TSharedPtr<EquipmentTrophy> Share();
 	EquipmentTrophy(TSharedPtr<class Y_Equipment> ToLoadInfo);
 	virtual void Clicked() override;
+	virtual FText Describe();
 };
 
 class DEMO0_API MoneyTrophy :public Y_TrophyInfo {
@@ -71,4 +73,5 @@ public:
 	static TSharedPtr<MoneyTrophy> Share(int32 MoneyCount);
 	MoneyTrophy(int32 MoneyCount);
 	virtual void Clicked() override;
+	virtual FText Describe();
 };

@@ -9,17 +9,17 @@ AY_Floor::AY_Floor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshComponentAsset(TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorCube.EditorCube'"));
-	if (MeshComponent == NULL) {
-		MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("CardMesh");
-		MeshComponent->SetupAttachment(GetRootComponent());
-		if (MeshComponentAsset.Succeeded()) {
-			SetRootComponent(MeshComponent);
-			MeshComponent->SetStaticMesh(MeshComponentAsset.Object);
-			//MeshComponent->SetRelativeRotation(FRotator(0, 0, 0));
-			MeshComponent->SetWorldScale3D(FVector(0.5));
-		}
-	}
+	//static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshComponentAsset(TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorCube.EditorCube'"));
+	//if (MeshComponent == NULL) {
+	//	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("CardMesh");
+	//	MeshComponent->SetupAttachment(GetRootComponent());
+	//	if (MeshComponentAsset.Succeeded()) {
+	//		SetRootComponent(MeshComponent);
+	//		MeshComponent->SetStaticMesh(MeshComponentAsset.Object);
+	//		//MeshComponent->SetRelativeRotation(FRotator(0, 0, 0));
+	//		MeshComponent->SetWorldScale3D(FVector(0.5));
+	//	}
+	//}
 	Height = 0;
 	StandCharacter = nullptr;
 }

@@ -70,7 +70,7 @@ void Y_ChooseCardInfo::AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedC
 void Y_ChooseCardIN::AfterChoose(TArray<TSharedPtr<class Y_CardInfo>> ChoosedCards)
 {
 	for (auto& p : ChoosedCards) {
-		Y::GetGameInfo()->UsingCards.Add(p);
+		Y::GetGameInfo()->AddCard(p);
 	}
 }
 

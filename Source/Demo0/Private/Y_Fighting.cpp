@@ -25,7 +25,7 @@ Y_Fighting::Y_Fighting()
 {
 	CurrentLevelNum = 0;
 	CurrentFloor = 0;
-	Money = 0;
+	Money = 200;
 	Health = MaxHealth = 30;
 }
 
@@ -62,7 +62,7 @@ void Y_Fighting::BeginFight()
 		ToDrawCards.Add(p);
 	}
 	Y::GetGameInstance()->RunTime = 0;
-	Y::GetGameInstance()->TickTime = 20;
+	Y::GetGameInstance()->TickTime = 0;
 	Y::GetPlayer()->ClickAble = false;
 
 	DrawCard(5);
@@ -154,6 +154,8 @@ void Y_Fighting::AddEquipment(TSharedPtr<Y_Equipment> GetEquipment)
 void Y_Fighting::AddCard(TSharedPtr<class Y_CardInfo> GetCard)
 {
 	UsingCards.Add(GetCard);
+	ReadyCards.Remove(GetCard);
+	ReadyCards.Add(Y::CardClass[GetCard->CardID]->NewObject());
 }
 
 void Y_Fighting::RemoveEquipment(TSharedPtr<class Y_Equipment> GetEquipment)
@@ -253,7 +255,10 @@ void Y_Fighting::UseCard(AY_Card* UsedCard, int32 LeaveType)
 void Y_Fighting::UseCard(TSharedPtr<class Y_CardInfo> UsedCard, int32 DiscardReason)
 {
 	if (DiscardReason != 0)
+	{
 		UsedCard->Discarded();
+		Y::GetController()->CardWidget->RemoveCard(UsedCard->OwnerWidget);
+	}
 	UsedCard->Leave();
 	UsedCard->Owner = nullptr;
 	InHandCards.Remove(UsedCard);
@@ -287,10 +292,10 @@ AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int
 {
 	FVector ToVector(Y::GetLocation());
 	FRotator ToRotator(Y::GetRotation());
-	ToRotator += FRotator(0, 90, 0);
-	FVector RelativeVector(130, SerialNumber * 130, 64);
-	//RelativeVector = RelativeVector * ToRotator.Vector();
+	FVector RelativeVector(200, SerialNumber * 130, 0);
+	RelativeVector = ToRotator.RotateVector(RelativeVector);
 	FVector SpawnVector = Y::GetLocation() + RelativeVector;
+	//ToRotator += FRotator(0, 90, 0);
 	AY_Floor* NewFloor = Cast<AY_Floor>(Y::GetGameInstance()->GISpawnActor(2, ActorClass, SpawnVector, ToRotator));
 	//AY_Floor* NewFloor = Cast<AY_Floor>(Y::GetWorld()->SpawnActor(Y::GetGameInstance()->FloorClasses.Find(ActorClass)->Get(), &SpawnVector, &ToRotator));
 	NewFloor->SerialNumber = SerialNumber;
@@ -474,7 +479,8 @@ Y_LevelInfo::EnemyPopulation::EnemyPopulation(int32 ID, int32 Type1, int32 Type2
 {
 	TypeID = ID;
 	MinFloor = (ID - 1) * 5;
-	Classes.Add(MakeShared<EnemyClass>(Type1, ID, 1, 2, 10));
-	Classes.Add(MakeShared<EnemyClass>(Type2, ID, 2, 3, 8));
-	Classes.Add(MakeShared<EnemyClass>(Type3, ID, 3, 5, 5));
+	Weight = 10 * ID;
+	Classes.Add(MakeShared<EnemyClass>(Type1, ID, 1, 2 * (0.5 + 0.5 * ID), 10));
+	Classes.Add(MakeShared<EnemyClass>(Type2, ID, 2, 3 * (0.5 + 0.5 * ID), 8));
+	Classes.Add(MakeShared<EnemyClass>(Type3, ID, 3, 5 * (0.5 + 0.5 * ID), 5));
 }
