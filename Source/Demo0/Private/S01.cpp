@@ -2,7 +2,6 @@
 
 
 #include "S01.h"
-#include "S_Helper.h"
 #include "Y.h"
 #include "Y_GameInstance.h"
 #include "Y_Buff.h"
@@ -14,6 +13,7 @@
 #include "Y_Fighting.h"
 #include "S03.h"
 #include "I01.h"
+#include "S_Helper.h"
 
 using namespace S;
 
