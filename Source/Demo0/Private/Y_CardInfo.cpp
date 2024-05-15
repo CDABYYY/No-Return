@@ -75,6 +75,14 @@ AY_Character* Y_CardInfo::GetOwner()
 void Y_CardInfo::BindMessage(FString Name)
 {
 	UsingMontageName = FName(Name);
+	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/CardPictures/");
+	Path.Append(Name);
+	Path.Append(TEXT("."));
+	Path.Append(Name);
+	Path.Append(TEXT("'"));
+	auto P = LoadObject<UTexture2D>(nullptr, Path.GetCharArray().GetData());
+	if (IsValid(P))UsingPicture = P;
+	else Y::Log(0, TEXT("Log %s Failed"), *Name);
 }
 
 void Y_CardInfo::CardUpdate()

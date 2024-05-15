@@ -92,7 +92,7 @@ void AY_Enemy::MoveMotion()
 
 void AY_Enemy::CharacterDead()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Enemy Dead"));
-	MyPlayMontage(TEXT("Dead"), StandFloor, 0.2, false);
+	//UE_LOG(LogTemp, Warning, TEXT("Enemy Dead"));
+	//MyPlayMontage(TEXT("Dead"), StandFloor, 0.2, false);
 	Info->EnemyDead();
 }

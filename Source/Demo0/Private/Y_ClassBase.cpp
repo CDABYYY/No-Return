@@ -205,11 +205,9 @@ NormalCard::NormalCard()
 	CurrentCost = OriginalCost = 5;
 	CardID = -1;
 	CardName = Y::PrintText(TEXT("Charge"));
-	UsingMontageName = TEXT("2");
+	BindMessage(TEXT("2"));
 	CurrentCardDescribe  = Y::PrintText(TEXT("Move to Front of Enemy, Attack 5"));
 	CurrentPointDescribe = Y::PrintText(TEXT("Move to Front, Attack 5"));
-	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/Png/JayceStaticField.JayceStaticField'");
-	UsingPicture = Y::LoadPicture(Path);
 }
 
 FText NormalCard::LogDescript()

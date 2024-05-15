@@ -246,6 +246,11 @@ void ACameraPawn::MouseLeftRelease()
 										Y::GetController()->CardWidget->RemoveCard(Y::GetChoosingCard()->OwnerWidget);
 
 										ClickAble = false;
+
+										Y::GetController()->CardWidget->ChoosedCard = nullptr;
+										Y::IsPressingCard() = false;
+										Y::GetController()->CardWidget->Update();
+										Y::GetController()->ShowCards(false);
 									}
 								}
 								else if (Y::IsPressingEquipment() && Y::GetChoosingEquipment().IsValid()) {
