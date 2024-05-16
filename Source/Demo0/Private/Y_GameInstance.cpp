@@ -220,10 +220,10 @@ void UY_GameInstance::BeginGame()
 	Y::GetGameInfo()->ForwardLevel();
 
 	//Temp
-	Y::GetLocation() = FVector(-19480, -244490, -30040);
-	Y::GetRotation() = FRotator(0, -100, 0);
-	//Y::GetLocation() = FVector(0, 0, 160);
-	//Y::GetRotation() = FRotator(0, 90, 0);
+	//Y::GetLocation() = FVector(-19480, -244490, -30040);
+	//Y::GetRotation() = FRotator(0, -100, 0);
+	Y::GetLocation() = FVector(0, 0, 160);
+	Y::GetRotation() = FRotator(0, 0, 0);
 
 	Y::GetController()->UpdateMap();
 	Y::GetController()->MapWidget->PullMap(false);

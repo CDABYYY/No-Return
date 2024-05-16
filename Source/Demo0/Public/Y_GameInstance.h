@@ -61,7 +61,7 @@ public:
 	void SetColor(UMeshComponent* MeshComponent, FName MaterialName);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void ShowNiagara(FName NiagaraName, FVector Position, FRotator Direction, float Duration, float Offset);
+	void ShowNiagara(FName NiagaraName, FVector Position, FRotator Direction, float Duration, float Velocity);
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TMap<FName, TSubclassOf<class AY_Character>> AllyClasses;

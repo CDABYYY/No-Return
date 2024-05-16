@@ -19,7 +19,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -71,7 +71,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	bool Living;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	FName CurrentNiagara;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	FName CurrentOverlap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -87,7 +93,7 @@ public:
 	virtual bool ChangeFacing(int32 ToChange);
 
 	//UFUNCTION(BlueprintCallable)
-	virtual int32 ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition,FString TriggerAction, bool TryAttack = false);
+	virtual int32 ExecuteAction(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false);
 
 	void ShowToExecute(bool ToShow);
 
@@ -114,6 +120,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayDead(FName MontageName);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayNiagara(int32 Type, FName PlayName);
 
 	bool CheckValid();
 

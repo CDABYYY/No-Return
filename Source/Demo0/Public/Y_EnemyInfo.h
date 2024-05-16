@@ -6,10 +6,10 @@
 #include "Y_StatusBar.h"
 
 /**
- * 
+ *
  */
 
-class DEMO0_API Y_CharacterAction: public TSharedFromThis<Y_CharacterAction>
+class DEMO0_API Y_CharacterAction : public TSharedFromThis<Y_CharacterAction>
 {
 public:
 	Y_CharacterAction();
@@ -48,14 +48,18 @@ public:
 	virtual void ActionExecute(bool Execute);
 
 	virtual bool AttackFloor(class AY_Floor* TargetFloor);
-	
+
 	virtual bool CanAttackFloor(class AY_Floor* TargetFloor);
 
-	virtual void PlayMontage(FName MontageName ,class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
+	virtual void PlayMontage(FName MontageName, class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
 
 	virtual void PlayMontage(bool Execute, class AY_Floor* ChoosedFloor = nullptr, float PlayRate = 0);
 
 	virtual void PlayMontage(bool Execute, int32 ToPosition = 0, float PlayRate = 0);
+
+	virtual void PlayNiagara(bool Execute, FName PlayName, class AY_Floor* FromFloor, class AY_Floor* ToFloor, float Duration = 0.5);
+
+	virtual void PlayNiagara(bool Execute, FName PlayName, class AY_Floor* FromFloor, int32 Distance, float Duration = 0.5);
 
 	virtual FText LogDescript();
 
@@ -67,7 +71,7 @@ public:
 };
 
 
-class DEMO0_API Y_EnemyInfo:public TSharedFromThis<class Y_EnemyInfo>
+class DEMO0_API Y_EnemyInfo :public TSharedFromThis<class Y_EnemyInfo>
 {
 public:
 	Y_EnemyInfo();

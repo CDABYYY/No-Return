@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 /**
- * 
+ *
  */
 class DEMO0_API Y
 {
@@ -76,25 +76,25 @@ public:
 		return Answer;
 	}
 
-	template<typename FType,typename ...Argv>
+	template<typename FType, typename ...Argv>
 	static void Log(int32 TestColor, const FType& Format, Argv... Params) {
 		FString s = FString::Printf(Format, Params...);
-		if(TestColor == 0)
+		if (TestColor == 0)
 		{
-			if(IsValid(GEngine))
+			if (IsValid(GEngine))
 				GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, s);
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *s);
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *s);
 		}
 		else {
-			if(IsValid(GEngine))
+			if (IsValid(GEngine))
 				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, s);
-				UE_LOG(LogTemp, Error, TEXT("%s"), *s);
+			UE_LOG(LogTemp, Error, TEXT("%s"), *s);
 		}
 
 		//::ELogVerbosity::
 	}
 
-	template<typename FType,typename ...Argv>
+	template<typename FType, typename ...Argv>
 	static void Log(const FType& Format, Argv... Params) {
 		FString s = FString::Printf(Format, Params...);
 		//GetGameInstance()->GetEngine()->AddOnScreenDebugMessage(-1, 5, FColor::Blue, s);
@@ -112,13 +112,13 @@ public:
 		}
 		return m.begin()->Key;
 	}
-	
-	template <typename FType,typename...Argv>
+
+	template <typename FType, typename...Argv>
 	static FText PrintText(const FType& type, Argv... argv) {
 		return FText::FromString(FString::Printf(type, argv...));
 	}
 
-	template <typename T,typename...Argv>
+	template <typename T, typename...Argv>
 	static TSharedPtr<T> YMakeShared(Argv...argv) {
 		TSharedPtr<T> TmpP = MakeShared<T>();
 		TmpP->Init(argv...);
@@ -155,8 +155,8 @@ public:
 		}
 	};
 
-	
-	template<class T1,class T2>
+
+	template<class T1, class T2>
 	static TSharedPtr<Y_SubClassIF<T1>> StoreClass() {
 		return MakeShared<Y_SubClassIM<T1, T2>>();
 	}
@@ -211,7 +211,7 @@ public:
 			pWeights.Add(TW);
 		}
 		float choosed = getRandom() * tot;
-		for (int i = 0; i < randomArray.Num();i++) {
+		for (int i = 0; i < randomArray.Num(); i++) {
 			if (choosed < pWeights[i]) return randomArray[i];
 			choosed -= pWeights[i];
 		}

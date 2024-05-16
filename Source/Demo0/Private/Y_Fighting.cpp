@@ -292,7 +292,7 @@ AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int
 {
 	FVector ToVector(Y::GetLocation());
 	FRotator ToRotator(Y::GetRotation());
-	FVector RelativeVector(200, SerialNumber * 130, 0);
+	FVector RelativeVector(200, SerialNumber * 130, -100);
 	RelativeVector = ToRotator.RotateVector(RelativeVector);
 	FVector SpawnVector = Y::GetLocation() + RelativeVector;
 	//ToRotator += FRotator(0, 90, 0);

@@ -192,6 +192,16 @@ void Y_CharacterAction::PlayMontage(bool Execute, int32 ToPosition, float PlayRa
     }
 }
 
+void Y_CharacterAction::PlayNiagara(bool Execute, FName PlayName, AY_Floor* FromFloor, AY_Floor* ToFloor, float Duration)
+{
+
+}
+
+void Y_CharacterAction::PlayNiagara(bool Execute, FName PlayName, AY_Floor* FromFloor, int32 Distance, float Duration)
+{
+
+}
+
 FText Y_CharacterAction::GetDescribe()
 {
     return ActionDescribe;
