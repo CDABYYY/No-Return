@@ -20,6 +20,11 @@
 #include "Y_TimeLine.h"
 #include "Y_RoomWidget.h"
 #include "Y.h"
+#include "Y_ClassBase.h"
+
+#include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 Y_Fighting::Y_Fighting()
 {
@@ -27,6 +32,7 @@ Y_Fighting::Y_Fighting()
 	CurrentFloor = 0;
 	Money = 200;
 	Health = MaxHealth = 30;
+	MCSkill = MakeShared<NormalSkill>();
 }
 
 Y_Fighting::~Y_Fighting()
@@ -65,7 +71,10 @@ void Y_Fighting::BeginFight()
 	Y::GetGameInstance()->TickTime = 0;
 	Y::GetPlayer()->ClickAble = false;
 
+	Y::GetController()->ShowCards(false);
 	DrawCard(5);
+	Y::GetGameInstance()->MapSoundPlaying->Stop();
+	Y::GetGameInstance()->MapSoundPlaying = UGameplayStatics::SpawnSound2D(Y::GetPlayer(), Y::GetGameInstance()->MapSound);
 }
 
 void Y_Fighting::AfterFight()
@@ -114,12 +123,18 @@ void Y_Fighting::AfterFight()
 	LivingEnemys.Empty();
 
 	Y::GetPlayer()->ClickAble = true;
+
+	Y::GetGameInstance()->MapSoundPlaying->Stop();
+	Y::GetGameInstance()->MapSoundPlaying  = UGameplayStatics::SpawnSound2D(Y::GetPlayer(), Y::GetGameInstance()->OpenMapSound);
 }
 
 void Y_Fighting::EndRoom()
 {
-	Health = Y::GetMainCharacter()->Health;
-	MaxHealth = Y::GetMainCharacter()->MaxHealth;
+	if(IsValid(Y::GetMainCharacter()))
+	{
+		Health = Y::GetMainCharacter()->Health;
+		MaxHealth = Y::GetMainCharacter()->MaxHealth;
+	}
 	if(SettleInfo->TrophyInfos.Num() > 0)
 	{
 		Y::GetController()->ShowSettle(false);
@@ -305,7 +320,7 @@ AY_Floor* Y_Fighting::SpawnFloor(TSharedPtr<class Y_FloorInfo> ToSpawnFloor, int
 	Y::GetFloors()[SerialNumber] = NewFloor;
 	NewFloor->Info = ToSpawnFloor;
 	ToSpawnFloor->Owner = NewFloor;
-	NewFloor->AddToRoot();
+	//NewFloor->AddToRoot();
 	return NewFloor;
 }
 
@@ -347,13 +362,14 @@ AY_Character* Y_Fighting::SpawnCharacter(TSharedPtr<Y_EnemyInfo> ToSpawnCharacte
 	NewCharacter->Health = ToSpawnCharacter->CurrentHealth;
 	NewCharacter->MaxHealth = ToSpawnCharacter->MaxHealth;
 	NewCharacter->Info = ToSpawnCharacter;
+	NewCharacter->LoadInfo(ToSpawnCharacter);
 	ToSpawnCharacter->Owner = NewCharacter;
 	ToSpawnCharacter->LoadCharacter(NewCharacter);
 	Y::GetEnemys().Add(NewCharacter);
 	LivingEnemys.Add(ToSpawnCharacter);
 	AppearedEnemys.Add(ToSpawnCharacter);
 	SpawnCharacter(NewCharacter);
-	NewCharacter->AddToRoot();
+	//NewCharacter->AddToRoot();
 	return NewCharacter;
 }
 
@@ -448,16 +464,29 @@ float Y_LevelInfo::GetWeight()
 
 void Y_LevelInfo::Loaded()
 {
+	for (auto& i : ThisLevelCards)
+		Y::GetGameInfo()->ReadyCards.Add(Y::CardClass[i]->NewObject());
 	Y::GetGameInfo()->CanSpawnCards.Append(ThisLevelCards);
 	for (auto& i : ThisLevelRooms) {
 		if (!Y::RoomClass.Find(i))
 			Y::Log(TEXT("UnFind this Room: %d"), i);
-		//Temp
-		//Y::GetGameInfo()->ReadyRooms.Add(Y::RoomClass[i]->NewObject());
+		Y::GetGameInfo()->ReadyRooms.Add(Y::RoomClass[i]->NewObject());
 	}
 	for (auto& i : ThisLevelEquipments) {
 		Y::GetGameInfo()->ReadyEquipments.Add(Y::EquipmentClass[i]->NewObject());
 	}
+
+	if(LevelMusic)
+	Y::GetGameInstance()->MapSound = LevelMusic;
+
+
+	Y::Log(0, TEXT("Level:%d"), LevelID);
+	Y::Log(0, TEXT("Level Position: %lf %lf %lf"), LevelLocation.X, LevelLocation.Y, LevelLocation.Z);
+	Y::GetPlayer()->SetActorLocation(LevelLocation);
+	Y::GetPlayer()->SetActorRotation(LevelRotation);
+
+	Y::GetLocation() = LevelLocation;
+	Y::GetRotation() = LevelRotation;
 }
 
 void Y_LevelInfo::UnLoad()

@@ -27,7 +27,7 @@ void UY_CardH::Update()
 	for (int32 i = 0; i < Pos;i++) {
 		Cards[i]->ArrangePos(XPos + i * 100, MaxHeight * i / Pos + ReservedHeight, -MaxAngle * (Pos - i) / Pos ,0.5);
 	}
-	if (Pos <= Cards.Num()) {
+	if (Pos < Cards.Num() && Pos >= 0) {
 		if (Choosed) {
 			Cards[Pos]->ArrangePos(XPos + Pos * 100, MaxHeight - 25 + ReservedHeight, 0, 0.5);
 			XPos += 100;

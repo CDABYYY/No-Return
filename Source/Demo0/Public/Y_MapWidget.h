@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UY_RoomWidget* CurrentRoom;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UTexture2D* UsingTexture;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (DisplayName = "Occupation Ratio"))
 	float a = 0.5;
 

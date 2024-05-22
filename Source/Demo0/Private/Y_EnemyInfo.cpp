@@ -47,6 +47,7 @@ void Y_EnemyInfo::EnemyAttack()
 {
     if(ChoosedAction > 0)
     {
+        Y::Log(0, TEXT("Execute Action: %d"), ChoosedAction);
         Actions[ChoosedAction]->ActionExecute(true);
         Y_StatusBar AA{ MakeShared<ActionBuff>(Actions[ChoosedAction]) };
         (Owner->Buffs)->ExecuteBuffs(Owner, Owner, AA, Y_Buff::AfterAction, Actions[ChoosedAction]->GetName().ToString(), true);
@@ -58,7 +59,7 @@ void Y_EnemyInfo::EnemyAttack()
     if((Owner->Buffs)->ExecuteBuffs(Owner, Owner, BA, Y_Buff::BeginAction, Actions[ChoosedAction]->GetName().ToString(), true) == 0)
     {
         //Temp
-        Y::Log(0, TEXT("Execute Action"));
+        Y::Log(0, TEXT("Prepare Execute Action: %d"), ChoosedAction);
         Actions[ChoosedAction]->CurrentCost = BA.Buff[0]->BuffCount;
         Owner->CharacterAttackTime += (int32)(Actions[ChoosedAction]->CurrentCost * Owner->ActionRate * Y::GetGameInstance()->TopoRate);
         Owner->ChangeAttackTime(Owner->CharacterAttackTime);
@@ -187,19 +188,23 @@ void Y_CharacterAction::PlayMontage(bool Execute, AY_Floor* ChoosedFloor, float 
 
 void Y_CharacterAction::PlayMontage(bool Execute, int32 ToPosition, float PlayRate)
 {
-    if (Execute) {
+    if (Execute && ToPosition >= 0 && ToPosition < Y::GetFloors().Num() && IsValid(Y::GetFloors()[ToPosition])) {
         PlayMontage(UsingMontageName, Y::GetFloors()[ToPosition], PlayRate);
     }
 }
 
 void Y_CharacterAction::PlayNiagara(bool Execute, FName PlayName, AY_Floor* FromFloor, AY_Floor* ToFloor, float Duration)
 {
-
+    int32 Distance = 0;
+    if (ToFloor != nullptr)Distance = ToFloor->SerialNumber - GetOwner()->StandFloor->SerialNumber;
+    if(Execute)
+        Y::PlayNiagara(PlayName, GetOwner()->StandFloor, Duration, Distance);
 }
 
 void Y_CharacterAction::PlayNiagara(bool Execute, FName PlayName, AY_Floor* FromFloor, int32 Distance, float Duration)
 {
-
+    if(Execute)
+    Y::PlayNiagara(PlayName, GetOwner()->StandFloor, Duration, Distance - GetOwner()->StandFloor->SerialNumber);
 }
 
 FText Y_CharacterAction::GetDescribe()

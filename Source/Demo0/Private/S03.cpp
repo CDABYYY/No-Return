@@ -155,7 +155,7 @@ disciple3::disciple3()
 sifu::sifu()
 {
 	MaxHealth = CurrentHealth = 90;
-	BindBlueprint = TEXT("L1P4T1");
+	BindBlueprint = TEXT("L1P4");
 	Actions.Add(Y::YMakeShared<S01>(this));
 	Actions.Add(Y::YMakeShared<S23>(this));
 	Actions.Add(Y::YMakeShared<S24>(this));
@@ -302,7 +302,7 @@ void challenger3::EnemyDead()
 champion::champion()
 {
 	MaxHealth = CurrentHealth = 150;
-	BindBlueprint = TEXT("L2P4T1");
+	BindBlueprint = TEXT("L2P4");
 	Actions.Add(Y::YMakeShared<S01>(this));
 	Actions.Add(Y::YMakeShared<S52>(this));
 	Actions.Add(Y::YMakeShared<S53>(this));

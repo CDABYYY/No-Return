@@ -57,9 +57,9 @@ public:
 
 	virtual void PlayMontage(bool Execute, int32 ToPosition = 0, float PlayRate = 0);
 
-	virtual void PlayNiagara(bool Execute, FName PlayName, class AY_Floor* FromFloor, class AY_Floor* ToFloor, float Duration = 0.5);
+	virtual void PlayNiagara(bool Execute, FName PlayName, class AY_Floor* FromFloor, class AY_Floor* ToFloor, float Duration = 1);
 
-	virtual void PlayNiagara(bool Execute, FName PlayName, class AY_Floor* FromFloor, int32 Distance, float Duration = 0.5);
+	virtual void PlayNiagara(bool Execute, FName PlayName, class AY_Floor* FromFloor, int32 Distance, float Duration = 1);
 
 	virtual FText LogDescript();
 

@@ -124,4 +124,14 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	AActor* GISpawnActor(int32 SpawnType, FName SpawnClass, FVector SpawnVector, FRotator SpawnRotator);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USoundCue* MapSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAudioComponent* MapSoundPlaying;
+
+	//Temp
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USoundCue* OpenMapSound;
 };

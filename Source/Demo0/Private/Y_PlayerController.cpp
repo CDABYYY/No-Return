@@ -23,9 +23,7 @@ void AY_PlayerController::BeginEvent(TSharedPtr<class Y_EventInfo> EventInfo)
 
 void AY_PlayerController::BeginChoose(TSharedPtr<class Y_ChooseCardInfo> ChooseInfo)
 {
-	if (!IsValid(ChooseWidget)) {
-		ShowChoosing(false);
-	}
+	ShowChoosing(false);
 	ChooseWidget->LoadInfo(ChooseInfo);
 }
 

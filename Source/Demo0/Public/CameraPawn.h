@@ -80,6 +80,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
 	float LookingTime;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Choosing")
+	class USoundCue* PlaySound;
+
 	void MoveRight(float Value);
 
 	UFUNCTION(BlueprintCallable)

@@ -49,12 +49,16 @@ void UY_RoomWidget::LoadInfo(TSharedPtr<class Y_RoomInfo> LoadingInfo)
 	Info->Owner = this;
 	RoomID = Info->RoomID;
 	RoomDescribe = Info->GetDescribe();
+	UsingTexture = Info->UsingPicture;
+	if(!IsValid(UsingTexture))UsingTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/RoomPictures/3.3'"));
+	if (!IsValid(UsingTexture))Y::Log(0, TEXT("UnLoad"));
 }
 
 void UY_RoomWidget::RoomInit()
 {
 	//Y::GetLocation() = FVector(0, 0, 300);
 	//Y::GetRotation() = FRotator(0, 90, 0);
+	UsingTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/RoomPictures/0.0'"));
 	Info = MakeShared<Y_RoomInfo>();
 	Info->Owner = this;
 	Cleared = false;
@@ -63,6 +67,7 @@ void UY_RoomWidget::RoomInit()
 
 void UY_RoomWidget::RoomClicked()
 {
+	//if (RoomStatus != 0)return;
 	CurrentRoom = this;
 	Y::GetController()->MapWidget->CurrentRoom = this;
 	Y::GetGameInstance()->CurrentRoom = this;
@@ -143,6 +148,13 @@ void UY_RoomWidget::EventFight()
 	//AY_Card::DrawCard(TEXT("Card1"));
 }
 
+Y_RoomInfo::Y_RoomInfo()
+{
+	//Temp
+	auto P = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/RoomPictures/0.0'"));
+	if (IsValid(P))UsingPicture = P;
+}
+
 void Y_RoomInfo::ChangeEndType(int32 ChangedValue)
 {
 	EndEventType = ChangedValue;
@@ -200,7 +212,6 @@ void Y_RoomInfo::EndEvent()
 
 void Y_RoomInfo::DoToEndRoom()
 {
-	//Need Fix(ForwardRoom Can't Use!)
 	Y::GetController()->MapWidget->ForwardRoom(Owner);
 	Y::GetGameInfo()->EndRoom();
 }

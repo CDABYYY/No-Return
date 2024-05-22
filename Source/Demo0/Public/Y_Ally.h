@@ -21,4 +21,6 @@ public:
 	virtual void Attack();
 
 	virtual void Injured();
+
+	virtual void CharacterDead()override;
 };

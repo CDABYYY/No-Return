@@ -5,6 +5,7 @@
 #include "Y.h"
 #include "Y_GameInstance.h"
 #include "CameraPawn.h"
+#include "Y_PlayerController.h"
 
 AY_Ally::AY_Ally() {
 
@@ -16,6 +17,7 @@ AY_Ally::AY_Ally() {
 	CharacterStatus = 0;
 
 	CharacterID = 0;
+	UsingPicture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/CharacterPictures/0.0'"));
 }
 
 void AY_Ally::BeginPlay()
@@ -30,4 +32,10 @@ void AY_Ally::Attack() {
 
 void AY_Ally::Injured() {
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, TEXT("MC Injured"));
+}
+
+void AY_Ally::CharacterDead()
+{
+	Y::GetPlayer()->ClickAble = true;
+	Y::GetController()->ShowDeadWidget();
 }

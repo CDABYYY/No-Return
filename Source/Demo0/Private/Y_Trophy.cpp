@@ -71,6 +71,7 @@ TSharedPtr<CardTrophy> CardTrophy::Share()
 
 CardTrophy::CardTrophy(std::initializer_list<TSharedPtr<class Y_CardInfo>> ToLoadInfos)
 {
+	UsingPicture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/UIPictures/NewCard.NewCard'"));
 	for (auto& p : ToLoadInfos)CardInfos.Add(p);
 }
 
@@ -103,7 +104,16 @@ TSharedPtr<EquipmentTrophy> EquipmentTrophy::Share()
 EquipmentTrophy::EquipmentTrophy(TSharedPtr<class Y_Equipment> ToLoadInfo)
 {
 	EquipmentInfo = ToLoadInfo;
-	UsingPicture = EquipmentInfo->UsingPicture;
+	//UsingPicture = EquipmentInfo->UsingPicture;
+	//Temp
+	FString Name = FString::Printf(TEXT("%d"), EquipmentInfo->EquipmentID);
+	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/EquipmentPictures/");
+	Path.Append(Name);
+	Path.Append(TEXT("."));
+	Path.Append(Name);
+	Path.Append(TEXT("'"));
+	auto P = LoadObject<UTexture2D>(nullptr, Path.GetCharArray().GetData());
+	if (IsValid(P))UsingPicture = P;
 }
 
 void EquipmentTrophy::Clicked()
@@ -125,6 +135,7 @@ TSharedPtr<MoneyTrophy> MoneyTrophy::Share(int32 MoneyCount)
 
 MoneyTrophy::MoneyTrophy(int32 MoneyCount)
 {
+	UsingPicture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/UIPictures/Coin.Coin'"));
 	Money = MoneyCount;
 }
 

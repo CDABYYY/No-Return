@@ -111,16 +111,6 @@ void Y_CardInfo::Move(int32 Distance, bool Execute)
 	}
 }
 
-void Y_CardInfo::PlayNiagara(FName PlayName,bool Execute, int32 ToPosition, float Duration, AY_Floor* BeginFloor)
-{
-	if(Execute)
-	{
-		if (BeginFloor == nullptr)BeginFloor = GetOwner()->StandFloor;
-		if (Duration == -1)Duration = GetRate();
-		Y::PlayNiagara(PlayName, GetOwner()->StandFloor, Duration, ToPosition - GetOwner()->StandFloor->SerialNumber);
-	}
-}
-
 void Y_CardInfo::DrawCard(int32 DrawCount, bool Execute)
 {
 	if (Execute) {

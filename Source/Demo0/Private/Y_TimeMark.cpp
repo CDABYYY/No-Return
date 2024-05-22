@@ -22,6 +22,7 @@ void UY_TimeMark::TimeMarkInit()
 void UY_TimeMark::AddProfile(AY_Character* ProfileAdded)
 {
 	Profiles.Add(ProfileAdded);
+	UsingPicture = Profiles.Data[0]->UsingPicture;
 }
 
 void UY_TimeMark::RemoveProfile(AY_Character* ProfileRemoved)

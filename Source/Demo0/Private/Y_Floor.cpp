@@ -46,8 +46,7 @@ void AY_Floor::Clicked()
 
 FVector AY_Floor::TargetLocation()
 {
-	
-	return GetActorLocation() + FVector(0, 0, 64);//Half of Mesh Size
+	return GetActorLocation() + FVector(0, 0, -50);//Half of Mesh Size
 }
 
 void AY_Floor::SetColor(FName MaterialName)

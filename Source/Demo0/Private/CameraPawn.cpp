@@ -4,6 +4,8 @@
 #include "CameraPawn.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 #include "Y_GameInstance.h"
 #include "Y_Card.h"
 #include "Y_Floor.h"
@@ -19,6 +21,8 @@
 #include "Y_ChooseCard.h"
 #include "Y_RoomWidget.h"
 #include "Y_Equipment.h"
+#include "Y_HUD.h"
+#include "Y_EquipmentH.h"
 #include "Engine/LocalPlayer.h"
 
 // Sets default values
@@ -33,6 +37,7 @@ ACameraPawn::ACameraPawn()
 	CardSpawnStart = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CardSpawnStart"));
 	CardSpawnStart->SetRelativeLocation(FVector(250, 0, -90));
 	
+	//UGameplayStatics::PlaySound2D(this, PlaySound);
 
 	/*static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshComponentAsset(TEXT("/ Script / Engine.StaticMesh'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'"));
 	if (MeshComponentAsset.Succeeded()) {
@@ -123,7 +128,7 @@ void ACameraPawn::Tick(float DeltaTime)
 							else {
 								if (LookingTime < 0.5 && LookingTime + DeltaTime >= 0.5) {
 									LookingFloor->SetColor(TEXT("Blue"));
-									if (Y::IsPressingCard() && Y::GetChoosingCard().IsValid())
+									if (Y::IsPressingCard() && Y::GetChoosingCard().IsValid() && Y::GetChoosingCard()->AcceptFloor(Y::GetChoosedFloor()))
 									{
 										Y_StatusBar BA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
 										if (Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), BA, Y_Buff::BeginAction, Y::GetChoosingCard()->GetName().ToString(), false) == 0)
@@ -135,11 +140,12 @@ void ACameraPawn::Tick(float DeltaTime)
 											Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), AA, Y_Buff::AfterAction, Y::GetChoosingCard()->GetName().ToString(), false);
 										}
 									}
-									else if (Y::IsPressingEquipment() && Y::GetChoosingEquipment().IsValid()) {
+									else if (Y::IsPressingEquipment() && Y::GetChoosingEquipment().IsValid() && Y::GetChoosingEquipment()->AcceptFloor(Y::GetChoosedFloor())) {
 										Y::GetChoosingEquipment()->Play(false);
 									}
 
 									for (auto& p : Y::GetEnemys())p->ShowToExecute(true);
+									if(Y::GetMainCharacter()->CheckValid())
 									Y::GetMainCharacter()->ShowToExecute(true);
 								}
 								LookingTime += DeltaTime;
@@ -217,6 +223,9 @@ void ACameraPawn::MouseLeftRelease()
 								if (Y::IsPressingCard() && Y::GetChoosingCard().IsValid()) {
 									if (Y::GetChoosingCard()->AcceptFloor(ChoosedFloor))
 									{
+										UGameplayStatics::SpawnSound2D(this, PlaySound);
+										
+
 										Y_StatusBar BA{ MakeShared<CardBuff>(Y::GetChoosingCard()) };
 										if (Y::GetMainCharacter()->ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), BA, Y_Buff::BeginAction, Y::GetChoosingCard()->GetName().ToString(), true) == 0)
 										{
@@ -254,6 +263,7 @@ void ACameraPawn::MouseLeftRelease()
 									}
 								}
 								else if (Y::IsPressingEquipment() && Y::GetChoosingEquipment().IsValid()) {
+									if(Y::GetChoosingEquipment()->AcceptFloor(Y::GetChoosedFloor()))
 									Y::GetChoosingEquipment()->Play(true);
 								}
 							}
@@ -266,6 +276,10 @@ void ACameraPawn::MouseLeftRelease()
 				Y::IsPressingCard() = false;
 				Y::GetController()->CardWidget->Update();
 				Y::GetController()->ShowCards(false);
+			}
+			if (Y::IsPressingEquipment()) {
+				Y::IsPressingEquipment() = false;
+				Y::GetController()->PCHUD->EquipmentWidget->ChoosedEquipment = nullptr;
 			}
 
 			for (auto& p : Y::GetFloors())if (IsValid(p))p->SetColor(TEXT("None"));
@@ -283,7 +297,9 @@ void ACameraPawn::TryExperimentFunction()
 	//ChoosePtr->Cards.Add(Y::CardClass[1]->NewObject());
 	//ChoosePtr->Cards.Add(Y::CardClass[1]->NewObject());
 	//Y::GetController()->BeginChoose(ChoosePtr);
-	Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() }));
+
+
+	//Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share({ Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject(), Y::CardClass[1]->NewObject() }));
 	Y::GetController()->MapWidget->CurrentRoom->RoomClosed();
 }
 

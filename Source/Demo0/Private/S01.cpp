@@ -2,7 +2,7 @@
 
 
 #include "S01.h"
-#include "S_Helper.h"
+#include "I_Helper.h"
 #include "Y.h"
 #include "Y_GameInstance.h"
 #include "Y_Buff.h"
@@ -15,7 +15,7 @@
 #include "S03.h"
 #include "I01.h"
 
-using namespace S;
+using namespace I;
 
 GainBuff::GainBuff() {
 	BuffAsType = BuffID = 20;
@@ -191,8 +191,11 @@ void S01::ActionExecute(bool Execute)
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		if(DisMT != 0)
-		PlayMontage(UsingMontageName, Y::GetFloors()[ToPos]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[ToPos]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone1"));
+		}
 	}
 }
 
@@ -230,6 +233,7 @@ void S02::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
@@ -260,13 +264,17 @@ void S03::ActionChoosed()
 
 void S03::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone3"));
 	}
 }
 
@@ -297,15 +305,19 @@ void S04::ActionChoosed()
 
 void S04::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -336,22 +348,26 @@ void S05::ActionChoosed()
 
 void S05::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<WeakBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<WeakBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
 S06::S06()
 {
 	OriginalCost = CurrentCost = 15;
-	Hurt = 8;
+	Hurt = 4;
 	UsingMontageName = TEXT("2");
 	ActionID = 6;
 }
@@ -360,7 +376,7 @@ float S06::GetWeight()
 {
 	DisMT = OwnerEnemy->Owner->StandFloor->SerialNumber - Y::GetMainCharacter()->StandFloor->SerialNumber;
 	DisMT = absPlus(DisMT);
-	if (DisMT <= 4) return 45;
+	if (DisMT <= 1) return 20;
 	return 0;
 }
 
@@ -375,13 +391,17 @@ void S06::ActionChoosed()
 
 void S06::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -430,6 +450,8 @@ void S07::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone22"));
+		PlayNiagara(Execute, TEXT("Call7"), GetOwner()->StandFloor, Y::GetFloors()[EnemyPos]);
 	}
 }
 
@@ -461,15 +483,23 @@ void S08::ActionChoosed()
 
 void S08::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 2 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone3"));
+		}
 	}
 }
 
@@ -500,13 +530,17 @@ void S09::ActionChoosed()
 
 void S09::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -539,6 +573,13 @@ void S10::ActionExecute(bool Execute)
 	int32 left, right;
 	TArray<int32> AccPos;
 	Border(GetOwner()->StandFloor->SerialNumber, 3, left, right);
+	for (int32 i = left; i <= right; i++)
+	{
+		if (IsEnemy(Y::GetFloors()[i]))
+		{
+			AccPos.Add(i);
+		}
+	}
 	int32 EnemyPos = Y::GetRandomArray(AccPos, 1)[0];
 	Y_StatusBar S1{ Y::YMakeShared<ShieldBuff>(10) };
 	ExecuteAction(GetOwner(), Y::GetFloors()[EnemyPos]->StandCharacter, S1, Execute);
@@ -546,6 +587,7 @@ void S10::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone13"));
 	}
 }
 
@@ -576,15 +618,19 @@ void S11::ActionChoosed()
 
 void S11::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<WeakBuff>(1) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<WeakBuff>(1) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone4"));
 	}
 }
 
@@ -617,6 +663,7 @@ void S12::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone9"));
 	}
 }
 
@@ -648,15 +695,23 @@ void S13::ActionChoosed()
 
 void S13::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
 	DisMT = MaxDist(GetOwner()->StandFloor, 2, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	if (DisMT < 2)
+	{
+		int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone1"));
+		}
 	}
 }
 
@@ -687,15 +742,19 @@ void S14::ActionChoosed()
 
 void S14::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(1) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(1) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone5"));
 	}
 }
 
@@ -726,16 +785,21 @@ void S15::ActionChoosed()
 
 void S15::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 3; i++) {
-		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		for (int32 i = 0; i < 3; i++) {
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone6"));
 	}
+
 }
 
 S16::S16()
@@ -767,6 +831,7 @@ void S16::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone4"));
 	}
 }
 
@@ -797,17 +862,21 @@ void S17::ActionChoosed()
 
 void S17::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<ShieldBuff>(5) };
-	ExecuteAction(GetOwner(), GetOwner(), S1, Execute);
-	for (int32 i = 0; i < 3; i++) {
-		Y_StatusBar S2{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		for (int32 i = 0; i < 3; i++) {
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		}
+		Y_StatusBar S2{ Y::YMakeShared<ShieldBuff>(5) };
+		ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
@@ -842,6 +911,7 @@ void S18::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone5"));
 	}
 }
 
@@ -872,15 +942,19 @@ void S19::ActionChoosed()
 
 void S19::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone3"));
 	}
 }
 
@@ -935,6 +1009,8 @@ void S20::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone9"));
+		Y::GetFloors()[EnemyPos]->StandCharacter->PlayNiagara(1, TEXT("Bone13"));
 	}
 }
 
@@ -964,7 +1040,6 @@ void S21::ActionChoosed()
 
 void S21::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
 	class TB :public Y_Buff {
 	public:
 		TB() { BuffID = 1102; BuffName = Y::PrintText(TEXT("弱点揭露")); TriggerCondition = BeginInjured; }
@@ -983,12 +1058,21 @@ void S21::ActionExecute(bool Execute)
 			return 0;
 		}
 	};
-	Y_StatusBar S1{ Y::YMakeShared<TB>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<TB>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		if (AccAttack(Y::GetFloors()[ToPos]))
+		{
+			GetOwner()->PlayNiagara(1, TEXT("Bone1"));
+			Y::GetFloors()[ToPos]->StandCharacter->PlayNiagara(1, TEXT("Bone18"));
+		}
 	}
 }
 
@@ -1037,6 +1121,8 @@ void S22::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone22"));
+		PlayNiagara(Execute, TEXT("Call7"), GetOwner()->StandFloor, Y::GetFloors()[EnemyPos]);
 	}
 }
 
@@ -1068,15 +1154,23 @@ void S23::ActionChoosed()
 
 void S23::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 3 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone1"));
+		}
 	}
 }
 
@@ -1107,15 +1201,22 @@ void S24::ActionChoosed()
 
 void S24::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y::GetGameInfo()->ToDrawCards.Add(MakeShared<C2001>());
-	Y::GetGameInfo()->ToDrawCards.Add(MakeShared<C2001>());
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y::GetGameInfo()->ToDrawCards.Add(MakeShared<C2001>());
+		Y::GetGameInfo()->ToDrawCards.Add(MakeShared<C2001>());
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		if (AccAttack(Y::GetFloors()[ToPos]))
+		{
+			PlayNiagara(Execute, TEXT("Shoot4"), GetOwner()->StandFloor, Y::GetFloors()[ToPos]);
+		}
 	}
 }
 
@@ -1151,6 +1252,7 @@ void S25::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone13"));
 	}
 }
 
@@ -1181,15 +1283,19 @@ void S26::ActionChoosed()
 
 void S26::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 3; i++) {
-		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		for (int32 i = 0; i < 3; i++) {
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -1220,15 +1326,22 @@ void S27::ActionChoosed()
 
 void S27::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		if (AccAttack(Y::GetFloors()[ToPos]))
+		{
+			PlayNiagara(Execute, TEXT("Call5"), GetOwner()->StandFloor, Y::GetFloors()[ToPos]);
+		}
 	}
 }
 
@@ -1258,13 +1371,20 @@ void S28::ActionChoosed()
 
 void S28::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(40) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(40) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		if (AccAttack(Y::GetFloors()[ToPos]))
+		{
+			PlayNiagara(Execute, TEXT("Call4"), GetOwner()->StandFloor, Y::GetFloors()[ToPos]);
+		}
 	}
 }
 
@@ -1294,15 +1414,22 @@ void S29::ActionChoosed()
 
 void S29::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(10) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(10) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		if (AccAttack(Y::GetFloors()[ToPos]))
+		{
+			PlayNiagara(Execute, TEXT("Call3"), GetOwner()->StandFloor, Y::GetFloors()[ToPos]);
+		}
 	}
 }
 
@@ -1333,9 +1460,6 @@ void S30::ActionChoosed()
 
 void S30::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
 	class TB :public Y_Buff {
 	public:
 		TB() { BuffName = Y::PrintText(TEXT("流血")); BuffID = 1103; TriggerCondition = AfterAction | Ticking; }
@@ -1354,12 +1478,19 @@ void S30::ActionExecute(bool Execute)
 			return 0;
 		}
 	};
-	Y_StatusBar S3{ Y::YMakeShared<TB>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S3, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S3{ Y::YMakeShared<TB>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S3, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -1389,15 +1520,19 @@ void S31::ActionChoosed()
 
 void S31::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(15) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<WeakBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(15) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<WeakBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone5"));
 	}
 }
 
@@ -1433,6 +1568,7 @@ void S32::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		PlayNiagara(Execute, TEXT("Call1"), Y::GetMainCharacter()->StandFloor, 0);
 	}
 }
 
@@ -1463,13 +1599,20 @@ void S33::ActionChoosed()
 
 void S33::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		if (AccAttack(Y::GetFloors()[ToPos]))
+		{
+			PlayNiagara(Execute, TEXT("Shoot4"), GetOwner()->StandFloor, Y::GetFloors()[ToPos]);
+		}
 	}
 }
 
@@ -1520,6 +1663,11 @@ void S34::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		auto E = Y::GetEnemys();
+		for (auto& p : E)
+		{
+			p->PlayNiagara(1, TEXT("Bone8"));
+		}
 	}
 }
 
@@ -1561,6 +1709,11 @@ void S35::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		auto E = Y::GetEnemys();
+		for (auto& p : E)
+		{
+			p->PlayNiagara(1, TEXT("Bone13"));
+		}
 	}
 }
 
@@ -1592,15 +1745,23 @@ void S36::ActionChoosed()
 
 void S36::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 3 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone1"));
+		}
 	}
 }
 
@@ -1648,6 +1809,12 @@ void S37::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone13"));
+		if (AccPos.Num() > 0)
+		{
+			int32 EnemyPos = Y::GetRandomArray(AccPos, 1)[0];
+			Y::GetFloors()[EnemyPos]->StandCharacter->PlayNiagara(1, TEXT("Bone13"));
+		}
 	}
 }
 
@@ -1700,6 +1867,12 @@ void S38::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone10"));
+		if (AccPos.Num() > 0)
+		{
+			int32 EnemyPos = Y::GetRandomArray(AccPos, 1)[0];
+			Y::GetFloors()[EnemyPos]->StandCharacter->PlayNiagara(1, TEXT("Bone10"));
+		}
 	}
 }
 
@@ -1730,13 +1903,17 @@ void S39::ActionChoosed()
 
 void S39::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 4, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -1767,15 +1944,19 @@ void S40::ActionChoosed()
 
 void S40::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ShieldBuff>(10) };
-	ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ShieldBuff>(10) };
+		ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -1807,17 +1988,25 @@ void S41::ActionChoosed()
 
 void S41::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(1) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 3 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(1) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone4"));
+		}
 	}
 }
 
@@ -1859,6 +2048,8 @@ void S42::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone22"));
+		PlayNiagara(Execute, TEXT("Call7"), GetOwner()->StandFloor, Y::GetFloors()[EnemyPos]);
 	}
 }
 
@@ -1890,15 +2081,23 @@ void S43::ActionChoosed()
 
 void S43::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	if (DisMT < 3)
+	{
+		int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone2"));
+		}
 	}
 }
 
@@ -1941,6 +2140,7 @@ void S44::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone13"));
 	}
 }
 
@@ -1971,13 +2171,17 @@ void S45::ActionChoosed()
 
 void S45::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 4, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone6"));
 	}
 }
 
@@ -2008,15 +2212,23 @@ void S46::ActionChoosed()
 
 void S46::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
 	DisMT = MaxDist(GetOwner()->StandFloor, 1, GetOwner()->Facing * -1);
-	Move(DisMT, Execute);
+	Move(GetOwner()->Facing * -1 * DisMT, Execute);
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos - GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone4"));
+		}
 	}
 }
 
@@ -2059,6 +2271,7 @@ void S47::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone13"));
 	}
 }
 
@@ -2089,16 +2302,20 @@ void S48::ActionChoosed()
 
 void S48::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 3; i++)
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
 	{
-		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		for (int32 i = 0; i < 3; i++)
+		{
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
@@ -2129,16 +2346,20 @@ void S49::ActionChoosed()
 
 void S49::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 2; i++)
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
 	{
-		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		for (int32 i = 0; i < 2; i++)
+		{
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone5"));
 	}
 }
 
@@ -2170,15 +2391,23 @@ void S50::ActionChoosed()
 
 void S50::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 3 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone2"));
+		}
 	}
 }
 
@@ -2221,6 +2450,7 @@ void S51::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone13"));
 	}
 }
 
@@ -2255,6 +2485,7 @@ void S52::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone11"));
 	}
 }
 
@@ -2295,6 +2526,7 @@ void S53::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone5"));
 	}
 }
 
@@ -2326,32 +2558,40 @@ void S54::ActionChoosed()
 
 void S54::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
+	DisMT = MaxDist(GetOwner()->StandFloor, 6, GetOwner()->Facing);
+	int32 DisT = DisMT;
+	int32 ToPos = 0;
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	if (DisMT < 6)
+	{
+		ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisT + 1);
+	}
 	for (int32 i = 0; i < 3; i++)
 	{
-		if (DisMT > 2)
+		if (DisT >= 2)
 		{
 			Move(GetOwner()->Facing * 2, Execute);
-			DisMT -= 2;
-		}
-		else if (DisMT == 2)
-		{
-			Move(GetOwner()->Facing * 1, Execute);
-			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-			DisMT -= 1;
+			DisT -= 2;
 		}
 		else
 		{
-			Move(GetOwner()->Facing * 0, Execute);
-			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+			Move(GetOwner()->Facing * 1, Execute);
+			if (AccAttack(Y::GetFloors()[ToPos]))
+			{
+				Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+				ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+			}
+			DisT = 0;
 		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[ToPos - GetOwner()->Facing * 1]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * (DisMT + 1)]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone2"));
+		}
 	}
 }
 
@@ -2382,15 +2622,19 @@ void S55::ActionChoosed()
 
 void S55::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -2422,15 +2666,23 @@ void S56::ActionChoosed()
 
 void S56::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 3 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone3"));
+		}
 	}
 }
 
@@ -2461,16 +2713,20 @@ void S57::ActionChoosed()
 
 void S57::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 2; i++)
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
 	{
-		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		for (int32 i = 0; i < 2; i++)
+		{
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone3"));
 	}
 }
 
@@ -2501,13 +2757,17 @@ void S58::ActionChoosed()
 
 void S58::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 4, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
@@ -2559,6 +2819,7 @@ void S59::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		Y::GetFloors()[EnemyPos]->StandCharacter->PlayNiagara(1, TEXT("Bone11"));
 	}
 }
 
@@ -2589,10 +2850,12 @@ void S60::ActionExecute(bool Execute)
 	Y_StatusBar S1{ Y::YMakeShared<ShieldBuff>(15) };
 	int32 left, right;
 	Border(GetOwner()->StandFloor->SerialNumber, 1, left, right);
+	int32 EnemyPos = -1;
 	for (int32 i = left; i <= right; i++)
 	{
 		if (IsEnemy(Y::GetFloors()[i]) && i != GetOwner()->StandFloor->SerialNumber)
 		{
+			EnemyPos = i;
 			ExecuteAction(GetOwner(), Y::GetFloors()[i]->StandCharacter, S1, Execute);
 			break;
 		}
@@ -2602,6 +2865,11 @@ void S60::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone13"));
+		if (EnemyPos > 0)
+		{
+			Y::GetFloors()[EnemyPos]->StandCharacter->PlayNiagara(1, TEXT("Bone13"));
+		}
 	}
 }
 
@@ -2635,6 +2903,7 @@ void S61::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone7"));
 	}
 }
 
@@ -2674,6 +2943,11 @@ void S62::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		auto E = Y::GetEnemys();
+		for (auto& p : E)
+		{
+			p->PlayNiagara(1, TEXT("Bone8"));
+		}
 	}
 }
 
@@ -2704,15 +2978,19 @@ void S63::ActionChoosed()
 
 void S63::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 3; i++) {
-		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		for (int32 i = 0; i < 3; i++) {
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
@@ -2744,17 +3022,25 @@ void S64::ActionChoosed()
 
 void S64::ActionExecute(bool Execute)
 {
-	Y_StatusBar S1{ Y::YMakeShared<SeriousBuff>(1) };
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 3 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<SeriousBuff>(1) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone1"));
+		}
 	}
 }
 
@@ -2785,15 +3071,20 @@ void S65::ActionChoosed()
 
 void S65::ActionExecute(bool Execute)
 {
-	Y_StatusBar S1{ Y::YMakeShared<SeriousBuff>(3) };
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S2{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<SeriousBuff>(3) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
+
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone3"));
 	}
 }
 
@@ -2824,17 +3115,21 @@ void S66::ActionChoosed()
 
 void S66::ActionExecute(bool Execute)
 {
-	Y_StatusBar S1{ Y::YMakeShared<SeriousBuff>(1) };
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 2; i++) {
-		Y_StatusBar S2{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		for (int32 i = 0; i < 2; i++) {
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+			Y_StatusBar S2{ Y::YMakeShared<SeriousBuff>(1) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
@@ -2865,15 +3160,19 @@ void S67::ActionChoosed()
 
 void S67::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 4, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ExposeBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -2904,15 +3203,19 @@ void S68::ActionChoosed()
 
 void S68::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<WeakBuff>(2) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S2, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 4, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<WeakBuff>(2) };
+		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
@@ -2943,17 +3246,21 @@ void S69::ActionChoosed()
 
 void S69::ActionExecute(bool Execute)
 {
-	Y_StatusBar S1{ Y::YMakeShared<SeriousBuff>(2) };
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 2; i++) {
-		Y_StatusBar S2{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S2, Execute);
-		ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 4, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		for (int32 i = 0; i < 3; i++) {
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+			Y_StatusBar S2{ Y::YMakeShared<SeriousBuff>(2) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+		}
 	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone3"));
 	}
 }
 
@@ -2994,6 +3301,11 @@ void S70::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		auto E = Y::GetEnemys();
+		for (auto& p : E)
+		{
+			p->PlayNiagara(1, TEXT("Bone13"));
+		}
 	}
 }
 
@@ -3024,15 +3336,19 @@ void S71::ActionChoosed()
 
 void S71::ActionExecute(bool Execute)
 {
-	Y_StatusBar S1{ Y::YMakeShared<SeriousBuff>(1) };
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S2{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S2, Execute);
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 4, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<SeriousBuff>(1) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -3063,17 +3379,25 @@ void S72::ActionChoosed()
 
 void S72::ActionExecute(bool Execute)
 {
-	Y_StatusBar S1{ Y::YMakeShared<SeriousBuff>(1) };
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S2{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S2, Execute);
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), S1, Execute);
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing * -1);
-	Move(DisMT, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<SeriousBuff>(1) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S2, Execute);
+	}
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 1, GetOwner()->Facing * -1);
+	Move(GetOwner()->Facing * -1 * DisMT, Execute);
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone1"));
+		}
 	}
 }
 
@@ -3104,17 +3428,25 @@ void S73::ActionChoosed()
 
 void S73::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<OverBuff>(1) };
-	ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 3, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 3 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<OverBuff>(1) };
+		ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone2"));
+		}
 	}
 }
 
@@ -3145,17 +3477,21 @@ void S74::ActionChoosed()
 
 void S74::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<ShieldBuff>(10) };
-	ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
-	Y_StatusBar S3{ Y::YMakeShared<OverBuff>(2) };
-	ExecuteAction(GetOwner(), GetOwner(), S3, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<ShieldBuff>(10) };
+		ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
+		Y_StatusBar S3{ Y::YMakeShared<OverBuff>(2) };
+		ExecuteAction(GetOwner(), GetOwner(), S3, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -3187,17 +3523,25 @@ void S75::ActionChoosed()
 
 void S75::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	DisMT = MaxDist(GetOwner()->StandFloor, DisMT, GetOwner()->Facing);
-	Move(DisMT, Execute);
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	Y_StatusBar S2{ Y::YMakeShared<OverBuff>(2) };
-	ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 4, GetOwner()->Facing);
+	Move(GetOwner()->Facing * DisMT, Execute);
+	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * (DisMT + 1);
+	if (DisMT < 4 && AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		Y_StatusBar S2{ Y::YMakeShared<OverBuff>(2) };
+		ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
+	}
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[ToPos = GetOwner()->StandFloor->SerialNumber + DisMT]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos + GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone2"));
+		}
 	}
 }
 
@@ -3228,18 +3572,22 @@ void S76::ActionChoosed()
 
 void S76::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	for (int32 i = 0; i < 2; i++)
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 2, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
 	{
-		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
-		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		for (int32 i = 0; i < 2; i++)
+		{
+			Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(Hurt + OwnerEnemy->AttackEnhance) };
+			ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+		}
+		Y_StatusBar S2{ Y::YMakeShared<OverBuff>(2) };
+		ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
 	}
-	Y_StatusBar S2{ Y::YMakeShared<OverBuff>(2) };
-	ExecuteAction(GetOwner(), GetOwner(), S2, Execute);
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone1"));
 	}
 }
 
@@ -3269,15 +3617,23 @@ void S77::ActionChoosed()
 
 void S77::ActionExecute(bool Execute)
 {
-	int32 ToPos = GetOwner()->StandFloor->SerialNumber + GetOwner()->Facing * DisMT;
-	Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(10) };
-	ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
-	int32 Dist = MaxDist(GetOwner()->StandFloor, 2, GetOwner()->Facing * -1);
-	Move(Dist, Execute);
+	int32 ToPos = PosAttack(GetOwner()->StandFloor, 1, GetOwner()->Facing);
+	if (AccAttack(Y::GetFloors()[ToPos]))
+	{
+		Y_StatusBar S1{ Y::YMakeShared<DemageBuff>(10) };
+		ExecuteAction(GetOwner(), Y::GetFloors()[ToPos]->StandCharacter, S1, Execute);
+	}
+	int32 OrgPos = GetOwner()->StandFloor->SerialNumber;
+	DisMT = MaxDist(GetOwner()->StandFloor, 2, GetOwner()->Facing * -1);
+	Move(GetOwner()->Facing * -1 * DisMT, Execute);
 	if (Execute)
 	{
 		OwnerEnemy->ActionCount++;
-		PlayMontage(UsingMontageName, Y::GetFloors()[GetOwner()->StandFloor->SerialNumber + Dist]);
+		if (DisMT != 0)
+		{
+			PlayMontage(UsingMontageName, Y::GetFloors()[OrgPos - GetOwner()->Facing * DisMT]);
+			GetOwner()->PlayNiagara(1, TEXT("Bone1"));
+		}
 	}
 }
 
@@ -3316,6 +3672,11 @@ void S78::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		auto E = Y::GetEnemys();
+		for (auto& p : E)
+		{
+			p->PlayNiagara(1, TEXT("Bone14"));
+		}
 	}
 }
 
@@ -3364,6 +3725,8 @@ void S79::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		GetOwner()->PlayNiagara(1, TEXT("Bone22"));
+		PlayNiagara(Execute, TEXT("Call7"), GetOwner()->StandFloor, Y::GetFloors()[EnemyPos]);
 	}
 }
 
@@ -3405,6 +3768,11 @@ void S80::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		auto E = Y::GetEnemys();
+		for (auto& p : E)
+		{
+			p->PlayNiagara(1, TEXT("Bone13"));
+		}
 	}
 }
 
@@ -3452,5 +3820,10 @@ void S81::ActionExecute(bool Execute)
 	{
 		OwnerEnemy->ActionCount++;
 		PlayMontage(UsingMontageName);
+		auto E = Y::GetEnemys();
+		for (auto& p : E)
+		{
+			p->PlayNiagara(1, TEXT("Bone8"));
+		}
 	}
 }

@@ -7,6 +7,17 @@
 
 void UY_EquipmentW::Init()
 {
+	if (Info.IsValid()) {
+		//Temp
+		FString Name = FString::Printf(TEXT("%d"), Info->EquipmentID);
+		FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/EquipmentPictures/");
+		Path.Append(Name);
+		Path.Append(TEXT("."));
+		Path.Append(Name);
+		Path.Append(TEXT("'"));
+		auto P = LoadObject<UTexture2D>(nullptr, Path.GetCharArray().GetData());
+		if (IsValid(P))Picture = P;
+	}
 	Update();
 }
 
@@ -14,8 +25,7 @@ void UY_EquipmentW::Update()
 {
 	if (Info.IsValid()) {
 		Info->Owner = this;
-		Picture = Info->UsingPicture;
-		//Need Fix :Havn't Dill Lop Cd follow Run
+		//Picture = Info->UsingPicture;
 		EquipmentCD = Info->SkillCD;
 		EquipmentID = Info->EquipmentID;
 		EquipmentCount = Info->CanUseCount;

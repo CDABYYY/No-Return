@@ -5,6 +5,7 @@
 #include "Y.h"
 #include "Y_RoomWidget.h"
 #include "Y_Fighting.h"
+#include "Y_ClassBase.h"
 
 
 TArray<int32> UY_MapWidget::GetWay(int32 a0, int32 b0, int32 f0)
@@ -96,6 +97,9 @@ void UY_MapWidget::ForwardRoom(UY_RoomWidget* Room)
 
 void UY_MapWidget::GetMap()
 {
+    if(Y::GetGameInfo()->CurrentLevel->MapTexture)
+        UsingTexture = Y::GetGameInfo()->CurrentLevel->MapTexture;
+
     weight.Add(14, 20);
     weight.Add(15, 30);
     weight.Add(16, 20);
@@ -112,11 +116,17 @@ void UY_MapWidget::GetMap()
     {
         int32 getR = Y::getRandom(slevel);
         for (int32 j = 0; j < getR; j++)
-            plevel.Add(DrawEvent((2.0f + i) / (getf + 3), (1.0f + j) / (getR + 1)));
+        {
+            auto NewRoom = DrawEvent((2.0f + i) / (getf + 3), (1.0f + j) / (getR + 1));
+            if (Y::getRandom() < 0.5)NewRoom->LoadInfo(MakeShared<NormalFightRoom>());
+            plevel.Add(NewRoom);
+        }
         levels.Add(getR);
         pway.Append(GetWay(levels[levels.Num() - 2], levels[levels.Num() - 1], i));
     }
-    plevel.Add(DrawEvent((2.0f + getf) / (getf + 3), 0.5));
+    auto LastRoom = DrawEvent((2.0f + getf) / (getf + 3), 0.5);
+    LastRoom->LoadInfo(Y::GetGameInfo()->CurrentLevel->FinalRoom);
+    plevel.Add(LastRoom);
     levels.Add(1);
     pway.Append(GetWay(levels[levels.Num() - 2], levels[levels.Num() - 1], getf));
 }

@@ -77,6 +77,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
 	FName CurrentOverlap;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "YValue")
+	UTexture2D* UsingPicture;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UWidgetComponent* MyWidgetHealth;
 
@@ -121,8 +124,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayDead(FName MontageName);
 
+	//0:OverLay, 1:Slot1(Motions), 2:Slot2(States), 3:Slot3(Passive) 
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayNiagara(int32 Type, FName PlayName);
+
+	void LoadInfo(TSharedPtr<class Y_EnemyInfo> NewInfo);
 
 	bool CheckValid();
 

@@ -79,7 +79,7 @@ C01::C01()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：掌"));
 	BindMessage(TEXT("1"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5 damage"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成5点伤害"));
 }
 
 FText C01::LogDescript()
@@ -93,6 +93,7 @@ void C01::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone1"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -112,7 +113,7 @@ C02::C02()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山步"));
 	BindMessage(TEXT("2"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("移动2格"));
 }
 
 FText C02::LogDescript()
@@ -126,6 +127,7 @@ void C02::Play(bool Execute)
 	Move(moveInstance, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone13"));
 		PlayMontage(GetMontageName(), Y::GetChoosedFloor());
 	}
 }
@@ -146,7 +148,7 @@ C03::C03()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：拳"));
 	BindMessage(TEXT("3"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5 damage,if weak +5 damage"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成5点伤害，如果敌人虚弱则改为10点"));
 }
 
 FText C03::LogDescript()
@@ -163,6 +165,7 @@ void C03::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone3"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -182,7 +185,7 @@ C04::C04()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("冲锋"));
 	BindMessage(TEXT("4"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Charge 2, Attack enemy 5 damage"));
+	CurrentCardDescribe = Y::PrintText(TEXT("最多移动2格，遇到敌人停止并对其造成5点伤害"));
 }
 
 FText C04::LogDescript()
@@ -206,6 +209,7 @@ void C04::Play(bool Execute)
 		Move(ToPos - Pos, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone4"));
 		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos]);
 	}
 }
@@ -226,7 +230,7 @@ C05::C05()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：扫荡"));
 	BindMessage(TEXT("5"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack 1 nearby enemies 4 damage"));
+	CurrentCardDescribe = Y::PrintText(TEXT("前后1格内的敌人各造成4点伤害"));
 }
 
 FText C05::LogDescript()
@@ -249,6 +253,7 @@ void C05::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone8"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -269,7 +274,7 @@ C06::C06()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：扫荡"));
 	BindMessage(TEXT("6"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 4 damage, Draw 1 card for every 2 damage"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成4点伤害，每造成4点伤害抽一张卡"));
 }
 
 FText C06::LogDescript()
@@ -286,6 +291,7 @@ void C06::Play(bool Execute)
 	DrawCard(Demage / 2, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone12"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -306,7 +312,7 @@ C07::C07()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("延山式：撼地"));
 	BindMessage(TEXT("7"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Give 4 damage and 1 expose to enemies 2 ahead"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对前方2格敌人造成4点伤害，并施加一层易伤"));
 }
 
 FText C07::LogDescript()
@@ -332,6 +338,7 @@ void C07::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone6"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -351,7 +358,7 @@ C08::C08()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("最终手段"));
 	BindMessage(TEXT("8"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 10 damage, Draw card 3"));
+	CurrentCardDescribe = Y::PrintText(TEXT("当手中没有延山式时可以打出，造成10点伤害，抽3张卡"));
 }
 
 FText C08::LogDescript()
@@ -366,6 +373,7 @@ void C08::Play(bool Execute)
 	DrawCard(3, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone5"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -390,7 +398,7 @@ C09::C09()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("调整脚步"));
 	BindMessage(TEXT("9"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 1"));
+	CurrentCardDescribe = Y::PrintText(TEXT("移动1格"));
 }
 
 FText C09::LogDescript()
@@ -403,6 +411,7 @@ void C09::Play(bool Execute)
 	Move(1, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone13"));
 		PlayMontage(GetMontageName(), Y::GetChoosedFloor());
 	}
 }
@@ -422,7 +431,7 @@ C10::C10()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("一击脱离"));
 	BindMessage(TEXT("10"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 4 damage, Go back 2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成4点伤害，后撤至多2格"));
 }
 
 FText C10::LogDescript()
@@ -440,6 +449,7 @@ void C10::Play(bool Execute)
 	Move(ToPos - Pos, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone13"));
 		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos]);
 	}
 }
@@ -460,7 +470,7 @@ C11::C11()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：冲拳"));
 	BindMessage(TEXT("11"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Charge 2, Attack enemy 5 damage, every Use TimeCost -1"));
+	CurrentCardDescribe = Y::PrintText(TEXT("冲刺2格，每使用一次减少1耗费"));
 }
 
 void C11::BeginFighting()
@@ -490,6 +500,7 @@ void C11::Play(bool Execute)
 	OriginalCost--;
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone4"));
 		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos]);
 	}
 }
@@ -510,7 +521,7 @@ C12::C12()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：绵掌"));
 	BindMessage(TEXT("12"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 4 damage, put 1 self in ExhaustCard"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成4点伤害，将一张延山式：绵拳加入弃牌堆"));
 }
 
 FText C12::LogDescript()
@@ -525,6 +536,7 @@ void C12::Play(bool Execute)
 	Y::GetGameInfo()->ExhaustCards.Add(MakeShared<C12>());
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone12"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -545,7 +557,7 @@ C13::C13()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：迅击"));
 	BindMessage(TEXT("13"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 2 damage 3 times, every Use damage +1"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成2点伤害3次，每次使用伤害+1"));
 	num = 0;
 }
 
@@ -569,6 +581,7 @@ void C13::Play(bool Execute)
 	num++;
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone2"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -589,7 +602,7 @@ C14::C14()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("迅捷架势"));
 	BindMessage(TEXT("14"));
-	CurrentCardDescribe = Y::PrintText(TEXT("all CardType 1 TimeCost -1"));
+	CurrentCardDescribe = Y::PrintText(TEXT("减少所有延山式1点消耗"));
 }
 
 FText C14::LogDescript()
@@ -620,6 +633,7 @@ void C14::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), GetOwner(), S, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone10"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -640,7 +654,7 @@ C15::C15()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("重击架势"));
 	BindMessage(TEXT("15"));
-	CurrentCardDescribe = Y::PrintText(TEXT("all CardType 1 damage +1"));
+	CurrentCardDescribe = Y::PrintText(TEXT("增加所有延山式1点伤害"));
 }
 
 FText C15::LogDescript()
@@ -667,6 +681,7 @@ void C15::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), GetOwner(), S, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone7"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -687,7 +702,7 @@ C16::C16()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("连绵架势"));
 	BindMessage(TEXT("16"));
-	CurrentCardDescribe = Y::PrintText(TEXT("every 2 Use CardType 1 Draw card 1"));
+	CurrentCardDescribe = Y::PrintText(TEXT("每打出2张延山式抽1张卡"));
 	num = 0;
 }
 
@@ -727,6 +742,7 @@ void C16::Play(bool Execute)
 	DrawCard(1, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone10"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -747,7 +763,7 @@ C17::C17()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：研习"));
 	BindMessage(TEXT("17"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5, every Kill damage +2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成5点伤害，每次击杀伤害加2"));
 	Kill = 0;
 }
 
@@ -775,6 +791,7 @@ void C17::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone2"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -794,7 +811,7 @@ C18::C18()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("奋力一搏"));
 	BindMessage(TEXT("18"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Charge 3, Attack enemy 5 damage, put 1 stun in DrawCard"));
+	CurrentCardDescribe = Y::PrintText(TEXT("冲刺3格，造成5点伤害，在抽牌堆中增加一张【眩晕】"));
 }
 
 FText C18::LogDescript()
@@ -819,6 +836,7 @@ void C18::Play(bool Execute)
 	Y::GetGameInfo()->ToDrawCards.Add(MakeShared<C2004>());
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone6"));
 		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos]);
 	}
 }
@@ -839,7 +857,7 @@ C19::C19()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：透劲"));
 	BindMessage(TEXT("19"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5 damage 2 ahead"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对前方2格敌人造成5点伤害"));
 }
 
 FText C19::LogDescript()
@@ -863,6 +881,7 @@ void C19::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone5"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -884,7 +903,7 @@ C20::C20()
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("奋力一搏"));
 	BindMessage(TEXT("20"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5 damage, Get 1 self damage +1, drop if don't Use next"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成5点伤害，获得1张持续1回合的【延山式：乱击】"));
 	extra = 0;
 }
 
@@ -920,6 +939,7 @@ void C20::Play(bool Execute)
 	Y::GetGameInfo()->InHandCards.Add(SharedThis(this));
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone4"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -940,7 +960,7 @@ C21::C21()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：断骨"));
 	BindMessage(TEXT("21"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Give 4 damage and 2 expose to enemy"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成4点伤害和2层易伤"));
 }
 
 FText C21::LogDescript()
@@ -956,6 +976,7 @@ void C21::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S2, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone5"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -976,7 +997,7 @@ C22::C22()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("延山式：摧筋"));
 	BindMessage(TEXT("22"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Give 4 damage and 2 weak to enemy"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成4点伤害和2层虚弱"));
 }
 
 FText C22::LogDescript()
@@ -992,6 +1013,7 @@ void C22::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S2, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone14"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1012,7 +1034,7 @@ C23::C23()
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("延山式：诸武精通"));
 	BindMessage(TEXT("23"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 10 damage 3 ahead, every CardType 1 damage +2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对一个方向3格内敌人造成10点伤害，手牌，抽牌堆和弃牌堆每有1张【延山式】增加2点伤害"));
 }
 
 FText C23::LogDescript()
@@ -1052,6 +1074,7 @@ void C23::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone8"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1073,7 +1096,7 @@ C24::C24()
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("延山式：爆发"));
 	BindMessage(TEXT("24"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Use all TypeCard 1 Cards in one direction"));
+	CurrentCardDescribe = Y::PrintText(TEXT("向一个方向打出手牌中所有的【延山式】"));
 }
 
 FText C24::LogDescript()
@@ -1115,15 +1138,12 @@ void C24::Play(bool Execute)
 				}
 			}
 		}
-		if (Execute)
-			Y::GetGameInfo()->UseCard(p, 1);
 	}
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone10"));
 		PlayMontage(GetMontageName());
 	}
-
-	Y::GetGameInfo()->UseCard(SharedThis(this), 1);
 }
 
 bool C24::AcceptFloor(AY_Floor* GetFloor)
@@ -1141,7 +1161,7 @@ C25::C25()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("防御"));
 	BindMessage(TEXT("25"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Sheild self 6"));
+	CurrentCardDescribe = Y::PrintText(TEXT("增加6层护盾"));
 }
 
 FText C25::LogDescript()
@@ -1155,6 +1175,7 @@ void C25::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), S, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone9"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1174,7 +1195,7 @@ C26::C26()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("过载思考"));
 	BindMessage(TEXT("26"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn self 2, Draw card 4"));
+	CurrentCardDescribe = Y::PrintText(TEXT("自身增加2层灼烧，抽4张卡"));
 }
 
 FText C26::LogDescript()
@@ -1189,6 +1210,7 @@ void C26::Play(bool Execute)
 	DrawCard(4, Execute);
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call2"), Y::GetMainCharacter()->StandFloor, nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1208,7 +1230,7 @@ C27::C27()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("点火"));
 	BindMessage(TEXT("27"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn enemy 3"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对敌人施加3层灼烧"));
 }
 
 FText C27::LogDescript()
@@ -1222,6 +1244,7 @@ void C27::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call2"), Y::GetMainCharacter()->StandFloor, Y::GetChoosedFloor());
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1241,7 +1264,7 @@ C28::C28()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("烈焰击"));
 	BindMessage(TEXT("28"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 3+burn_num/3 damage"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成3+3分之灼烧层数伤害"));
 }
 
 FText C28::LogDescript()
@@ -1256,6 +1279,7 @@ void C28::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call3"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1275,7 +1299,7 @@ C29::C29()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("火焰释放"));
 	BindMessage(TEXT("29"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, Burn 6(last 3)"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对3格内敌人施加3层灼烧"));
 }
 
 FText C29::LogDescript()
@@ -1299,6 +1323,7 @@ void C29::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Shoot2"), Y::GetMainCharacter()->StandFloor, Y::GetChoosedFloor());
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1319,7 +1344,7 @@ C30::C30()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("掌握火势"));
 	BindMessage(TEXT("30"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn 1 extra 【Burn】 1"));
+	CurrentCardDescribe = Y::PrintText(TEXT("使用后，每次施加灼烧时灼烧层数+1"));
 }
 
 FText C30::LogDescript()
@@ -1343,6 +1368,7 @@ void C30::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetMainCharacter(), S, Execute);
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone7"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1363,7 +1389,7 @@ C31::C31()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("渐热"));
 	BindMessage(TEXT("31"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn 2, 【Burn】+1 for each time"));
+	CurrentCardDescribe = Y::PrintText(TEXT("施加2层灼烧，每次使用该卡层数+1"));
 	num = 0;
 }
 
@@ -1384,6 +1410,7 @@ void C31::Play(bool Execute)
 	num++;
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call2"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1403,7 +1430,7 @@ C32::C32()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("煽风点火"));
 	BindMessage(TEXT("32"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 2, Burn 2*3"));
+	CurrentCardDescribe = Y::PrintText(TEXT("移动2点，施加2层灼烧3次"));
 }
 
 FText C32::LogDescript()
@@ -1420,6 +1447,7 @@ void C32::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call2"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1439,7 +1467,7 @@ C33::C33()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("助长火势"));
 	BindMessage(TEXT("33"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 2, Burn 4, Draw card 4 when burn_num 10"));
+	CurrentCardDescribe = Y::PrintText(TEXT("移动2格，施加4层灼烧，若目标有10层灼烧则抽4张卡"));
 }
 
 FText C33::LogDescript()
@@ -1456,6 +1484,7 @@ void C33::Play(bool Execute)
 		DrawCard(4, Execute);
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call2"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1475,7 +1504,7 @@ C34::C34()
 	CardRare = 1;
 	CardName = Y::PrintText(TEXT("趁火打劫"));
 	BindMessage(TEXT("34"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 4, Attack enemy 4 when burn_num >=1"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成4点伤害，若目标有灼烧再次造成4点伤害"));
 }
 
 FText C34::LogDescript()
@@ -1495,6 +1524,7 @@ void C34::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call3"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1514,7 +1544,7 @@ C35::C35()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("引火"));
 	BindMessage(TEXT("35"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, 【fire】 2, 【Burn】+1 for each time when 【fire】"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对3格内敌人施加2层着火"));
 }
 
 FText C35::LogDescript()
@@ -1528,6 +1558,7 @@ void C35::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call4"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1547,7 +1578,7 @@ C36::C36()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("燃烧"));
 	BindMessage(TEXT("36"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, 【Fire】 2, Damage*2 when 【Fire】"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对3格内敌人造成2层猛燃"));
 }
 
 FText C36::LogDescript()
@@ -1561,6 +1592,7 @@ void C36::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call1"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1580,7 +1612,7 @@ C37::C37()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("火焰连打"));
 	BindMessage(TEXT("37"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Damage 2*4, Burn 1*4"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成2点伤害4次，1层灼烧4次"));
 }
 
 FText C37::LogDescript()
@@ -1599,6 +1631,7 @@ void C37::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call1"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1618,7 +1651,7 @@ C38::C38()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("助燃"));
 	BindMessage(TEXT("38"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, Burn 1 when there are 2 burn_num"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对3格内敌人，目标每有2层灼烧向其施加1层灼烧"));
 }
 
 FText C38::LogDescript()
@@ -1636,6 +1669,7 @@ void C38::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call2"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1655,7 +1689,7 @@ C39::C39()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("嗜火"));
 	BindMessage(TEXT("39"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 1, Move 1 when there are 3 burn_num"));
+	CurrentCardDescribe = Y::PrintText(TEXT("移动1格，目标每有3层灼烧增加1格"));
 }
 
 FText C39::LogDescript()
@@ -1700,6 +1734,7 @@ void C39::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call1"), Y::GetMainCharacter()->StandFloor, nullptr);
 		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos]);
 	}
 }
@@ -1719,7 +1754,7 @@ C40::C40()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("以火作衣"));
 	BindMessage(TEXT("40"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Shield self burn_num"));
+	CurrentCardDescribe = Y::PrintText(TEXT("获得3格内敌人灼烧层数的护盾"));
 }
 
 FText C40::LogDescript()
@@ -1737,6 +1772,7 @@ void C40::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone9"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1755,7 +1791,7 @@ C41::C41()
 	CardID = 41;
 	CardName = Y::PrintText(TEXT("引燃"));
 	BindMessage(TEXT("41"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn 6 all"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对2格内敌人施加6层灼烧"));
 }
 
 FText C41::LogDescript()
@@ -1798,7 +1834,7 @@ C42::C42()
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("不息烈火"));
 	BindMessage(TEXT("42"));
-	CurrentCardDescribe = Y::PrintText(TEXT("keep all burn_num up"));
+	CurrentCardDescribe = Y::PrintText(TEXT("所有人灼烧层数不会降低"));
 }
 
 FText C42::LogDescript()
@@ -1820,6 +1856,7 @@ void C42::Play(bool Execute)
 
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone5"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1839,7 +1876,7 @@ C43::C43()
 	CardRare = 2;
 	CardName = Y::PrintText(TEXT("引燃"));
 	BindMessage(TEXT("43"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn right now"));
+	CurrentCardDescribe = Y::PrintText(TEXT("结算目标灼烧"));
 }
 
 FText C43::LogDescript()
@@ -1853,6 +1890,7 @@ void C43::Play(bool Execute)
 	ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S, Execute);
 	if (Execute)
 	{
+		PlayNiagara(Execute, TEXT("Call2"), Y::GetChoosedFloor(), nullptr);
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1872,7 +1910,7 @@ C44::C44()
 	CardRare = 3;
 	CardName = Y::PrintText(TEXT("死亡莲华"));
 	BindMessage(TEXT("44"));
-	CurrentCardDescribe = Y::PrintText(TEXT("light, light again when enemy dies"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对所有目标使用【引燃】，若有目标死亡，则再次使用【死亡莲花】"));
 }
 
 FText C44::LogDescript()
@@ -1897,6 +1935,7 @@ void C44::Play(bool Execute)
 	}
 	if (Execute)
 	{
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone5"));
 		PlayMontage(GetMontageName());
 	}
 }
@@ -1915,7 +1954,7 @@ C2001::C2001()
 	CardID = 2001;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("疑虑"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Cost 3"));
+	CurrentCardDescribe = Y::PrintText(TEXT("无效果"));
 }
 
 FText C2001::LogDescript()
@@ -1937,7 +1976,7 @@ C2002::C2002()
 	CardID = 2002;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("痛苦"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack self 3 damege,All Cards damage -1 when this in hand"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对自身造成3点伤害，自身造成的所有伤害-1"));
 }
 
 FText C2002::LogDescript()
@@ -1995,7 +2034,7 @@ C2003::C2003()
 	CardID = 2003;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("愤怒"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 3 damage, Get self again"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成3点伤害，将一张【愤怒】加入牌堆"));
 }
 
 FText C2003::LogDescript()
@@ -2029,7 +2068,7 @@ C2004::C2004()
 	CardID = 2004;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("晕眩"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Can't Use"));
+	CurrentCardDescribe = Y::PrintText(TEXT("无法打出"));
 }
 
 FText C2004::LogDescript()
@@ -2052,7 +2091,7 @@ C2005::C2005()
 	CardID = 2005;
 	CardTypes.Add(10);
 	CardName = Y::PrintText(TEXT("羞耻"));
-	CurrentCardDescribe = Y::PrintText(TEXT("all Cards TimeCost +1 when this in hand"));
+	CurrentCardDescribe = Y::PrintText(TEXT("在手牌中时所有卡牌消耗+1"));
 }
 
 FText C2005::LogDescript()

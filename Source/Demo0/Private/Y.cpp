@@ -224,7 +224,7 @@ const TCHAR* Y::toS(FText ReadyText)
 void Y::PlayNiagara(FName PlayName, AY_Floor* PlayFloor, float Duration, int32 Offset)
 {
 	FVector V = PlayFloor->GetTargetLocation();
-	V.Z += 100;
+	//V.Z += 100;
 	FRotator R = GetRotation();
 	if (Offset < 0) {
 		Offset *= -1;
@@ -232,9 +232,9 @@ void Y::PlayNiagara(FName PlayName, AY_Floor* PlayFloor, float Duration, int32 O
 	}
 	else {
 	}
-	float OffsetF = (float)Offset / Duration;
-	Y::Log(0 , TEXT("Niagara Position: %d / %f"), Offset, OffsetF);
-	GetGameInstance()->ShowNiagara(PlayName, V, R, Duration * 0.5, OffsetF);
+	float Dis = 650 * Duration;
+	Duration = 0.2 * Offset / Duration;
+	GetGameInstance()->ShowNiagara(PlayName, V, R, Duration, Dis);
 }
 
 

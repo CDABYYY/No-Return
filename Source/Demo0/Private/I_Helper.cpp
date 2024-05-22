@@ -12,7 +12,7 @@ using namespace I;
 bool I::CardRange(AY_Floor* GetFloor, int32 n)
 {
 	int32 ToPos = GetFloor->SerialNumber;
-	if (ToPos >= 0 && ToPos < Y::GetFloors().Num() && IsValid(Y::GetFloors()[ToPos]) &&
+	if (IsValid(Y::GetFloors()[ToPos]) &&
 		absPlus(GetFloor->SerialNumber - Y::GetMainCharacter()->StandFloor->SerialNumber) <= n) return true;
 	else return false;
 }
@@ -48,7 +48,45 @@ bool I::IsBlocked(AY_Floor* GetFloor)
 
 bool I::IsEnemy(AY_Floor* GetFloor)
 {
-	if (IsValid(GetFloor->StandCharacter) && GetFloor != Y::GetMainCharacter()->StandFloor)return true;
+	if (IsValid(GetFloor) && GetFloor->StandCharacter->CheckValid() && GetFloor != Y::GetMainCharacter()->StandFloor)return true;
+	return false;
+}
+
+int32 I::MaxDist(AY_Floor* GetFloor, int32 n, int32 Idirec)
+{
+	int32 step, count = 0;
+	if (Idirec > 0)step = 1;
+	else step = -1;
+	for (int32 i = GetFloor->SerialNumber + step; 0 <= i && i < Y::GetFloors().Num() && count < n; i += step)
+	{
+		if (IsValid(Y::GetFloors()[i]) && !IsValid(Y::GetFloors()[i]->StandCharacter))
+		{
+			count++;
+		}
+		else {
+			break;
+		}
+	}
+	return count;
+}
+
+int32 I::PosAttack(AY_Floor* GetFloor, int32 n, int32 Idirect)
+{
+	int32 dist = Y::GetMainCharacter()->StandFloor->SerialNumber - GetFloor->SerialNumber;
+	dist = absPlus(dist);
+	if (dist <= n)return Y::GetMainCharacter()->StandFloor->SerialNumber;
+	return GetFloor->SerialNumber + n * Idirect;
+}
+
+bool I::AccAttack(AY_Floor* AttackFloor)
+{
+	if (0 <= AttackFloor->SerialNumber && AttackFloor->SerialNumber <= Y::GetFloors().Num())
+	{
+		if (IsValid(AttackFloor) && IsValid(AttackFloor->StandCharacter))
+		{
+			return true;
+		}
+	}
 	return false;
 }
 

@@ -31,7 +31,7 @@ void LZ01()
 	Y::LoadRoom<E05>(105);
 	Y::Levels[1]->ThisLevelRooms.Add(105);
 	Y::LoadRoom<E06>(106);
-	Y::Levels[1]->ThisLevelRooms.Add(106);
+	//Y::Levels[1]->ThisLevelRooms.Add(106);
 	Y::LoadRoom<E07>(107);
 	Y::Levels[1]->ThisLevelRooms.Add(107);
 	Y::LoadRoom<E08>(108);
@@ -121,6 +121,7 @@ TSharedPtr<Y_RoomInfo> E01::RoomClicked()
 	auto EP = MakeShared<Y_EventInfo>();
 
 	EP->Description = Y::PrintText(TEXT("少年，买卡删卡了解一下"));
+	//EP->BindMessage(1);
 	if (Y::GetGameInfo()->MoneyCount() >= 50)
 	{
 		EP->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("购买卡牌")), []()
@@ -376,6 +377,7 @@ TSharedPtr<Y_RoomInfo> E06::RoomClicked()
 				this->ChangeEndType(2);
 			}}, (r > 2 * (0.5 - 0.1 * i) ? EA[i - 1] : nullptr)));
 		p->Choices.Add(MakeShared<Y_ChoiceInfoL>(Y::PrintText(TEXT("")), []() {}));
+		EA.Add(p);
 	}
 	Y::GetController()->BeginEvent(EA[2]);
 	return nullptr;

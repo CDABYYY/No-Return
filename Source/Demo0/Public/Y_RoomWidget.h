@@ -13,6 +13,8 @@ class DEMO0_API Y_RoomInfo
 {
 public:
 
+	Y_RoomInfo();
+
 	bool Arriveable;
 
 	//To Cooperate Buff.
@@ -27,7 +29,7 @@ public:
 	//1:Leave 2:Fight 3:EndRoom
 	void ChangeEndType(int32 ChangedValue);
 
-	UTexture2D* UsingTexture;
+	UTexture2D* UsingPicture;
 
 	class UY_RoomWidget* Owner;
 

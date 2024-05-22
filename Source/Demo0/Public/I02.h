@@ -315,10 +315,6 @@ public:
 
 	EQ21();
 
-	virtual void Play(bool Execute);
-
-	virtual bool AcceptFloor(class AY_Floor* GetFloor);
-
 	virtual TArray<TSharedPtr<class Y_Equipment>> Upgrade();
 };
 
@@ -328,10 +324,6 @@ class DEMO0_API EQ22 : public Y_Equipment
 public:
 
 	EQ22();
-
-	virtual void Play(bool Execute);
-
-	virtual bool AcceptFloor(class AY_Floor* GetFloor);
 
 	virtual TArray<TSharedPtr<class Y_Equipment>> Upgrade();
 };
@@ -343,10 +335,6 @@ public:
 
 	EQ23();
 
-	virtual void Play(bool Execute);
-
-	virtual bool AcceptFloor(class AY_Floor* GetFloor);
-
 	virtual TArray<TSharedPtr<class Y_Equipment>> Upgrade();
 };
 
@@ -356,10 +344,6 @@ class DEMO0_API EQ24 : public Y_Equipment
 public:
 
 	EQ24();
-
-	virtual void Play(bool Execute);
-
-	virtual bool AcceptFloor(class AY_Floor* GetFloor);
 
 	virtual TArray<TSharedPtr<class Y_Equipment>> Upgrade();
 };

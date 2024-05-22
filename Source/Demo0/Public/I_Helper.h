@@ -19,10 +19,15 @@ namespace I {
 
 	bool IsEnemy(AY_Floor* GetFloor);//地板是否有敌人
 
+	int32 PosAttack(AY_Floor* GetFloor, int32 n, int32 Idirect);//攻击地点
+
+	bool AccAttack(AY_Floor* GetFloor);//判断该地板上是否有人
+
+	int32 MaxDist(AY_Floor* GetFloor, int32 n, int32 Idirect);//由该地板向某个方向移动的最大距离
+
 	void Border(int32 tempFloorNum, int32 n, int32& leftBorder, int32& rightBorder);//AOE边界范围
 
 	void Border(int32 tempFloorNum, int32 n, int32& leftBorder, int32& rightBorder, bool right);//单侧边界范围
 
 	int32 End(int32 tempFloorNum, int32 n, bool right);//强制位移终点
 };
-

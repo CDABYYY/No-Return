@@ -61,7 +61,7 @@ int32 BornOFBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter
 			Count += p->BuffCount;
 			p->BuffCount = 0;
 		}
-		Y_StatusBar S{ Y::YMakeShared<ShieldBuff>(Count) };
+		Y_StatusBar S{ Y::YMakeShared<BurnBuff>(Count) };
 		ExecuteAction(OwnerCharacter, OwnerCharacter, S);
 	}
 	else if (ExecuteCondition == AfterInjured) {
@@ -77,7 +77,7 @@ C45::C45()
 	CardID = 45;
 	CardName = Y::PrintText(TEXT("过热思考"));
 	BindMessage(TEXT("45"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Draw Card 5, Burn self 2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("抽5张卡牌, 赋予自己2层【灼烧】"));
 }
 
 void C45::Play(bool Execute)
@@ -88,6 +88,7 @@ void C45::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone18"));
 	}
 }
 
@@ -102,7 +103,7 @@ C46::C46()
 	CardID = 46;
 	CardName = Y::PrintText(TEXT("火焰观测"));
 	BindMessage(TEXT("46"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Draw Card burn_num/2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("抽自己【灼烧】层数一半的卡牌"));
 }
 
 void C46::Play(bool Execute)
@@ -112,6 +113,7 @@ void C46::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Body14"));
 	}
 }
 
@@ -126,7 +128,7 @@ C47::C47()
 	CardID = 47;
 	CardName = Y::PrintText(TEXT("灼烧伤口"));
 	BindMessage(TEXT("47"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Shield self 8, Burn self 2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("赋予自己8点【护盾】，2层【灼烧】"));
 }
 
 void C47::Play(bool Execute)
@@ -138,6 +140,7 @@ void C47::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Body9"));
 	}
 }
 
@@ -152,7 +155,7 @@ C48::C48()
 	CardID = 48;
 	CardName = Y::PrintText(TEXT("刺激躯体"));
 	BindMessage(TEXT("48"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn self 3, Clear self weakness and vulnerability"));
+	CurrentCardDescribe = Y::PrintText(TEXT("赋予自己3层【灼烧】，清除【虚弱】【易伤】"));
 }
 
 void C48::Play(bool Execute)
@@ -172,6 +175,7 @@ void C48::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Body6"));
 	}
 }
 
@@ -186,7 +190,7 @@ C49::C49()
 	CardID = 49;
 	CardName = Y::PrintText(TEXT("浴火冲锋"));
 	BindMessage(TEXT("49"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn all 3, Move 3"));
+	CurrentCardDescribe = Y::PrintText(TEXT("赋予自己3层【灼烧】，至多冲锋3格，对撞到的敌人施加3层【灼烧】"));
 }
 
 void C49::Play(bool Execute)
@@ -200,7 +204,7 @@ void C49::Play(bool Execute)
 		if (ToPos > Pos) ToPos--;
 		else ToPos++;
 		Move(ToPos - Pos, Execute);
-		Y_StatusBar S2{ Y::YMakeShared<DemageBuff>(5) };
+		Y_StatusBar S2{ Y::YMakeShared<BurnBuff>(3) };
 		ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S2, Execute);
 		ExecuteAction(Y::GetMainCharacter(), Y::GetChoosedFloor()->StandCharacter, S1, Execute);
 	}
@@ -208,7 +212,8 @@ void C49::Play(bool Execute)
 		Move(ToPos - Pos, Execute);
 	if (Execute)
 	{
-		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos], GetRate());
+		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos]);
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone4"));
 	}
 }
 
@@ -223,7 +228,7 @@ C50::C50()
 	CardID = 50;
 	CardName = Y::PrintText(TEXT("火焰护盾"));
 	BindMessage(TEXT("50"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack self burn_num/2, Shield self burn_num"));
+	CurrentCardDescribe = Y::PrintText(TEXT("受到自身【灼烧】层数一半的【伤害】，赋予等同于自己【灼烧】层数的【护盾】"));
 }
 
 void C50::Play(bool Execute)
@@ -236,6 +241,7 @@ void C50::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone9"));
 	}
 }
 
@@ -250,7 +256,7 @@ C51::C51()
 	CardID = 51;
 	CardName = Y::PrintText(TEXT("浴火"));
 	BindMessage(TEXT("51"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
+	CurrentCardDescribe = Y::PrintText(TEXT("获得两层【浴火】（将受到的【伤害】转为等层【护盾】）"));
 }
 
 void C51::Play(bool Execute)
@@ -260,6 +266,7 @@ void C51::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone8"));
 	}
 }
 
@@ -274,7 +281,7 @@ C52::C52()
 	CardID = 52;
 	CardName = Y::PrintText(TEXT("避火"));
 	BindMessage(TEXT("52"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Shield self burn_num"));
+	CurrentCardDescribe = Y::PrintText(TEXT("获得等同于自身【灼烧】层数的【护盾】"));
 }
 
 void C52::Play(bool Execute)
@@ -285,6 +292,7 @@ void C52::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone9"));
 	}
 }
 
@@ -299,7 +307,7 @@ C53::C53()
 	CardID = 53;
 	CardName = Y::PrintText(TEXT("火焰爆发"));
 	BindMessage(TEXT("53"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy burn_num of self between self 2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("对附近两格范围内所有敌人造成自身【灼烧】层数的【伤害】"));
 }
 
 void C53::Play(bool Execute)
@@ -311,7 +319,7 @@ void C53::Play(bool Execute)
 	Y_StatusBar S{ Y::YMakeShared<DemageBuff>(buff.Num() > 0 ? buff[0]->BuffCount : 0) };
 	for (int32 i = leftBorder; i <= rightBorder; i++)
 	{
-		if (IsEnemy(Y::GetFloors()[i]))
+		if (IsValid(Y::GetFloors()[i]) && IsEnemy(Y::GetFloors()[i]))
 		{
 			ExecuteAction(Y::GetMainCharacter(), Y::GetFloors()[i]->StandCharacter, S, Execute);
 		}
@@ -319,6 +327,7 @@ void C53::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone9"));
 	}
 }
 
@@ -333,7 +342,7 @@ C54::C54()
 	CardID = 54;
 	CardName = Y::PrintText(TEXT("反思"));
 	BindMessage(TEXT("54"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Discard the hand and draw an equal number of cards"));
+	CurrentCardDescribe = Y::PrintText(TEXT("弃去手牌并抽取等量的牌"));
 }
 
 void C54::Play(bool Execute)
@@ -349,6 +358,7 @@ void C54::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone15"));
 	}
 }
 
@@ -363,7 +373,7 @@ C55::C55()
 	CardID = 55;
 	CardName = Y::PrintText(TEXT("踏火急行"));
 	BindMessage(TEXT("55"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 1+burn_num/3, Burn enemy 1+burn_num/3"));
+	CurrentCardDescribe = Y::PrintText(TEXT("移动1格，自身每有3层【灼烧】则增加1格移动距离，并对碰到的敌人多造成1层【灼烧】"));
 }
 
 void C55::Play(bool Execute)
@@ -383,7 +393,8 @@ void C55::Play(bool Execute)
 		Move(ToPos - Pos, Execute);
 	if (Execute)
 	{
-		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos], GetRate());
+		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos]);
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone2"));
 	}
 }
 
@@ -399,7 +410,7 @@ C56::C56()
 	CardID = 56;
 	CardName = Y::PrintText(TEXT("屏障"));
 	BindMessage(TEXT("56"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Shield self 15"));
+	CurrentCardDescribe = Y::PrintText(TEXT("赋予自己15点【护盾】"));
 }
 
 void C56::Play(bool Execute)
@@ -409,6 +420,7 @@ void C56::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone9"));
 	}
 }
 
@@ -423,7 +435,7 @@ C57::C57()
 	CardID = 57;
 	CardName = Y::PrintText(TEXT("反击"));
 	BindMessage(TEXT("57"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
+	CurrentCardDescribe = Y::PrintText(TEXT("如果恢复期间受到攻击则防止其并向选中方向一格反击5点【伤害】"));
 }
 
 void C57::Play(bool Execute)
@@ -431,6 +443,8 @@ void C57::Play(bool Execute)
 	class TB :public Y_Buff {
 	public:
 		TB() {
+			BuffID = 51;
+			BuffName = Y::PrintText(TEXT("反击"));
 			TriggerCondition = BeginAction | BeginInjured;
 		}
 		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
@@ -442,7 +456,7 @@ void C57::Play(bool Execute)
 			}
 			else if (ExecuteCondition == BeginInjured)
 			{
-				auto buff = ToBuffs.FindType(3);
+				auto buff = ToBuffs.FindBuffExtend(3);
 				if (buff.Num() > 0)
 				{
 					for (auto& p : buff)
@@ -465,6 +479,7 @@ void C57::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone9"));
 	}
 }
 
@@ -479,7 +494,7 @@ C58::C58()
 	CardID = 58;
 	CardName = Y::PrintText(TEXT("不惜代价"));
 	BindMessage(TEXT("58"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Move 3, Burn self and enemy 5"));
+	CurrentCardDescribe = Y::PrintText(TEXT("至多移动3格，对目标和自身造成5点【伤害】"));
 }
 
 void C58::Play(bool Execute)
@@ -497,7 +512,8 @@ void C58::Play(bool Execute)
 	}
 	if (Execute)
 	{
-		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos], GetRate());
+		PlayMontage(GetMontageName(), Y::GetFloors()[ToPos]);
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone3"));
 	}
 }
 
@@ -512,19 +528,20 @@ C59::C59()
 	CardID = 59;
 	CardName = Y::PrintText(TEXT("止火"));
 	BindMessage(TEXT("59"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Settle and Move self burn_num"));
+	CurrentCardDescribe = Y::PrintText(TEXT("结算并清除自身【灼烧】"));
 }
 
 void C59::Play(bool Execute)
 {
 	auto buff = Y::GetMainCharacter()->Buffs->FindType(5);
 	for (auto& p : buff) {
-		p->execute(Y::GetMainCharacter(), Y::GetMainCharacter(), *Y::GetMainCharacter()->Buffs, Y_Buff::Ticking, TEXT("C59"));
+		p->execute(Y::GetMainCharacter(), Y::GetMainCharacter(), *Y::GetMainCharacter()->Buffs, Y_Buff::Ticking, TEXT("C59"), Execute);
 		p->RemoveFromCharacter();
 	}
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone20"));
 	}
 }
 
@@ -539,7 +556,7 @@ C60::C60()
 	CardID = 60;
 	CardName = Y::PrintText(TEXT("烈火予身"));
 	BindMessage(TEXT("60"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn enemy burn_num/2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("在【灼烧】结算前向附近1格的敌人施加自身【灼烧】层数一半的【灼烧】"));
 }
 
 void C60::Play(bool Execute)
@@ -547,6 +564,7 @@ void C60::Play(bool Execute)
 	class TB :public Y_Buff {
 	public:
 		TB() {
+			BuffName = Y::PrintText(TEXT("烈火矛身"));
 			BuffOrder = -10;
 			TriggerCondition = Ticking;
 			BuffID = 1060;
@@ -584,6 +602,7 @@ void C60::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone19"));
 	}
 }
 
@@ -598,7 +617,7 @@ C61::C61()
 	CardID = 61;
 	CardName = Y::PrintText(TEXT("火焰研习"));
 	BindMessage(TEXT("61"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Draw card 1 when attack self 3 through burn"));
+	CurrentCardDescribe = Y::PrintText(TEXT("每受到3点【灼烧】抽1张卡牌"));
 }
 
 void C61::Play(bool Execute)
@@ -606,6 +625,8 @@ void C61::Play(bool Execute)
 	class TB :public Y_Buff {
 	public:
 		TB() {
+			BuffID = 52;
+			BuffName = Y::PrintText(TEXT("火焰研习"));
 			TriggerCondition = BeginTick;
 		}
 		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
@@ -620,6 +641,7 @@ void C61::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone21"));
 	}
 }
 
@@ -634,7 +656,7 @@ C62::C62()
 	CardID = 62;
 	CardName = Y::PrintText(TEXT("火焰熟练"));
 	BindMessage(TEXT("62"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn self burn/5 when burn others"));
+	CurrentCardDescribe = Y::PrintText(TEXT("造成【灼烧】时附加自身【灼烧】层数的1/5"));
 }
 
 void C62::Play(bool Execute)
@@ -642,6 +664,8 @@ void C62::Play(bool Execute)
 	class TB :public Y_Buff {
 	public:
 		TB() {
+			BuffID = 53;
+			BuffName = Y::PrintText(TEXT("火焰熟练"));
 			TriggerCondition = BeginBuff;
 		}
 		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
@@ -657,6 +681,7 @@ void C62::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone18"));
 	}
 }
 
@@ -671,7 +696,7 @@ C63::C63()
 	CardID = 63;
 	CardName = Y::PrintText(TEXT("火焰精通"));
 	BindMessage(TEXT("63"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Shield self burn_num/2"));
+	CurrentCardDescribe = Y::PrintText(TEXT("在受到灼烧伤害前获得自身【灼烧】层数一半的【护盾】"));
 }
 
 void C63::Play(bool Execute)
@@ -679,6 +704,8 @@ void C63::Play(bool Execute)
 	class TB :public Y_Buff {
 	public:
 		TB() {
+			BuffID = 54;
+			BuffName = Y::PrintText(TEXT("火焰精通"));;
 			TriggerCondition = BeginInjured;
 		}
 		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
@@ -697,6 +724,7 @@ void C63::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone9"));
 	}
 }
 
@@ -711,7 +739,7 @@ C64::C64()
 	CardID = 64;
 	CardName = Y::PrintText(TEXT("火焰掌控"));
 	BindMessage(TEXT("64"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack with 1 Burn when your burn_num greater than 8"));
+	CurrentCardDescribe = Y::PrintText(TEXT("当自身【灼烧】层数大于8时，普通攻击将附加1层【灼烧】"));
 }
 
 void C64::Play(bool Execute)
@@ -719,6 +747,8 @@ void C64::Play(bool Execute)
 	class TB :public Y_Buff {
 	public:
 		TB() {
+			BuffID = 55;
+			BuffName = Y::PrintText(TEXT("火焰掌控"));
 			TriggerCondition = BeginAttack;
 		}
 		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
@@ -740,6 +770,7 @@ void C64::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone13"));
 	}
 }
 
@@ -754,7 +785,7 @@ C65::C65()
 	CardID = 65;
 	CardName = Y::PrintText(TEXT("火势蔓延"));
 	BindMessage(TEXT("65"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Attack enemy 5"));
+	CurrentCardDescribe = Y::PrintText(TEXT("当自身【灼烧】层数大于10时，每次自身获得【灼烧】后触发【烈火予身】效果"));
 }
 
 void C65::Play(bool Execute)
@@ -762,6 +793,8 @@ void C65::Play(bool Execute)
 	class TB :public Y_Buff {
 	public:
 		TB() {
+			BuffID = 56;
+			BuffName = Y::PrintText(TEXT("火势蔓延"));
 			TriggerCondition = BeginBuffed;
 		}
 		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
@@ -795,6 +828,7 @@ void C65::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone12"));
 	}
 }
 
@@ -809,7 +843,7 @@ C66::C66()
 	CardID = 66;
 	CardName = Y::PrintText(TEXT("火势扩张"));
 	BindMessage(TEXT("66"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Burn all 1 after you attack when the number of your burn greater than 10"));
+	CurrentCardDescribe = Y::PrintText(TEXT("当自身【灼烧】层数大于10时，每次攻击后全场获得1层【灼烧】"));
 }
 
 void C66::Play(bool Execute)
@@ -817,22 +851,21 @@ void C66::Play(bool Execute)
 	class TB :public Y_Buff {
 	public:
 		TB() {
+			BuffID = 57;
+			BuffName = Y::PrintText(TEXT("火势扩张"));
 			TriggerCondition = BeginAttack;
 		}
 		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
 			auto buff = OwnerCharacter->Buffs->FindType(5);
-			if (buff[0]->BuffCount > 10)
+			if (buff.Num() > 0 && buff[0]->BuffCount > 10)
 			{
 				auto buff1 = ToBuffs.FindBuffExtend(3);
 				if (buff1.Num() > 0)
 				{
-					Y_StatusBar S1{ Y::YMakeShared<BurnBuff>(1) };
-					for (int32 i = 0; i < Y::GetFloors().Num(); i++)
+					for (auto& p : Y::GetEnemys())
 					{
-						if (IsValid(Y::GetFloors()[i]) && IsValid(Y::GetFloors()[i]->StandCharacter))
-						{
-							ExecuteAction(OwnerCharacter, Y::GetFloors()[i]->StandCharacter, S1);
-						}
+						Y_StatusBar S1{ Y::YMakeShared<BurnBuff>(1) };
+						ExecuteAction(OwnerCharacter, p, S1);
 					}
 				}
 			}
@@ -844,6 +877,7 @@ void C66::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone7"));
 	}
 }
 
@@ -858,7 +892,7 @@ C67::C67()
 	CardID = 67;
 	CardName = Y::PrintText(TEXT("搜索预案"));
 	BindMessage(TEXT("67"));
-	CurrentCardDescribe = Y::PrintText(TEXT("Draw card to 6"));
+	CurrentCardDescribe = Y::PrintText(TEXT("抽卡至六张"));
 }
 
 void C67::Play(bool Execute)
@@ -871,6 +905,7 @@ void C67::Play(bool Execute)
 	if (Execute)
 	{
 		PlayMontage(GetMontageName());
+		Y::GetMainCharacter()->PlayNiagara(1, TEXT("Bone8"));
 	}
 }
 

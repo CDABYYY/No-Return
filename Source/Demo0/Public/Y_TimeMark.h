@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UY_TimeLine* Owner;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* UsingPicture;
+
 	UFUNCTION(BlueprintCallable)
 	float GetRelativePosition();
 

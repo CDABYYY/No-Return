@@ -16,6 +16,9 @@
 #include "Y_Equipment.h"
 #include "Y_PlayerController.h"
 #include "Y_MapWidget.h"
+#include "Y_CardH.h"
+#include "Y_EquipmentH.h"
+#include "Y_HUD.h"
 
 //#include "I_Level1.h"
 #include "Y_ClassBase.h"
@@ -27,6 +30,11 @@
 
 #include "IImageWrapper.h"
 #include "IImageWrapperModule.h"
+
+
+#include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 UY_GameInstance* UY_GameInstance::YGI = nullptr;
 TMap<FString, UTexture2D*> UY_GameInstance::Pictures = TMap<FString, UTexture2D*>();
@@ -72,14 +80,13 @@ UY_GameInstance::UY_GameInstance()
 	LS02();
 	LS03();
 
-	//Temp
-	Y::LoadCharacter<NormalEnemy>(1);
-	
-	Y::Levels[0]->Loaded();
-	//TEMP
-	FightInfo->ReadyRooms.Add(Y::RoomClass[-1]->NewObject());
-	for(int32 i = 0;i<10;i++)
-	FightInfo->ReadyEquipments.Add(Y::EquipmentClass[-1]->NewObject());
+	////Temp
+	//Y::LoadCharacter<NormalEnemy>(1);
+	//
+	////TEMP
+	//FightInfo->ReadyRooms.Add(Y::RoomClass[-1]->NewObject());
+	//for(int32 i = 0;i<10;i++)
+	//FightInfo->ReadyEquipments.Add(Y::EquipmentClass[-1]->NewObject());
 	for (int32 i = 0; i < 10; i++)
 		FightInfo->ReadyCards.Add(Y::CardClass[-1]->NewObject());
 
@@ -88,7 +95,7 @@ UY_GameInstance::UY_GameInstance()
 	FightInfo->UsingCards.Add(Y::CardClass[-1]->NewObject());
 
 
-	FightInfo->MCSkill = MakeShared<NormalSkill>();
+	//FightInfo->MCSkill = MakeShared<NormalSkill>();
 
 }
 
@@ -171,23 +178,25 @@ void UY_GameInstance::HelpTick(float DeltaTime)
 	RunTime += DeltaTime; 
 	UY_TimeLine::YTimeLine->UpdateTimeMark();
 	if (RunTime > (float)TickTime / 10) {
+		Y::Log(0, TEXT("Now Tick"));
 		TickTime += 20;
 		for (auto& p : Enemys)
 		{
-			if(p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::BeginTick, TEXT("Tick")))
+			if(p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::BeginTick, TEXT("Tick"), true) == 0)
 			{
-				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::Ticking, TEXT("Tick"));
-				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::AfterTick, TEXT("Tick"));
+				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::Ticking, TEXT("Tick"), true);
+				p->Buffs->ExecuteBuffs(p, p, *(p->Buffs), Y_Buff::AfterTick, TEXT("Tick"), true);
 			}
 		}
-		if (Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::BeginTick, TEXT("Tick")))
+		if (Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::BeginTick, TEXT("Tick"), true) == 0)
 		{
-			Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::Ticking, TEXT("Tick"));
-			Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::AfterTick, TEXT("Tick"));
+			Y::Log(0, TEXT("Do MainCharacter"));
+			Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::Ticking, TEXT("Tick"), true);
+			Y::GetMainCharacter()->Buffs->ExecuteBuffs(Y::GetMainCharacter(), Y::GetMainCharacter(), *(Y::GetMainCharacter()->Buffs), Y_Buff::AfterTick, TEXT("Tick"), true);
 		}
-		Y::GetGameInfo()->EventBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->EventBuffs, Y_Buff::Ticking, TEXT("Tick"));
-		Y::GetGameInfo()->AlwaysBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->AlwaysBuffs, Y_Buff::Ticking, TEXT("Tick"));
-		Y::GetGameInfo()->FightingBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->FightingBuffs, Y_Buff::Ticking, TEXT("Tick"));
+		Y::GetGameInfo()->EventBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->EventBuffs, Y_Buff::Ticking, TEXT("Tick"), true);
+		Y::GetGameInfo()->AlwaysBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->AlwaysBuffs, Y_Buff::Ticking, TEXT("Tick"), true);
+		Y::GetGameInfo()->FightingBuffs.ExecuteBuffs(nullptr, nullptr, Y::GetGameInfo()->FightingBuffs, Y_Buff::Ticking, TEXT("Tick"), true);
 	}
 	//while (AtkOrder.Num() > 0) {
 	//	if(!IsValid(AtkOrder[0]))
@@ -212,27 +221,47 @@ void UY_GameInstance::DeleteAtk(AY_Character* owner)
 
 void UY_GameInstance::BeginGame()
 {
-	Floors = TArray<AY_Floor*>();
-	Enemys = TArray<AY_Character*>();
-	CurrentRoom = nullptr;
-	MainCharacter = nullptr;
-
-	Y::GetGameInfo()->ForwardLevel();
-
+	OpenMapSound = LoadObject<USoundCue>(this, TEXT("/Script/Engine.SoundCue'/Game/Resource/Sounds/Map_Cue.Map_Cue'"));
+	Y::GetPlayer()->PlaySound = LoadObject<USoundCue>(this, TEXT("/Script/Engine.SoundCue'/Game/Resource/Sounds/Cardnew_Cue.Cardnew_Cue'"));
+	if (IsValid(Y::GetMainCharacter()))Y::GetMainCharacter()->Destroy();
+	Y::GetMainCharacter() = nullptr;
+	for (auto& p : Y::GetEnemys())if (IsValid(p))p->Destroy();
+	Y::GetEnemys().Empty();
+	for (auto& p : Y::GetFloors())if (IsValid(p))p->Destroy();
+	Y::GetFloors().Empty();
+	
 	//Temp
-	//Y::GetLocation() = FVector(-19480, -244490, -30040);
-	//Y::GetRotation() = FRotator(0, -100, 0);
-	Y::GetLocation() = FVector(0, 0, 160);
-	Y::GetRotation() = FRotator(0, 0, 0);
+	Y::GetLocation() = FVector(-20840, -244430, -29930);
+	Y::GetRotation() = FRotator(0, -100, 0);
+	//Y::GetLocation() = FVector(0, 0, 160);
+	//Y::GetRotation() = FRotator(0, 0, 0);
+
+	
+	FightInfo = MakeShared<Y_Fighting>();
+
+	//TEMP
+	for (int32 i = 0; i < 5; i++)
+		FightInfo->UsingCards.Add(Y::CardClass[1]->NewObject());
+	for (int32 i = 0; i < 3; i++)
+		FightInfo->UsingCards.Add(Y::CardClass[2]->NewObject());
+	for (int32 i = 0; i < 2; i++)
+		FightInfo->UsingCards.Add(Y::CardClass[27]->NewObject());
+
+	Y::Levels[0]->Loaded();
+	Y::GetGameInfo()->ForwardLevel();
 
 	Y::GetController()->UpdateMap();
 	Y::GetController()->MapWidget->PullMap(false);
 	Y::GetController()->LoadHUD();
-	Y::GetController()->ShowCards(false);
+	Y::GetController()->ShowCards(true);
+	Y::GetController()->PCHUD->EquipmentWidget->Clear();
+	Y::GetController()->CardWidget->Clear();
 	Y::GetPlayer()->LookingTime = 0;
 	Y::GetPlayer()->LookingFloor = nullptr;
 
+
 	GameStatus = 1;
+	MapSoundPlaying = UGameplayStatics::SpawnSound2D(this, OpenMapSound);
 }
 
 

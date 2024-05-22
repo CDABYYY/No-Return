@@ -84,6 +84,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadHUD();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowDeadWidget();
+
 	void BeginEvent(TSharedPtr<class Y_EventInfo> EventInfo);
 
 	void BeginChoose(TSharedPtr<class Y_ChooseCardInfo> ChooseInfo);

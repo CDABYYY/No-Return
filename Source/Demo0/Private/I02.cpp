@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø
 #include "I02.h"
 #include "Y_ClassBase.h"
 #include "Y_Character.h"
@@ -31,6 +31,14 @@ void L_I02()
 	Y::LoadEquipment<EQ18>(18);
 	Y::LoadEquipment<EQ19>(19);
 	Y::LoadEquipment<EQ20>(20);
+	Y::LoadEquipment<EQ21>(21);
+	Y::LoadEquipment<EQ22>(22);
+	Y::LoadEquipment<EQ23>(23);
+	Y::LoadEquipment<EQ24>(24);
+	Y::LoadEquipment<EQ25>(25);
+	Y::LoadEquipment<EQ26>(26);
+	Y::LoadEquipment<EQ27>(27);
+	Y::LoadEquipment<EQ28>(28);
 }
 
 bool NormalEQ::AcceptFloor(AY_Floor* GetFloor)
@@ -41,8 +49,11 @@ bool NormalEQ::AcceptFloor(AY_Floor* GetFloor)
 
 EQ01::EQ01()
 {
-	EquipmentID = 1 + 1 * (1 << 10);
+	EquipmentID = 1;
 	EquipLevel = 1;
+	/*AddedBuff = MakeShared<>();
+	NeedTarget = false;*/
+	EquipmentName = Y::PrintText(TEXT("Êú®Ââë"));
 }
 
 void EQ01::Play(bool Execute)
@@ -66,8 +77,9 @@ TArray<TSharedPtr<class Y_Equipment>> EQ01::Upgrade()
 
 EQ02::EQ02()
 {
-	EquipmentID = 1 + 2 * (1 << 10);
+	EquipmentID = 2;
 	EquipLevel = 2;
+	EquipmentName = Y::PrintText(TEXT("ÈìÅÂâë"));
 }
 
 void EQ02::Play(bool Execute)
@@ -87,12 +99,13 @@ TArray<TSharedPtr<class Y_Equipment>> EQ02::Upgrade()
 }
 
 /*------------------------------------EQ02--------------------------------------*/
+/*------------------------------------EQ03--------------------------------------*/
 
-//÷∆ Ω∏÷Ω£
 EQ03::EQ03()
 {
-	EquipmentID = 1 + 3 * (1 << 10) + 1 * (1 << 20);
+	EquipmentID = 3;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("Âà∂ÂºèÈí¢Ââë"));
 }
 
 void EQ03::Play(bool Execute)
@@ -111,12 +124,14 @@ TArray<TSharedPtr<class Y_Equipment>> EQ03::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
+/*------------------------------------EQ03--------------------------------------*/
+/*------------------------------------EQ04--------------------------------------*/
 
-//∏ΩƒßΩ£
 EQ04::EQ04()
 {
-	EquipmentID = 1 + 3 * (1 << 10) + 2 * (1 << 20);
+	EquipmentID = 4;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("ÈôÑÈ≠îÂâë"));
 }
 
 void EQ04::Play(bool Execute)
@@ -135,12 +150,14 @@ TArray<TSharedPtr<class Y_Equipment>> EQ04::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
+/*------------------------------------EQ04--------------------------------------*/
+/*------------------------------------EQ05--------------------------------------*/
 
-//π¶∑® È
 EQ05::EQ05()
 {
-	EquipmentID = 2 + 1 * (1 << 10);
+	EquipmentID = 5;
 	EquipLevel = 1;
+	EquipmentName = Y::PrintText(TEXT("ÂäüÊ≥ï‰π¶"));
 }
 
 void EQ05::Play(bool Execute)
@@ -155,14 +172,17 @@ bool EQ05::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ05::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ06>()};
 }
 
-//◊⁄√≈ ÷≤·
+/*------------------------------------EQ05--------------------------------------*/
+/*------------------------------------EQ06--------------------------------------*/
+
 EQ06::EQ06()
 {
-	EquipmentID = 2 + 2 * (1 << 10);
+	EquipmentID = 6;
 	EquipLevel = 2;
+	EquipmentName = Y::PrintText(TEXT("ÂÆóÈó®ÊâãÂÜå"));
 }
 
 void EQ06::Play(bool Execute)
@@ -177,14 +197,17 @@ bool EQ06::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ06::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ07>(), MakeShared<EQ08>()};
 }
 
-//∞Ÿø∆»´ È
+/*------------------------------------EQ06--------------------------------------*/
+/*------------------------------------EQ07--------------------------------------*/
+
 EQ07::EQ07()
 {
-	EquipmentID = 2 + 3 * (1 << 10) + 1 * (1 << 20);
+	EquipmentID = 7;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("ÁôæÁßëÂÖ®‰π¶"));
 }
 
 void EQ07::Play(bool Execute)
@@ -205,16 +228,19 @@ TArray<TSharedPtr<class Y_Equipment>> EQ07::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
-//”¶º±±¶µ‰
+/*------------------------------------EQ07--------------------------------------*/
+/*------------------------------------EQ08--------------------------------------*/
+
 EQ08::EQ08()
 {
-	EquipmentID = 2 + 3 * (1 << 10) + 2 * (1 << 20);
+	EquipmentID = 8;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("Â∫îÊÄ•ÂÆùÂÖ∏"));
 }
 
 void EQ08::Play(bool Execute)
 {
-	int getCardsnum = Y::GetGameInfo()->InHandCards.Num();
+	int32 getCardsnum = Y::GetGameInfo()->InHandCards.Num();
 	for (auto& p : Y::GetGameInfo()->InHandCards)
 	{
 		Y::GetGameInfo()->UseCard(p, 1);
@@ -232,11 +258,14 @@ TArray<TSharedPtr<class Y_Equipment>> EQ08::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
-//∑≈—™µ∂
+/*------------------------------------EQ08--------------------------------------*/
+/*------------------------------------EQ09--------------------------------------*/
+
 EQ09::EQ09()
 {
-	EquipmentID = 3 + 1 * (1 << 10);
+	EquipmentID = 9;
 	EquipLevel = 1;
+	EquipmentName = Y::PrintText(TEXT("ÊîæË°ÄÂàÄ"));
 }
 
 void EQ09::Play(bool Execute)
@@ -252,21 +281,24 @@ bool EQ09::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ09::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ10>()};
 }
 
-//Ãﬁπ«µ∂
+/*------------------------------------EQ09--------------------------------------*/
+/*------------------------------------EQ10--------------------------------------*/
+
 EQ10::EQ10()
 {
-	EquipmentID = 3 + 2 * (1 << 10);
+	EquipmentID = 10;
 	EquipLevel = 2;
+	EquipmentName = Y::PrintText(TEXT("ÂâîÈ™®ÂàÄ"));
 }
 
 void EQ10::Play(bool Execute)
 {
-	Y_StatusBar TS1{ Y::YMakeShared<ExposeBuff>(1) };//“◊…À
+	Y_StatusBar TS1{ Y::YMakeShared<ExposeBuff>(1) };//Êòì‰º§
 	ExecuteAction(GetOwner(), Y::GetChoosedFloor()->StandCharacter, TS1, Execute);
-	Y_StatusBar TS2{ Y::YMakeShared<WeakBuff>(1) };//–È»ı
+	Y_StatusBar TS2{ Y::YMakeShared<WeakBuff>(1) };//ËôöÂº±
 	ExecuteAction(GetOwner(), Y::GetChoosedFloor()->StandCharacter, TS2, Execute);
 }
 
@@ -277,21 +309,24 @@ bool EQ10::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ10::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ11>(), MakeShared<EQ12>()};
 }
 
-//æ‚π«µ∂
+/*------------------------------------EQ10--------------------------------------*/
+/*------------------------------------EQ11--------------------------------------*/
+
 EQ11::EQ11()
 {
-	EquipmentID = 3 + 3 * (1 << 10) + 1 * (1 << 20);
+	EquipmentID = 11;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("ÈîØÈ™®ÂàÄ"));
 }
 
 void EQ11::Play(bool Execute)
 {
-	Y_StatusBar TS1{ Y::YMakeShared<ExposeBuff>(2) };//“◊…À
+	Y_StatusBar TS1{ Y::YMakeShared<ExposeBuff>(2) };//Êòì‰º§
 	ExecuteAction(GetOwner(), Y::GetChoosedFloor()->StandCharacter, TS1, Execute);
-	Y_StatusBar TS2{ Y::YMakeShared<WeakBuff>(2) };//–È»ı
+	Y_StatusBar TS2{ Y::YMakeShared<WeakBuff>(2) };//ËôöÂº±
 	ExecuteAction(GetOwner(), Y::GetChoosedFloor()->StandCharacter, TS2, Execute);
 }
 
@@ -305,18 +340,24 @@ TArray<TSharedPtr<class Y_Equipment>> EQ11::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
-//¥Ã–ƒµ∂
+/*------------------------------------EQ11--------------------------------------*/
+/*------------------------------------EQ12--------------------------------------*/
+
 EQ12::EQ12()
 {
-	EquipmentID = 3 + 3 * (1 << 10) + 2 * (1 << 20);
+	EquipmentID = 12;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("Âà∫ÂøÉÂàÄ"));
 }
 
 void EQ12::Play(bool Execute)
 {
-	Y_StatusBar TS1{ Y::YMakeShared<ExposeBuff>(2) };//“◊…À
+	Y_StatusBar TS1{ Y::YMakeShared<ExposeBuff>(2) };//Êòì‰º§
 	ExecuteAction(GetOwner(), Y::GetChoosedFloor()->StandCharacter, TS1, Execute);
-	//“◊…À ˝÷µ∑≠±∂£ø£ø£ø£ø£ø£ø
+	auto a = Y::GetChoosedFloor()->StandCharacter->Buffs->FindType(7);
+	for (auto& p : a) {
+		p->BuffParams[0] *= 2;
+	}
 }
 
 bool EQ12::AcceptFloor(AY_Floor* GetFloor)
@@ -329,17 +370,20 @@ TArray<TSharedPtr<class Y_Equipment>> EQ12::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
-//≤ºº◊
+/*------------------------------------EQ12--------------------------------------*/
+/*------------------------------------EQ13--------------------------------------*/
+
 EQ13::EQ13()
 {
-	EquipmentID = 4 + 1 * (1 << 10);
+	EquipmentID = 13;
 	EquipLevel = 1;
+	EquipmentName = Y::PrintText(TEXT("Â∏ÉÁî≤"));
 }
 
 void EQ13::Play(bool Execute)
 {
 	Y_StatusBar TS{ Y::YMakeShared<ShieldBuff>(5) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), TS, Execute);
+	ExecuteAction(GetOwner(), GetOwner(), TS, Execute);
 }
 
 bool EQ13::AcceptFloor(AY_Floor* GetFloor)
@@ -349,20 +393,23 @@ bool EQ13::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ13::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ14>()};
 }
 
-//Ã˙º◊
+/*------------------------------------EQ13--------------------------------------*/
+/*------------------------------------EQ14--------------------------------------*/
+
 EQ14::EQ14()
 {
-	EquipmentID = 4 + 2 * (1 << 10);
+	EquipmentID = 14;
 	EquipLevel = 2;
+	EquipmentName = Y::PrintText(TEXT("ÈìÅÁî≤"));
 }
 
 void EQ14::Play(bool Execute)
 {
 	Y_StatusBar TS{ Y::YMakeShared<ShieldBuff>(8) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), TS, Execute);
+	ExecuteAction(GetOwner(), GetOwner(), TS, Execute);
 }
 
 bool EQ14::AcceptFloor(AY_Floor* GetFloor)
@@ -372,20 +419,23 @@ bool EQ14::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ14::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ15>(), MakeShared<EQ16>()};
 }
 
-//∫ÆÃ˙º◊
+/*------------------------------------EQ14--------------------------------------*/
+/*------------------------------------EQ15--------------------------------------*/
+
 EQ15::EQ15()
 {
-	EquipmentID = 4 + 3 * (1 << 10) + 1 * (1 << 20);
+	EquipmentID = 15;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("ÂØíÈìÅÁî≤"));
 }
 
 void EQ15::Play(bool Execute)
 {
 	Y_StatusBar TS{ Y::YMakeShared<ShieldBuff>((Y::GetChoosedFloor()->StandCharacter->MaxHealth - Y::GetChoosedFloor()->StandCharacter->Health) * 0.3) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), TS, Execute);
+	ExecuteAction(GetOwner(), GetOwner(), TS, Execute);
 }
 
 bool EQ15::AcceptFloor(AY_Floor* GetFloor)
@@ -398,11 +448,14 @@ TArray<TSharedPtr<class Y_Equipment>> EQ15::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
-//‘…Ã˙º◊
+/*------------------------------------EQ15--------------------------------------*/
+/*------------------------------------EQ16--------------------------------------*/
+
 EQ16::EQ16()
 {
-	EquipmentID = 4 + 3 * (1 << 10) + 2 * (1 << 20);
+	EquipmentID = 16;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("Èô®ÈìÅÁî≤"));
 }
 
 void EQ16::Play(bool Execute)
@@ -421,12 +474,14 @@ TArray<TSharedPtr<class Y_Equipment>> EQ16::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
+/*------------------------------------EQ16--------------------------------------*/
 /*------------------------------------EQ17--------------------------------------*/
 
 EQ17::EQ17()
 {
-	EquipmentID = 5 + 1 * (1 << 10);
+	EquipmentID = 17;
 	EquipLevel = 1;
+	EquipmentName = Y::PrintText(TEXT("Êú®Áõæ"));
 }
 
 void EQ17::Play(bool Execute)
@@ -443,7 +498,7 @@ void EQ17::Play(bool Execute)
 	};
 	auto TP = MakeShared<TB>();
 	Y_StatusBar S{ TP };
-	ExecuteAction(Y::GetMainCharacter(), GetOwner(), S, Execute);
+	ExecuteAction(GetOwner(), GetOwner(), S, Execute);
 }
 
 bool EQ17::AcceptFloor(AY_Floor* GetFloor)
@@ -453,7 +508,7 @@ bool EQ17::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ17::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ18>()};
 }
 
 /*------------------------------------EQ17--------------------------------------*/
@@ -461,8 +516,9 @@ TArray<TSharedPtr<class Y_Equipment>> EQ17::Upgrade()
 
 EQ18::EQ18()
 {
-	EquipmentID = 5 + 2 * (1 << 10);
+	EquipmentID = 18;
 	EquipLevel = 2;
+	EquipmentName = Y::PrintText(TEXT("ÈìÅÁõæ"));
 }
 
 void EQ18::Play(bool Execute)
@@ -479,7 +535,7 @@ void EQ18::Play(bool Execute)
 	};
 	auto TP = MakeShared<TB>();
 	Y_StatusBar S{ TP };
-	ExecuteAction(Y::GetMainCharacter(), GetOwner(), S, Execute);
+	ExecuteAction(GetOwner(), GetOwner(), S, Execute);
 }
 
 bool EQ18::AcceptFloor(AY_Floor* GetFloor)
@@ -489,7 +545,7 @@ bool EQ18::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ18::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ19>(), MakeShared<EQ20>()};
 }
 
 /*------------------------------------EQ18--------------------------------------*/
@@ -497,8 +553,9 @@ TArray<TSharedPtr<class Y_Equipment>> EQ18::Upgrade()
 
 EQ19::EQ19()
 {
-	EquipmentID = 5 + 3 * (1 << 10) + 1 * (1 << 20);
+	EquipmentID = 19;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("ÈôÑÈ≠îÁõæ"));
 }
 
 void EQ19::Play(bool Execute)
@@ -519,7 +576,7 @@ void EQ19::Play(bool Execute)
 	};
 	auto TP = MakeShared<TB>();
 	Y_StatusBar S{ TP };
-	ExecuteAction(Y::GetMainCharacter(), GetOwner(), S, Execute);
+	ExecuteAction(GetOwner(), GetOwner(), S, Execute);
 }
 
 bool EQ19::AcceptFloor(AY_Floor* GetFloor)
@@ -537,8 +594,9 @@ TArray<TSharedPtr<class Y_Equipment>> EQ19::Upgrade()
 
 EQ20::EQ20()
 {
-	EquipmentID = 5 + 3 * (1 << 10) + 2 * (1 << 20);
+	EquipmentID = 20;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("Âà∂ÂºèÈí¢Áõæ"));
 }
 
 void EQ20::Play(bool Execute)
@@ -576,73 +634,69 @@ TArray<TSharedPtr<class Y_Equipment>> EQ20::Upgrade()
 
 EQ21::EQ21()
 {
-	EquipmentID = 6 + 1 * (1 << 10);
+	EquipmentID = 21;
 	EquipLevel = 1;
-}
-
-void EQ21::Play(bool Execute)
-{
-
 	class TB :public Y_Buff {
 	public:
-		TB() { BuffID = 3021; TriggerCondition = BeginInjured; }
+		TB() { BuffID = 3021; TriggerCondition = AfterFight; }
 		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
-			auto TA = ToBuffs.FindBuffExtend(3);
-			for (auto& p0 : TA)
-			{
-				p0->BuffCount *= 0.75;
-			}
+			Y::GetMainCharacter()->Health += 3;
 			return 0;
 		}
 	};
-	auto TP = MakeShared<TB>();
-	Y_StatusBar S{ TP };
-	ExecuteAction(Y::GetMainCharacter(), GetOwner(), S, Execute);
-}
-
-bool EQ21::AcceptFloor(AY_Floor* GetFloor)
-{
-	return CardRange(GetFloor, 0);
+	AddedBuff = MakeShared<TB>();
+	NeedTarget = false;
+	EquipmentName = Y::PrintText(TEXT("Â∫îÊÄ•Áª∑Â∏¶"));
 }
 
 TArray<TSharedPtr<class Y_Equipment>> EQ21::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ22>()};
 }
 
 /*------------------------------------EQ21--------------------------------------*/
+/*------------------------------------EQ22--------------------------------------*/
 
 EQ22::EQ22()
 {
-}
-
-void EQ22::Play(bool Execute)
-{
-}
-
-bool EQ22::AcceptFloor(AY_Floor* GetFloor)
-{
-	return false;
+	EquipmentID = 22;
+	EquipLevel = 2;
+	class TB :public Y_Buff {
+	public:
+		TB() { BuffID = 3022; TriggerCondition = AfterFight; }
+		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
+			Y::GetMainCharacter()->Health += 5;
+			return 0;
+		}
+	};
+	AddedBuff = MakeShared<TB>();
+	NeedTarget = false;
+	EquipmentName = Y::PrintText(TEXT("Ë∑åÊâìËçØ"));
 }
 
 TArray<TSharedPtr<class Y_Equipment>> EQ22::Upgrade()
 {
-	return TArray<TSharedPtr<class Y_Equipment>>();
+	return TArray<TSharedPtr<class Y_Equipment>>{MakeShared<EQ23>(), MakeShared<EQ24>()};
 }
 
-
+/*------------------------------------EQ22--------------------------------------*/
+/*------------------------------------EQ23--------------------------------------*/
 
 EQ23::EQ23()
 {
-}
-
-void EQ23::Play(bool Execute)
-{
-}
-
-bool EQ23::AcceptFloor(AY_Floor* GetFloor)
-{
-	return false;
+	EquipmentID = 23;
+	EquipLevel = 3;
+	class TB :public Y_Buff {
+	public:
+		TB() { BuffID = 3023; TriggerCondition = AfterFight; }
+		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
+			Y::GetMainCharacter()->Health *= 1.2;
+			return 0;
+		}
+	};
+	AddedBuff = MakeShared<TB>();
+	NeedTarget = false;
+	EquipmentName = Y::PrintText(TEXT("Â§ßËøò‰∏π"));
 }
 
 TArray<TSharedPtr<class Y_Equipment>> EQ23::Upgrade()
@@ -650,19 +704,25 @@ TArray<TSharedPtr<class Y_Equipment>> EQ23::Upgrade()
 	return TArray<TSharedPtr<class Y_Equipment>>();
 }
 
-
+/*------------------------------------EQ23--------------------------------------*/
+/*------------------------------------EQ24--------------------------------------*/
 
 EQ24::EQ24()
 {
-}
-
-void EQ24::Play(bool Execute)
-{
-}
-
-bool EQ24::AcceptFloor(AY_Floor* GetFloor)
-{
-	return false;
+	EquipmentID = 24;
+	EquipLevel = 3;
+	class TB :public Y_Buff {
+	public:
+		TB() { BuffID = 3024; TriggerCondition = AfterFight; }
+		virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override {
+			Y::GetMainCharacter()->Health += 5;
+			Y::GetMainCharacter()->MaxHealth += 5;
+			return 0;
+		}
+	};
+	AddedBuff = MakeShared<TB>();
+	NeedTarget = false;
+	EquipmentName = Y::PrintText(TEXT("Ë°•ËçØ"));
 }
 
 TArray<TSharedPtr<class Y_Equipment>> EQ24::Upgrade()
@@ -670,13 +730,14 @@ TArray<TSharedPtr<class Y_Equipment>> EQ24::Upgrade()
 	return TArray<TSharedPtr<class Y_Equipment>>();
 }
 
+/*------------------------------------EQ24--------------------------------------*/
+/*------------------------------------EQ25--------------------------------------*/
 
-
-//◊Á÷‰Ω£
 EQ25::EQ25()
 {
-	EquipmentID = 7 + 1 * (1 << 10);
+	EquipmentID = 25;
 	EquipLevel = 1;
+	EquipmentName = Y::PrintText(TEXT("ËØÖÂííÂâë"));
 }
 
 void EQ25::Play(bool Execute)
@@ -700,20 +761,23 @@ bool EQ25::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ25::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ26>()};
 }
 
-//÷‰Ω£
+/*------------------------------------EQ25--------------------------------------*/
+/*------------------------------------EQ26--------------------------------------*/
+
 EQ26::EQ26()
 {
-	EquipmentID = 7 + 2 * (1 << 10);
+	EquipmentID = 26;
 	EquipLevel = 2;
+	EquipmentName = Y::PrintText(TEXT("ÂííÂâë"));
 }
 
 void EQ26::Play(bool Execute)
 {
 	Y_StatusBar TS1{ Y::YMakeShared<DemageBuff>(8) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), TS1, Execute);
+	ExecuteAction(GetOwner(), GetOwner(), TS1, Execute);
 	Y_StatusBar TS2{ Y::YMakeShared<DemageBuff>(15) };
 	ExecuteAction(GetOwner(), Y::GetChoosedFloor()->StandCharacter, TS2, Execute);
 }
@@ -725,19 +789,22 @@ bool EQ26::AcceptFloor(AY_Floor* GetFloor)
 
 TArray<TSharedPtr<class Y_Equipment>> EQ26::Upgrade()
 {
-	return TArray<TSharedPtr<Y_Equipment>>{};
+	return TArray<TSharedPtr<Y_Equipment>>{MakeShared<EQ27>(), MakeShared<EQ28>()};
 }
 
-//“˚—™Ω£
+/*------------------------------------EQ26--------------------------------------*/
+/*------------------------------------EQ27--------------------------------------*/
+
 EQ27::EQ27()
 {
-	EquipmentID = 7 + 3 * (1 << 10) + 1 * (1 << 20);
+	EquipmentID = 27;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("È•ÆË°ÄÂâë"));
 }
 
 void EQ27::Play(bool Execute)
 {
-	Y::GetChoosedFloor()->StandCharacter->Health = Y::GetChoosedFloor()->StandCharacter->Health + 8;
+	Y::GetChoosedFloor()->StandCharacter->Health += 8;
 	Y_StatusBar TS{ Y::YMakeShared<DemageBuff>(15) };
 	ExecuteAction(GetOwner(), Y::GetChoosedFloor()->StandCharacter, TS, Execute);
 }
@@ -752,17 +819,20 @@ TArray<TSharedPtr<class Y_Equipment>> EQ27::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>{};
 }
 
-//¡ÈΩ£
+/*------------------------------------EQ27--------------------------------------*/
+/*------------------------------------EQ28--------------------------------------*/
+
 EQ28::EQ28()
 {
-	EquipmentID = 7 + 3 * (1 << 10) + 2 * (1 << 20);
+	EquipmentID = 28;
 	EquipLevel = 3;
+	EquipmentName = Y::PrintText(TEXT("ÁÅµÂâë"));
 }
 
 void EQ28::Play(bool Execute)
 {
 	Y_StatusBar TS{ Y::YMakeShared<DemageBuff>(8) };
-	ExecuteAction(GetOwner(), Y::GetMainCharacter(), TS, Execute);
+	ExecuteAction(GetOwner(), GetOwner(), TS, Execute);
 	auto BS1 = Y::GetMainCharacter()->Buffs->FindType(7);
 	for (auto& p : BS1)p->RemoveFromCharacter();
 	auto BS2 = Y::GetMainCharacter()->Buffs->FindType(6);
@@ -779,4 +849,4 @@ TArray<TSharedPtr<class Y_Equipment>> EQ28::Upgrade()
 	return TArray<TSharedPtr<Y_Equipment>>();
 }
 
-
+/*------------------------------------EQ28--------------------------------------*/

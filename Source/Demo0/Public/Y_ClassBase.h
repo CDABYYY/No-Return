@@ -61,6 +61,8 @@ public:
 	BurnBuff();
 	virtual int32 execute(class AY_Character* FromCharacter, class AY_Character* ToCharacter, class Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack = false)override;
 	virtual FText printBuff(bool PrintLog = false)const override;
+	virtual void AddToCharacter(class AY_Character* TargetCharacter, bool Execute)override;
+	virtual void RemoveFromCharacter()override;
 };
 
 class DEMO0_API NormalCard : public Y_CardInfo

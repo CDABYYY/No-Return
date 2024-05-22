@@ -12,7 +12,10 @@
 #include "Y_Trophy.h"
 #include "Y_Equipment.h"
 #include "Y_GameInstance.h"
+#include "Y_MapWidget.h"
 #include "Y.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 void LoadY_Base()
 {
@@ -29,17 +32,40 @@ void LoadY_Base()
 	Y::LoadRoom<NormalFightRoom>(-10);
 	Y::LoadEquipment<NormalEquipment>(-1);
 
+	Y::Levels[1]->LevelMusic = LoadObject<USoundCue>(nullptr, TEXT("/Script/Engine.SoundCue'/Game/Resource/Sounds/BGM1_Cue.BGM1_Cue'"));
+	Y::Levels[2]->LevelMusic = LoadObject<USoundCue>(nullptr, TEXT("/Script/Engine.SoundCue'/Game/Resource/Sounds/BGM2_Cue.BGM2_Cue'"));
+	Y::Levels[3]->LevelMusic = LoadObject<USoundCue>(nullptr, TEXT("/Script/Engine.SoundCue'/Game/Resource/Sounds/BGM3_Cue.BGM3_Cue'"));
+
+	Y::Levels[1]->MapTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/Pictures/Map1.Map1'"));
+	Y::Levels[2]->MapTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/Pictures/Map2.Map2'"));
+	Y::Levels[3]->MapTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/Pictures/Map3.Map3'"));
+
 	//Temp
 	for (int32 i = 1; i <= 3; i++) {
 		Y::Levels[i]->CanInLevel = 1 << i;
 		for (int32 j = 1; j <= 3; j++) {
-			Y::Levels[i]->ThisLevelPopulations.Add(MakeShared<Y_LevelInfo::EnemyPopulation>(j, j * 3 - 2, j * 3 - 1, j * 3));
+			Y::Levels[i]->ThisLevelPopulations.Add(MakeShared<Y_LevelInfo::EnemyPopulation>(j, (i-1)*10 + j * 3 - 2, (i - 1) * 10+ j * 3 - 1, (i - 1) * 10 + j * 3));
 		}
 	}
 	for (int32 i = 1; i <= 67; i++)Y::Levels[0]->ThisLevelCards.Add(i);
 	for (int32 i = 1; i <= 5; i++) {
 		Y::Levels[0]->ThisLevelEquipments.Add(i * 4 - 3);
 	}
+	Y::Levels[1]->FinalRoom = MakeShared<NormalBossRoom>(10);
+	Y::Levels[2]->FinalRoom = MakeShared<NormalBossRoom>(20);
+	Y::Levels[3]->FinalRoom = MakeShared<NormalFightRoom>();
+
+	Y::Levels[0]->LevelLocation = FVector(-20840, -244430, -29930);
+	Y::Levels[0]->LevelRotation = FRotator(0, -100, 0);
+
+	Y::Levels[1]->LevelLocation = FVector(-20840, -244430, -29930);
+	Y::Levels[1]->LevelRotation = FRotator(0, -100, 0);
+
+	Y::Levels[2]->LevelLocation = FVector(-25740, -235590, -30900);
+	Y::Levels[2]->LevelRotation = FRotator(0, -180, 0);
+
+	Y::Levels[3]->LevelLocation = FVector(-18610, -240090, -31520);
+	Y::Levels[3]->LevelRotation = FRotator(0, 0, 0);
 }
 
 MoveBuff::MoveBuff()
@@ -70,6 +96,7 @@ FText MoveBuff::printBuff(bool PrintLog) const
 
 PureDemageBuff::PureDemageBuff()
 {
+	ShowAble = false;
 	BuffAsType = BuffID = 3;
 	TriggerCondition = DetectDeath;
 	BuffProperty = 1;
@@ -114,6 +141,7 @@ BurnDemageBuff::BurnDemageBuff()
 
 ShieldBuff::ShieldBuff()
 {
+	ShowAble = true;
 	BuffAsType = BuffID = 4;
 	TriggerCondition = BeginInjured | AfterAttack | AfterMove;
 	BuffProperty = 3;
@@ -121,6 +149,8 @@ ShieldBuff::ShieldBuff()
 	BuffLevel = 20;
 	BuffExtend.Add(BuffID);
 	BuffName = Y::PrintText(TEXT("护盾"));
+
+	BindMessage(4);
 }
 
 int32 ShieldBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter, Y_StatusBar& ToBuffs, int32 ExecuteCondition, FString TriggerAction, bool TryAttack)
@@ -178,6 +208,8 @@ BurnBuff::BurnBuff()
 	BuffExtend.Add(BuffID);
 	BuffParams.Add(0.5);
 	BuffParams.Add(1);
+	ShowAble = true;
+	BindMessage(5);
 	BuffName = Y::PrintText(TEXT("灼烧"));
 }
 
@@ -200,6 +232,19 @@ FText BurnBuff::printBuff(bool PrintLog) const
 	return Y::PrintText(TEXT("Burn %d"),BuffCount);
 }
 
+void BurnBuff::AddToCharacter(AY_Character* TargetCharacter, bool Execute)
+{
+	Y_Buff::AddToCharacter(TargetCharacter, Execute);
+	if (Execute)TargetCharacter->PlayNiagara(0, TEXT("Body11"));
+}
+
+void BurnBuff::RemoveFromCharacter()
+{
+	if (OwnerCharacter->CurrentNiagara == TEXT("Body11"))
+	OwnerCharacter->PlayNiagara(0, TEXT("NULL"));
+	Y_Buff::RemoveFromCharacter();
+}
+
 NormalCard::NormalCard()
 {
 	CurrentCost = OriginalCost = 5;
@@ -220,11 +265,11 @@ void NormalCard::Play( bool Execute)
 
 	int32 Pos = Y::GetMainCharacter()->StandFloor->SerialNumber;
 	int32 ToPos = Y::GetChoosedFloor()->SerialNumber;
+	PlayNiagara(Execute, TEXT("Shoot1"), Y::GetMainCharacter()->StandFloor, ToPos);
 	if (IsValid(Y::GetChoosedFloor()->StandCharacter)) {
 		if (ToPos < Pos)ToPos += 1;
 		else ToPos -= 1;
 	}
-	PlayNiagara(TEXT("FireBall02"), Execute, ToPos);
 	if(ToPos - Pos != 0)
 	{
 		Move(ToPos - Pos, Execute);
@@ -235,6 +280,8 @@ void NormalCard::Play( bool Execute)
 	}
 	DrawCard(1, Execute);
 	PlayMontage(Execute, ToPos);
+	USoundCue* PlaySound = LoadObject<USoundCue>(nullptr, TEXT("/Script/Engine.SoundCue'/Game/Resource/Sounds/Cardnew_Cue.Cardnew_Cue'"));
+	if (PlaySound)UGameplayStatics::PlaySound2D(Y::GetPlayer(), PlaySound);
 }
 
 bool NormalCard::AcceptFloor(AY_Floor* GetFloor)
@@ -334,6 +381,7 @@ void NormalEnemy::EnemyDead()
 NormalRoom::NormalRoom()
 {
 	RoomID = -2;
+	UsingPicture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/RoomPictures/1.1'"));
 }
 
 FText NormalRoom::GetDescribe()
@@ -343,8 +391,6 @@ FText NormalRoom::GetDescribe()
 
 TSharedPtr<Y_RoomInfo> NormalRoom::RoomClicked()
 {
-	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
-	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
 	Y::GetPlayer()->ClickAble = false;
 
 	for (int32 i = 0; i < 10; i++) {
@@ -384,9 +430,6 @@ FText EventRoom::GetDescribe()
 TSharedPtr<Y_RoomInfo> EventRoom::RoomClicked()
 {
 	Y::Log(0, TEXT("InEventRoom"));
-	//Temp
-	//Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
-	//Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
 	ChangeEndType(2);
 	for (int32 i = 0; i < 10; i++) {
 		Y::GetGameInfo()->SpawnFloor(Y::FloorClass[1]->NewObject(), i);
@@ -528,6 +571,9 @@ WeakBuff::WeakBuff() {
 	BuffLevel = -5;
 	BuffExtend.Add(BuffID);
 	BuffName = Y::PrintText(TEXT("虚弱"));
+	ShowAble = true;
+
+	BindMessage(6);
 }
 
 
@@ -554,6 +600,9 @@ ExposeBuff::ExposeBuff() {
 	BuffLevel = -5;
 	BuffExtend.Add(BuffID);
 	BuffName = Y::PrintText(TEXT("易伤"));
+	ShowAble = true;
+
+	BindMessage(7);
 }
 
 
@@ -575,12 +624,11 @@ int32 ExposeBuff::execute(AY_Character* FromCharacter, AY_Character* ToCharacter
 NormalFightRoom::NormalFightRoom()
 {
 	RoomID = -10;
+	UsingPicture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/RoomPictures/1.1'"));
 }
 
 TSharedPtr<Y_RoomInfo> NormalFightRoom::RoomClicked()
 {
-	Y::GetPlayer()->SetActorLocation(FVector(0, 0, 190));
-	Y::GetPlayer()->SetActorRotation(FRotator(0, 0, 0));
 	int32 SpawnFloors = 8 + 6 * Y::getRandom();
 	TArray<int32> CanSpawnFloors;
 	for (int32 i = 0; i < SpawnFloors; i++) {
@@ -589,13 +637,14 @@ TSharedPtr<Y_RoomInfo> NormalFightRoom::RoomClicked()
 	}
 	int32 SpawnedMain = 4 + 3 * Y::getRandom();
 	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[SpawnedMain]);
+	CanSpawnFloors.Remove(SpawnedMain);
 
 	int32 GetP = Y::GetGameInfo()->CurrentFloor + 2; 
 	int32 OP = GetP;
 	auto P = Y::getRandom(Y::GetGameInfo()->CurrentLevel->ThisLevelPopulations);
 	while (GetP > 0) {
 		auto EnemyType = Y::getRandom(P->Classes);
-		if (GetP < EnemyType->CostLevel * 0.5) break;
+		//if (GetP < EnemyType->CostLevel * 0.5) break;
 		GetP -= EnemyType->CostLevel;
 		int32 EnemyPos = CanSpawnFloors[Y::getRandom() * CanSpawnFloors.Num()];
 		CanSpawnFloors.Remove(EnemyPos);
@@ -698,6 +747,7 @@ NormalBossRoom::NormalBossRoom(int32 FinalBoosType)
 {
 	RoomID = 999;
 	BossType = FinalBoosType;
+	UsingPicture = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Resource/RoomPictures/2.2'"));
 }
 
 TSharedPtr<Y_RoomInfo> NormalBossRoom::RoomClicked()
@@ -709,7 +759,17 @@ TSharedPtr<Y_RoomInfo> NormalBossRoom::RoomClicked()
 	Y::GetGameInfo()->SpawnMC(Y::GetFloors()[2]);
 	auto Boss = Y::GetGameInfo()->SpawnCharacter(Y::CharacterClass[BossType]->NewObject(), Y::GetFloors()[7]);
 	Boss->Buffs->AddBuff(MakeShared<Y_BuffR>(this));
-	Boss->Update();
+	Boss->Update(); 
+	class ChangeLevelSettle :public Y_SettleInfo {
+		virtual void EndWork()override {
+			Y::GetGameInfo()->ForwardLevel();
+		}
+	};
+	Y::GetGameInfo()->SettleInfo = MakeShared<ChangeLevelSettle>();
+	Y::GetGameInfo()->SettleInfo->TittleDescribe = Y::PrintText(TEXT("击败Boss！"));
+	Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(CardTrophy::Share());
+	Y::GetGameInfo()->SettleInfo->TrophyInfos.Add(MoneyTrophy::Share(100));
+
 
 	Y::GetGameInfo()->BeginFight();
 	return nullptr;
@@ -718,5 +778,4 @@ TSharedPtr<Y_RoomInfo> NormalBossRoom::RoomClicked()
 void NormalBossRoom::LeaveRoom()
 {
 	DoToEndRoom();
-	Y::GetGameInfo()->ForwardLevel();
 }

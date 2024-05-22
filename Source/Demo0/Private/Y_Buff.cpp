@@ -22,11 +22,11 @@ Y_Buff::Y_Buff()
 	Addable = true;
 	Living = true;
 	OwnerCharacter = nullptr;
-	ShowAble = true;
 	IconWidget = nullptr;
 	BuffDescribe = Y::PrintText(TEXT("Buff Describe"));
 	//FString SP = TEXT("/Script/Engine.Texture2D'/Game/Resource/Png/JayceThunderingBlow.JayceThunderingBlow'");
 	//BuffPicture = Y::LoadPicture(SP);
+	ShowAble = false;
 }
 
 void Y_Buff::Init(int32 BuffCount0)
@@ -122,6 +122,18 @@ FString Y_Buff::PrinCount()
 {
 	FString TmpString = BuffName.ToString();
 	return FString::Printf(TEXT("%d层%s"), BuffCount, *(TmpString));
+}
+
+void Y_Buff::BindMessage(int32 ID)
+{
+	FString Name = FString::Printf(TEXT("%d"), ID);
+	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/BuffPictures/");
+	Path.Append(Name);
+	Path.Append(TEXT("."));
+	Path.Append(Name);
+	Path.Append(TEXT("'"));
+	auto P = LoadObject<UTexture2D>(nullptr, Path.GetCharArray().GetData());
+	if (IsValid(P))BuffPicture = P;
 }
 
 void Y_Buff::AddInExecuteLog()

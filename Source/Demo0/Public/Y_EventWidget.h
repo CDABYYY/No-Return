@@ -65,6 +65,8 @@ public:
 
 	UTexture2D* Picture;
 
+	void BindMessage(int32 ID);
+
 	virtual FText GetDescription();
 
 	virtual UTexture2D* GetPicture();

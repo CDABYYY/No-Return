@@ -11,6 +11,7 @@
 #include "Y_BuffBar.h"
 #include "Components/WidgetComponent.h"
 #include "Y_ClassBase.h"
+#include "Y_EnemyInfo.h"
 
 // Sets default values
 AY_Character::AY_Character()
@@ -198,6 +199,20 @@ void AY_Character::ChangeAttackTime(int32 ChangedTime)
 	UY_TimeLine::YTimeLine->RemoveCharacter(this);
 	CharacterAttackTime = ChangedTime;
 	UY_TimeLine::YTimeLine->AddCharacter(this);
+}
+
+void AY_Character::LoadInfo(TSharedPtr<class Y_EnemyInfo> NewInfo)
+{
+	//Temp
+	FString Name = FString::Printf(TEXT("%d"), NewInfo->EnemyID);
+	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/CharacterPictures/");
+	Path.Append(Name);
+	Path.Append(TEXT("."));
+	Path.Append(Name);
+	Path.Append(TEXT("'"));
+	auto P = LoadObject<UTexture2D>(nullptr, Path.GetCharArray().GetData());
+	if (IsValid(P))UsingPicture = P;
+	//UsingPicture = NewInfo->EnemyProfile;
 }
 
 bool AY_Character::CheckValid()

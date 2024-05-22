@@ -201,6 +201,7 @@ public:
 	virtual void RemoveFromCharacter();//Generally For Special Effects. Warning:This Fuction Will Generally Kill Self! If You Need Call it Safely, you should keep a TSharedPtr.
 	virtual bool AcceptBuffAdd(Y_Buff* OtherBuff);
 	virtual FString PrinCount();
+	void BindMessage(int32 ID);
 
 	void AddInExecuteLog();
 	void AddInInfluentLog();

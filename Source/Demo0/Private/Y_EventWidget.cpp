@@ -39,6 +39,18 @@ Y_EventInfo::Y_EventInfo()
 	Description = FText::FromString(TEXT("UnNamed"));
 }
 
+void Y_EventInfo::BindMessage(int32 ID)
+{
+	FString Name = FString::Printf(TEXT("%d"), ID);
+	FString Path = TEXT("/Script/Engine.Texture2D'/Game/Resource/EventPictures/");
+	Path.Append(Name);
+	Path.Append(TEXT("."));
+	Path.Append(Name);
+	Path.Append(TEXT("'"));
+	auto P = LoadObject<UTexture2D>(nullptr, Path.GetCharArray().GetData());
+	if (IsValid(P))Picture = P;
+}
+
 FText Y_EventInfo::GetDescription()
 {
 	return Description;
